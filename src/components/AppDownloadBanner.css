@@ -1,0 +1,216 @@
+/* ====== بانر التحميل ====== */
+.apk-banner {
+  position: relative;
+  background: linear-gradient(135deg, #1a2f1a 0%, #0f1f0f 50%, #1a2a1a 100%);
+  border: 1px solid rgba(107, 192, 119, 0.4);
+  border-radius: 20px;
+  padding: 28px 24px 16px;
+  margin: 24px 0;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(107, 192, 119, 0.15), 0 0 0 1px rgba(107, 192, 119, 0.1);
+}
+
+/* توهج خلفي */
+.apk-banner-glow {
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(107, 192, 119, 0.2) 0%, transparent 70%);
+  pointer-events: none;
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+.apk-banner-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+  flex-wrap: wrap;
+}
+
+/* أيقونة التطبيق */
+.apk-icon-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.apk-icon-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(107, 192, 119, 0.4);
+  animation: ring-spin 8s linear infinite;
+}
+
+@keyframes ring-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.apk-icon {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #2d5a2d, #1a3a1a);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  border: 2px solid rgba(107, 192, 119, 0.5);
+  box-shadow: 0 4px 16px rgba(107, 192, 119, 0.2);
+}
+
+/* معلومات التطبيق */
+.apk-info {
+  flex: 1;
+  min-width: 140px;
+}
+
+.apk-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+  font-family: var(--font-arabic);
+}
+
+.apk-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.apk-version {
+  background: rgba(107, 192, 119, 0.2);
+  color: #6bc077;
+  border: 1px solid rgba(107, 192, 119, 0.3);
+  border-radius: 20px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.apk-dot {
+  color: rgba(255,255,255,0.3);
+  font-size: 12px;
+}
+
+.apk-meta span:not(.apk-version):not(.apk-dot):not(.apk-badge) {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+}
+
+.apk-badge {
+  background: rgba(107, 192, 119, 0.15);
+  color: #6bc077;
+  border-radius: 20px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* زرار التحميل */
+.apk-download-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #6bc077, #4a9a56);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: var(--font-arabic);
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(107, 192, 119, 0.4);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.apk-download-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  animation: btn-shine 2.5s ease infinite;
+}
+
+@keyframes btn-shine {
+  0% { left: -100%; }
+  50%, 100% { left: 100%; }
+}
+
+.apk-download-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 28px rgba(107, 192, 119, 0.5);
+}
+
+.apk-download-btn:active {
+  transform: scale(0.97);
+}
+
+.apk-download-btn.downloading {
+  background: linear-gradient(135deg, #4a9a56, #3a7a46);
+  cursor: not-allowed;
+}
+
+.apk-download-icon {
+  font-size: 18px;
+  animation: bounce-down 1.2s ease infinite;
+}
+
+@keyframes bounce-down {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+.apk-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* شريط الميزات */
+.apk-features {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(107, 192, 119, 0.15);
+  position: relative;
+  z-index: 1;
+}
+
+.apk-features span {
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  font-family: var(--font-arabic);
+}
+
+@media (max-width: 600px) {
+  .apk-banner-inner { flex-direction: column; align-items: flex-start; }
+  .apk-download-btn { width: 100%; justify-content: center; }
+  .apk-features { gap: 10px; }
+}

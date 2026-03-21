@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import AppDownloadBanner from '../components/AppDownloadBanner'
 import './Home.css'
 
 const features = [
@@ -51,10 +52,13 @@ export default function Home() {
   return (
     <div className="page-container fade-in">
       <div className="home-hero">
-        <div className="home-hero-icon">📖</div>
+        <div className="home-hero-icon">☪️</div>
         <h1>نور الإسلام</h1>
         <p>تطبيق القرآن الكريم والأذكار الإسلامية</p>
       </div>
+
+      {/* بانر تحميل التطبيق */}
+      <AppDownloadBanner />
 
       <div className="home-grid">
         {features.map(f => (
