@@ -12,8 +12,12 @@ const SUGGESTIONS = [
   'ما حكم الغيبة والنميمة؟',
 ]
 
-// URL مطلق دائماً — يعمل على الويب والموبايل بدون استثناء
-const API = 'https://nabil-quran.netlify.app/.netlify/functions/islamic-ai'
+const MISTRAL_KEY = '0OuOy44O4MoPxH7FrToFUeDEDaUrYSjz'
+const MISTRAL_API = 'https://api.mistral.ai/v1/chat/completions'
+
+const SYSTEM_PROMPT = `أنت مساعد إسلامي ذكي متخصص في العلوم الإسلامية. اسمك "نور" وأنت جزء من تطبيق "نور الإسلام".
+مهامك: الإجابة على أسئلة الدين الإسلامي بدقة وأمانة، تفسير الآيات القرآنية والأحاديث النبوية، الفقه والعبادات، العقيدة والسيرة النبوية، الأخلاق والمعاملات الإسلامية، الأذكار والأدعية المأثورة.
+قواعد: أجب دائماً باللغة العربية الفصحى الواضحة، استند إلى الكتاب والسنة، إذا لم تعرف قل "الله أعلم"، كن موجزاً ومفيداً.`
 
 export default function IslamicAI() {
   const [messages, setMessages] = useState([
@@ -43,23 +47,30 @@ export default function IslamicAI() {
     setMessages(history)
     setLoading(true)
 
-    // بناء المحادثة بدون أول رسالة مساعد (system prompt يغطيها)
     const apiMessages = history
-      .filter((_, i) => i > 0) // تخطي رسالة الترحيب الأولى
+      .filter((_, i) => i > 0)
       .map(m => ({ role: m.role, content: m.content }))
 
     try {
-      const res = await fetch(API, {
+      const res = await fetch(MISTRAL_API, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: apiMessages }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${MISTRAL_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'mistral-small-latest',
+          max_tokens: 1024,
+          messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...apiMessages],
+        }),
       })
       const data = await res.json()
-      if (!res.ok || data.error) throw new Error(data.error || 'خطأ في الخدمة')
-      setMessages([...history, { role: 'assistant', content: data.reply }])
+      if (!res.ok) throw new Error(data.message || 'خطأ في الخدمة')
+      const reply = data.choices?.[0]?.message?.content || ''
+      setMessages([...history, { role: 'assistant', content: reply }])
     } catch (e) {
       setError('تعذر الاتصال بالمساعد. تحقق من اتصالك بالإنترنت.')
-      setMessages(history) // ارجع للحالة قبل الإرسال
+      setMessages(history)
     } finally {
       setLoading(false)
       inputRef.current?.focus()
