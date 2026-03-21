@@ -147,6 +147,15 @@ export default function PrayerTime() {
     }
   }, [methodId, settings.location?.lat, settings.location?.lng])
 
+  // ─── اختيار موقع (مدينة أو GPS أو IP) ──────────────────────────────
+  const pickLocation = useCallback((lat, lng, city) => {
+    updateSettings({ location: { lat, lng, city } })
+    try { setTimes(calcTimes(lat, lng, methodId)) } catch (_) {}
+    setShowPicker(false)
+    setGpsStatus('')
+    setGpsLoading(false)
+  }, [methodId, updateSettings])
+
   // ─── كشف تلقائي من الـ IP عند أول دخول (بدون أذونات) ───────────────
   useEffect(() => {
     if (settings.location) return
@@ -195,15 +204,6 @@ export default function PrayerTime() {
     }, 1000)
     return () => clearInterval(t)
   }, [times, adhanEnabled, selectedAdhan, methodId, settings.location])
-
-  // ─── اختيار موقع (مدينة أو GPS أو IP) ──────────────────────────────
-  const pickLocation = useCallback((lat, lng, city) => {
-    updateSettings({ location: { lat, lng, city } })
-    try { setTimes(calcTimes(lat, lng, methodId)) } catch (_) {}
-    setShowPicker(false)
-    setGpsStatus('')
-    setGpsLoading(false)
-  }, [methodId, updateSettings])
 
   // GPS
   const doGps = async () => {
