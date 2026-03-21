@@ -16,6 +16,7 @@ import Settings from './pages/Settings'
 import Qibla from './pages/Qibla'
 import UpdateChecker from './components/UpdateChecker'
 import WhatsNew from './components/WhatsNew'
+import WelcomeAudio from './components/WelcomeAudio'
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <div className="app-layout">
           <WhatsNew />
           <UpdateChecker />
+          <WelcomeAudio />
           <Sidebar />
           <main className="main-content">
             <Routes>
