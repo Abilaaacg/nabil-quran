@@ -88,7 +88,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ github.run_number }}
-          name: "نبيل قرآن v${{ github.run_number }}"
+          name: "نور الإسلام v${{ github.run_number }}"
           body: |
             ## 📱 تطبيق نبيل قرآن للأندرويد
 

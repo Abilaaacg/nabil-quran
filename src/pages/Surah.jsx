@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import './Surah.css'
@@ -18,7 +18,6 @@ const surahNames = [
   'الماعون','الكوثر','الكافرون','النصر','المسد','الإخلاص','الفلق','الناس',
 ]
 
-// أرقام الآيات بشكل دائري للمصحف
 function VerseNum({ n }) {
   return <span className="mushaf-verse-num">﴾{n}﴿</span>
 }
@@ -30,9 +29,10 @@ export default function Surah() {
   const [verses, setVerses] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [showTranslation, setShowTranslation] = useState(false)
   const [translations, setTranslations] = useState([])
+  const [loadingTafsir, setLoadingTafsir] = useState(false)
   const [activeVerse, setActiveVerse] = useState(null)
+  const tafsirRef = useRef(null)
 
   const surahName = surahNames[num - 1] || `سورة ${num}`
   const fontSize = settings.quranFontSize || 32
@@ -42,6 +42,7 @@ export default function Surah() {
     setError(null)
     setVerses([])
     setActiveVerse(null)
+    setTranslations([])
     fetch(`https://api.alquran.cloud/v1/surah/${num}`)
       .then(r => r.json())
       .then(data => {
@@ -52,16 +53,29 @@ export default function Surah() {
       .finally(() => setLoading(false))
   }, [num])
 
-  useEffect(() => {
-    if (showTranslation && translations.length === 0) {
-      fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.muyassar`)
-        .then(r => r.json())
-        .then(data => {
-          if (data.code === 200) setTranslations(data.data.ayahs)
-        })
-        .catch(() => {})
+  // تحميل التفسير عند أول ضغط على آية
+  const loadTafsir = () => {
+    if (translations.length > 0) return
+    setLoadingTafsir(true)
+    fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.muyassar`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.code === 200) setTranslations(data.data.ayahs)
+      })
+      .catch(() => {})
+      .finally(() => setLoadingTafsir(false))
+  }
+
+  const handleVerseClick = (verseNum) => {
+    if (activeVerse === verseNum) {
+      setActiveVerse(null)
+      return
     }
-  }, [showTranslation, num])
+    setActiveVerse(verseNum)
+    loadTafsir()
+    // تمرير لقسم التفسير
+    setTimeout(() => tafsirRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 200)
+  }
 
   return (
     <div className="mushaf-layout fade-in">
@@ -78,16 +92,10 @@ export default function Surah() {
         </div>
 
         <div className="mushaf-controls">
-          <button
-            className={`ctrl-btn ${showTranslation ? 'active' : ''}`}
-            onClick={() => setShowTranslation(t => !t)}
-            title="التفسير الميسر"
-          >
-            تفسير
-          </button>
           <div className="font-size-btns">
-            <button onClick={() => updateSettings({ quranFontSize: Math.max(22, fontSize - 2) })}>أ-</button>
-            <button onClick={() => updateSettings({ quranFontSize: Math.min(52, fontSize + 2) })}>أ+</button>
+            <button onClick={() => updateSettings({ quranFontSize: Math.max(18, fontSize - 2) })}>أ−</button>
+            <span className="font-size-val">{fontSize}</span>
+            <button onClick={() => updateSettings({ quranFontSize: Math.min(60, fontSize + 2) })}>أ+</button>
           </div>
         </div>
       </div>
@@ -103,9 +111,7 @@ export default function Surah() {
             <span className="header-line" />
           </div>
           {verses.length > 0 && (
-            <div className="mushaf-meta">
-              {verses.length} آية
-            </div>
+            <div className="mushaf-meta">{verses.length} آية</div>
           )}
         </div>
 
@@ -124,12 +130,10 @@ export default function Surah() {
         )}
 
         {error && (
-          <div className="error-box" style={{ margin: '20px' }}>
-            ⚠️ {error}
-          </div>
+          <div className="error-box" style={{ margin: '20px' }}>⚠️ {error}</div>
         )}
 
-        {/* النص المتصل - شكل المصحف */}
+        {/* النص المتصل */}
         {!loading && !error && (
           <>
             {Object.entries(
@@ -141,17 +145,13 @@ export default function Surah() {
               }, {})
             ).map(([pageNum, pageVerses]) => (
               <div key={pageNum} className="mushaf-page-block">
-                <div
-                  className="mushaf-text"
-                  style={{ fontSize: `${fontSize}px` }}
-                >
+                <div className="mushaf-text" style={{ fontSize: `${fontSize}px` }}>
                   {pageVerses.map((ayah) => (
                     <React.Fragment key={ayah.numberInSurah}>
                       <span
                         className={`mushaf-word ${activeVerse === ayah.numberInSurah ? 'verse-highlight' : ''}`}
-                        onClick={() => setActiveVerse(
-                          activeVerse === ayah.numberInSurah ? null : ayah.numberInSurah
-                        )}
+                        onClick={() => handleVerseClick(ayah.numberInSurah)}
+                        title={`الآية ${ayah.numberInSurah} — اضغط لعرض التفسير`}
                       >
                         {ayah.text}
                       </span>
@@ -164,28 +164,25 @@ export default function Surah() {
               </div>
             ))}
 
-            {/* التفسير - يظهر للآية المختارة أو كامل السورة */}
-            {showTranslation && (
-              <div className="mushaf-tafsir">
-                <div className="tafsir-title">التفسير الميسر</div>
-                {activeVerse ? (
-                  // تفسير آية محددة
-                  translations[activeVerse - 1] && (
-                    <div className="tafsir-single">
-                      <span className="tafsir-ayah-num">الآية {activeVerse}:</span>
-                      <span>{translations[activeVerse - 1].text}</span>
-                    </div>
-                  )
+            {/* التفسير - يظهر تلقائياً عند الضغط على آية */}
+            {activeVerse && (
+              <div className="mushaf-tafsir" ref={tafsirRef}>
+                <div className="tafsir-title">
+                  تفسير الآية {activeVerse}
+                  <button
+                    onClick={() => setActiveVerse(null)}
+                    style={{ float: 'left', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: 16 }}
+                  >✕</button>
+                </div>
+                {loadingTafsir ? (
+                  <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: 20 }}>
+                    جاري تحميل التفسير...
+                  </div>
+                ) : translations[activeVerse - 1] ? (
+                  <div className="tafsir-single">
+                    {translations[activeVerse - 1].text}
+                  </div>
                 ) : (
-                  // كل التفسير
-                  translations.map((t, i) => (
-                    <div key={i} className="tafsir-item">
-                      <span className="tafsir-ayah-num">({i + 1})</span>
-                      {t.text}
-                    </div>
-                  ))
-                )}
-                {translations.length === 0 && (
                   <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: 20 }}>
                     جاري تحميل التفسير...
                   </div>

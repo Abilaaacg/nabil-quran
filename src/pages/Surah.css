@@ -103,6 +103,13 @@
   border-color: var(--accent);
 }
 
+.font-size-val {
+  font-size: 12px;
+  color: var(--text-muted);
+  min-width: 24px;
+  text-align: center;
+}
+
 /* ====== صفحة المصحف ====== */
 .mushaf-page {
   max-width: 820px;

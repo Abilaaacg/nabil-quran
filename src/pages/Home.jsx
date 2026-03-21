@@ -52,7 +52,7 @@ export default function Home() {
     <div className="page-container fade-in">
       <div className="home-hero">
         <div className="home-hero-icon">📖</div>
-        <h1>نبيل قرآن</h1>
+        <h1>نور الإسلام</h1>
         <p>تطبيق القرآن الكريم والأذكار الإسلامية</p>
       </div>
 
@@ -70,6 +70,17 @@ export default function Home() {
 
       <div className="home-footer">
         <p>بسم الله الرحمن الرحيم</p>
+        <p style={{ fontSize: 12, marginTop: 8, color: 'var(--text-muted)' }}>
+          تم برمجة التطبيق عن طريق المهندس أحمد نبيل
+        </p>
+        <a
+          href="https://nabil-quran.netlify.app"
+          target="_blank"
+          rel="noreferrer"
+          style={{ fontSize: 12, color: 'var(--accent)', marginTop: 4, display: 'block' }}
+        >
+          🌐 تابعنا عبر الموقع
+        </a>
       </div>
     </div>
   )
