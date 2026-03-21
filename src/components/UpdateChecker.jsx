@@ -26,8 +26,7 @@ async function sendUpdateNotification(version) {
         id: 1001,
         title: '📲 تحديث جديد متاح!',
         body: `نور الإسلام ${version} — اضغط للتحديث الآن`,
-        schedule: { at: new Date(Date.now() + 1000) },
-        actionTypeId: 'UPDATE',
+        actionTypeId: '',
         extra: null,
       }]
     })
