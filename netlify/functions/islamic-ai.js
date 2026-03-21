@@ -1,5 +1,5 @@
 // Netlify Function — Islamic AI Assistant
-// يحتاج: ANTHROPIC_API_KEY في Netlify Environment Variables
+// يحتاج: MISTRAL_API_KEY في Netlify Environment Variables
 
 const SYSTEM_PROMPT = `أنت مساعد إسلامي ذكي متخصص في العلوم الإسلامية. اسمك "نور" وأنت جزء من تطبيق "نور الإسلام".
 
@@ -24,7 +24,7 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' }
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY
+  const apiKey = process.env.MISTRAL_API_KEY
   if (!apiKey) {
     return {
       statusCode: 500,
@@ -42,18 +42,16 @@ exports.handler = async (event) => {
   }
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
+        model: 'mistral-small-latest',
         max_tokens: 1024,
-        system: SYSTEM_PROMPT,
-        messages,
+        messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
       }),
     })
 
@@ -63,7 +61,7 @@ exports.handler = async (event) => {
     }
 
     const data = await response.json()
-    const text = data.content?.[0]?.text || ''
+    const text = data.choices?.[0]?.message?.content || ''
 
     return {
       statusCode: 200,
