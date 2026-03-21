@@ -24,16 +24,24 @@ export default function WelcomeAudio() {
     audio.addEventListener('ended', () => setPlaying(false))
     audio.load()
 
-    // محاولة تشغيل تلقائي
+    // حيلة تجاوز حظر المتصفح:
+    // نشغّل مكتوم أولاً (المتصفح يسمح بده دايماً)
+    // ثم نفتح الصوت فوراً بعد ما التشغيل يبدأ
     const tryPlay = () => {
       if (played.current) return
       played.current = true
+      audio.muted = true
       audio.play()
-        .then(() => setPlaying(true))
-        .catch(() => {}) // المتصفح منع التشغيل التلقائي
+        .then(() => {
+          audio.muted = false  // المتصفح سمح → افتح الصوت
+          setPlaying(true)
+        })
+        .catch(() => {
+          // المتصفح رفض حتى المكتوم → نستنى تفاعل المستخدم
+          played.current = false
+        })
     }
 
-    // لو التشغيل التلقائي مسموح
     tryPlay()
 
     // fallback: أول تفاعل من المستخدم
