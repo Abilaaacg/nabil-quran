@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import AppDownloadBanner from '../components/AppDownloadBanner'
+import SocialProof from '../components/SocialProof'
 import './Home.css'
 
 const features = [
@@ -71,6 +72,8 @@ export default function Home() {
           </Link>
         ))}
       </div>
+
+      <SocialProof />
 
       <div className="home-footer">
         <p>بسم الله الرحمن الرحيم</p>
