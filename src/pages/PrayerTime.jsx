@@ -225,22 +225,34 @@ export default function PrayerTime() {
 
   // عداد تنازلي + أذان
   useEffect(() => {
+    let lastDate = new Date().toDateString()
+
     const t = setInterval(() => {
       const n = new Date()
       setNow(n)
+
+      // إعادة حساب المواقيت عند منتصف الليل
+      const today = n.toDateString()
+      if (today !== lastDate && settings.location) {
+        lastDate = today
+        computeTimes(settings.location.lat, settings.location.lng, methodId)
+        return
+      }
+
       if (times) {
         setNext(getNextPrayer(times))
+
         // تشغيل الأذان عند وقت الصلاة
         if (adhanEnabled) {
           const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']
-          const today = n.toDateString()
           prayers.forEach(key => {
             const pt = times[key]
             if (!pt) return
-            const diff = Math.abs(n - pt)
-            const playKey = `${today}_${key}`
-            if (diff < 30000 && !playedRef.current[playKey]) {
-              playedRef.current[playKey] = true
+            const diff = n - pt  // موجب = بعد وقت الصلاة، سالب = قبله
+            const playKey = `adhan_played_${today}_${key}`
+            // شغّل الأذان خلال أول 30 ثانية من وقت الصلاة فقط
+            if (diff >= 0 && diff < 30000 && !localStorage.getItem(playKey)) {
+              localStorage.setItem(playKey, '1')
               const sound = ADHAN_SOUNDS.find(s => s.id === selectedAdhan) || ADHAN_SOUNDS[0]
               if (audioRef.current) audioRef.current.pause()
               audioRef.current = new Audio(sound.url)
@@ -251,7 +263,7 @@ export default function PrayerTime() {
       }
     }, 1000)
     return () => clearInterval(t)
-  }, [times, adhanEnabled, selectedAdhan])
+  }, [times, adhanEnabled, selectedAdhan, computeTimes, methodId, settings.location])
 
   const toggleAdhan = () => {
     const val = !adhanEnabled
