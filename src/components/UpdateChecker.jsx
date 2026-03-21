@@ -1,20 +1,19 @@
 import { useEffect, useState } from 'react'
 
 const CURRENT = parseInt(import.meta.env.VITE_APP_VERSION || '0')
-const REPO = 'Abilaaacg/nabil-quran'
+const VERSION_URL = 'https://nabil-quran.netlify.app/version.json'
 
 export default function UpdateChecker() {
   const [info, setInfo] = useState(null)
 
   useEffect(() => {
-    if (!CURRENT) return // بيئة dev — تجاهل
-    fetch(`https://api.github.com/repos/${REPO}/releases/latest`)
+    if (!CURRENT) return // بيئة dev
+    fetch(VERSION_URL + '?t=' + Date.now())
       .then(r => r.json())
       .then(data => {
-        const latest = parseInt(data.tag_name?.replace('v', '') || '0')
+        const latest = parseInt(data.version?.replace('v', '') || '0')
         if (latest > CURRENT) {
-          const apk = data.assets?.find(a => a.name === 'nabil-quran.apk')
-          setInfo({ version: data.tag_name, url: apk?.browser_download_url || data.html_url })
+          setInfo({ version: data.version, url: data.url })
         }
       })
       .catch(() => {})
