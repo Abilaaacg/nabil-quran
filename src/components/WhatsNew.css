@@ -1,8 +1,8 @@
 .wn-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(4px);
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(5px);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -13,69 +13,102 @@
 
 @keyframes wn-fade-in {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }
 
 .wn-modal {
   background: var(--bg-card);
   border: 1px solid rgba(107,192,119,0.3);
-  border-radius: 20px;
-  padding: 28px 24px;
+  border-radius: 22px;
+  padding: 0 0 22px;
   max-width: 420px;
   width: 100%;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(107,192,119,0.15);
-  animation: wn-slide-up 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(107,192,119,0.15);
+  animation: wn-slide-up 0.32s cubic-bezier(0.34,1.56,0.64,1);
+  overflow: hidden;
+  direction: rtl;
 }
 
 @keyframes wn-slide-up {
-  from { transform: translateY(40px) scale(0.95); opacity: 0; }
+  from { transform: translateY(50px) scale(0.93); opacity: 0; }
   to   { transform: translateY(0) scale(1); opacity: 1; }
 }
 
+/* ── شريط تحذير عاجل ── */
+.wn-urgent-bar {
+  background: linear-gradient(135deg, #e67e22, #d35400);
+  color: #fff;
+  padding: 10px 18px;
+  font-family: var(--font-arabic);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: urgentPulse 2s ease-in-out infinite;
+}
+
+@keyframes urgentPulse {
+  0%, 100% { background: linear-gradient(135deg, #e67e22, #d35400); }
+  50%       { background: linear-gradient(135deg, #f39c12, #e67e22); }
+}
+
+/* ── رأس ── */
 .wn-header {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 20px;
+  padding: 22px 22px 0;
+  margin-bottom: 16px;
 }
 
 .wn-icon {
-  width: 52px;
-  height: 52px;
-  background: linear-gradient(135deg, rgba(107,192,119,0.2), rgba(107,192,119,0.05));
-  border: 1px solid rgba(107,192,119,0.3);
-  border-radius: 14px;
+  width: 54px;
+  height: 54px;
+  background: linear-gradient(135deg, rgba(107,192,119,0.25), rgba(107,192,119,0.08));
+  border: 1px solid rgba(107,192,119,0.35);
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
+  font-size: 28px;
   flex-shrink: 0;
 }
 
 .wn-title {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--text-primary);
   font-family: var(--font-arabic);
-  margin-bottom: 3px;
+  margin-bottom: 5px;
 }
 
 .wn-version {
   font-size: 12px;
   color: var(--accent);
-  background: rgba(107,192,119,0.1);
+  background: rgba(107,192,119,0.12);
   border-radius: 20px;
   padding: 2px 10px;
   display: inline-block;
+  border: 1px solid rgba(107,192,119,0.25);
 }
 
+/* ── عنوان فرعي ── */
+.wn-subtitle {
+  font-family: var(--font-arabic);
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 0 22px 10px;
+}
+
+/* ── قائمة التغييرات ── */
 .wn-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 24px;
-  padding: 0;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 0 22px;
 }
 
 .wn-item {
@@ -86,25 +119,45 @@
   background: var(--bg-secondary);
   border-radius: 10px;
   border-right: 3px solid var(--accent);
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
+/* ── زر ── */
 .wn-btn {
-  width: 100%;
+  width: calc(100% - 44px);
+  margin: 0 22px;
   background: linear-gradient(135deg, #6bc077, #4a9a56);
   color: #fff;
   border: none;
-  border-radius: 12px;
+  border-radius: 13px;
   padding: 14px;
   font-size: 15px;
   font-weight: 700;
   font-family: var(--font-arabic);
   cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 4px 16px rgba(107,192,119,0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 18px rgba(107,192,119,0.35);
 }
 
 .wn-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(107,192,119,0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(107,192,119,0.45);
+}
+
+.wn-btn:active {
+  transform: translateY(0);
+}
+
+.wn-dismiss {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-arabic);
+  margin-top: 10px;
+}
+
+@media (max-width: 420px) {
+  .wn-modal { border-radius: 18px; }
+  .wn-item  { font-size: 13px; padding: 9px 12px; }
+  .wn-title { font-size: 16px; }
 }

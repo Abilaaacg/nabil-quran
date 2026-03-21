@@ -9,9 +9,7 @@ export default function WhatsNew() {
       .then(r => r.json())
       .then(d => {
         const seen = localStorage.getItem('seen_version')
-        if (d.version && d.version !== seen) {
-          setData(d)
-        }
+        if (d.version && d.version !== seen) setData(d)
       })
       .catch(() => {})
   }, [])
@@ -26,13 +24,24 @@ export default function WhatsNew() {
   return (
     <div className="wn-overlay" onClick={close}>
       <div className="wn-modal" onClick={e => e.stopPropagation()}>
+
+        {/* شارة عاجل */}
+        {data.urgent && (
+          <div className="wn-urgent-bar">
+            <span>⚡</span>
+            <span>{data.urgentMsg}</span>
+          </div>
+        )}
+
         <div className="wn-header">
-          <div className="wn-icon">✨</div>
+          <div className="wn-icon">🚀</div>
           <div>
             <div className="wn-title">{data.title}</div>
             <div className="wn-version">{data.version}</div>
           </div>
         </div>
+
+        <div className="wn-subtitle">الجديد في هذا التحديث:</div>
 
         <ul className="wn-list">
           {data.changes.map((c, i) => (
@@ -41,8 +50,10 @@ export default function WhatsNew() {
         </ul>
 
         <button className="wn-btn" onClick={close}>
-          رائع! ابدأ الاستخدام
+          🎉 رائع! ابدأ الاستخدام
         </button>
+
+        <p className="wn-dismiss">اضغط في أي مكان للإغلاق</p>
       </div>
     </div>
   )
