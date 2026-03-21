@@ -284,86 +284,120 @@
 }
 
 /* ====== شريط الموقع ====== */
+.prayer-no-location {
+  text-align: center;
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-arabic);
+}
+
 .location-bar {
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 12px 16px;
-  margin-bottom: 16px;
-  gap: 12px;
-  flex-wrap: wrap;
+  padding: 13px 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: var(--font-arabic);
+  text-align: right;
 }
 
-.location-bar-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-  min-width: 0;
+.location-bar:hover {
+  border-color: var(--accent);
+  background: var(--bg-card-hover);
 }
 
-.location-bar-icon { font-size: 18px; flex-shrink: 0; }
+.location-bar-icon { font-size: 20px; }
 
 .location-bar-city {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-  font-family: var(--font-arabic);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.location-updated {
-  font-size: 12px;
-  color: var(--accent);
+  flex: 1;
+  font-size: 16px;
   font-weight: 700;
-  white-space: nowrap;
-  animation: fadeIn 0.3s ease;
+  color: var(--text-primary);
 }
 
-.location-bar-btns {
-  display: flex;
-  gap: 8px;
-  flex-shrink: 0;
+.location-bar-arrow {
+  font-size: 12px;
+  color: var(--text-muted);
 }
 
-.loc-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 8px 14px;
-  border-radius: var(--radius-sm);
+/* ── منتقي المدينة ── */
+.city-picker {
+  background: var(--bg-card);
   border: 1px solid var(--border);
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
-  font-size: 13px;
-  font-weight: 600;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  animation: fadeIn 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gps-btn {
+  width: 100%;
+  padding: 12px;
+  background: rgba(107,192,119,0.1);
+  border: 1px solid rgba(107,192,119,0.35);
+  border-radius: var(--radius-sm);
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 700;
   font-family: var(--font-arabic);
   cursor: pointer;
   transition: var(--transition);
-  white-space: nowrap;
 }
 
-.loc-btn:hover:not(:disabled) {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: rgba(107,192,119,0.08);
+.gps-btn:hover:not(:disabled) { background: rgba(107,192,119,0.2); }
+.gps-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.gps-status {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: center;
+  font-family: var(--font-arabic);
+  padding: 4px 0;
 }
 
-.loc-btn.loc-btn-active {
-  border-color: var(--accent);
-  color: var(--accent);
+.quick-cities-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  font-family: var(--font-arabic);
+  letter-spacing: 0.5px;
+}
+
+.quick-cities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quick-city {
+  padding: 7px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 13px;
+  font-family: var(--font-arabic);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.quick-city:hover, .quick-city.active {
   background: rgba(107,192,119,0.12);
-}
-
-.loc-btn.loc-btn-loading,
-.loc-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* ====== بحث المدينة ====== */
