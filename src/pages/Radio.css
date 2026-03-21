@@ -156,3 +156,22 @@
 .retry-btn:hover {
   background: rgba(243, 73, 73, 0.1);
 }
+
+.radio-search {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: var(--font-arabic);
+  padding: 10px 16px;
+  margin-bottom: 12px;
+  outline: none;
+  transition: var(--transition);
+  box-sizing: border-box;
+}
+
+.radio-search:focus {
+  border-color: var(--accent);
+}
