@@ -1,117 +1,286 @@
-.surah-header {
+/* ====== Layout المصحف ====== */
+.mushaf-layout {
+  min-height: 100vh;
+  background: var(--bg-primary);
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 24px;
 }
 
-.surah-header h1 {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--accent);
-  font-family: var(--font-arabic);
-  text-align: center;
+/* ====== شريط التحكم ====== */
+.mushaf-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  backdrop-filter: blur(10px);
 }
 
 .back-btn {
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: 13px;
+  white-space: nowrap;
   transition: var(--transition);
   display: inline-flex;
   align-items: center;
   gap: 4px;
 }
 
-.back-btn:hover {
+.back-btn:hover { color: var(--accent); }
+
+.mushaf-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.mushaf-surah-name {
+  font-family: var(--font-arabic);
+  font-size: 20px;
+  font-weight: 700;
   color: var(--accent);
 }
 
-.surah-controls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
+.mushaf-verse-count {
+  font-size: 11px;
+  color: var(--text-muted);
 }
 
-.font-controls {
+.mushaf-controls {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.ctrl-btn {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 4px 8px;
-}
-
-.font-controls span {
-  font-size: 13px;
   color: var(--text-secondary);
-  min-width: 40px;
-  text-align: center;
-}
-
-.font-controls .btn-icon {
-  font-weight: 700;
-  color: var(--accent);
-  font-size: 16px;
-  padding: 4px 8px;
-}
-
-.basmala {
-  font-family: var(--font-arabic);
-  font-size: 26px;
-  color: var(--accent);
-  text-align: center;
-  padding: 20px;
-  margin-bottom: 16px;
-  background: rgba(107, 192, 119, 0.08);
-  border-radius: var(--radius);
-  border: 1px solid rgba(107, 192, 119, 0.2);
-}
-
-.verses-container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.verse-item {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px 24px;
+  padding: 5px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--font-ui);
   transition: var(--transition);
 }
 
-.verse-item:hover {
-  border-color: rgba(107, 192, 119, 0.3);
-  background: var(--bg-card-hover);
+.ctrl-btn:hover, .ctrl-btn.active {
+  background: rgba(107, 192, 119, 0.15);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
-.verse-text {
+.font-size-btns {
+  display: flex;
+  gap: 4px;
+}
+
+.font-size-btns button {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--accent);
+  width: 30px;
+  height: 30px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-ui);
+  transition: var(--transition);
+}
+
+.font-size-btns button:hover {
+  background: rgba(107, 192, 119, 0.15);
+  border-color: var(--accent);
+}
+
+/* ====== صفحة المصحف ====== */
+.mushaf-page {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 30px 40px 60px;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .mushaf-page { padding: 20px 16px 50px; }
+}
+
+/* ====== عنوان السورة ====== */
+.mushaf-surah-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.mushaf-header-decoration {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.header-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to left, transparent, var(--accent), transparent);
+}
+
+.header-title {
   font-family: var(--font-arabic);
-  line-height: 2.2;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+  white-space: nowrap;
+  padding: 8px 24px;
+  border: 1px solid rgba(107, 192, 119, 0.3);
+  border-radius: 8px;
+  background: rgba(107, 192, 119, 0.05);
+}
+
+.mushaf-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ====== البسملة ====== */
+.mushaf-basmala {
+  font-family: var(--font-arabic);
+  font-size: 28px;
+  color: var(--accent);
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 28px;
+  direction: rtl;
+  letter-spacing: 0.5px;
+}
+
+/* ====== النص المتصل - قلب المصحف ====== */
+.mushaf-text {
+  font-family: 'Amiri', 'Traditional Arabic', serif;
+  line-height: 2.8;
+  direction: rtl;
+  text-align: justify;
+  color: var(--text-primary);
+  word-spacing: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px 40px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+}
+
+@media (max-width: 600px) {
+  .mushaf-text { padding: 24px 18px; line-height: 2.6; }
+}
+
+.mushaf-word {
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+  display: inline;
+}
+
+.mushaf-word:hover {
+  background: rgba(107, 192, 119, 0.15);
+}
+
+.verse-highlight {
+  background: rgba(107, 192, 119, 0.2) !important;
+}
+
+/* ====== أرقام الآيات ====== */
+.mushaf-verse-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  font-size: 0.6em;
+  font-family: 'Amiri', serif;
+  margin: 0 4px;
+  vertical-align: middle;
+  opacity: 0.85;
+}
+
+/* ====== التفسير ====== */
+.mushaf-tafsir {
+  margin-top: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  border-right: 3px solid var(--accent);
+}
+
+.tafsir-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tafsir-single {
+  font-family: var(--font-arabic);
+  font-size: 17px;
+  line-height: 2;
   color: var(--text-primary);
   direction: rtl;
-  text-align: right;
 }
 
-.verse-number {
-  color: var(--accent);
-  font-size: 0.85em;
-  margin-right: 4px;
-}
-
-.verse-translation {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-  font-size: 14px;
-  color: var(--text-secondary);
-  line-height: 1.8;
+.tafsir-item {
   font-family: var(--font-arabic);
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--text-secondary);
   direction: rtl;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.tafsir-item:last-child { border-bottom: none; }
+
+.tafsir-ayah-num {
+  color: var(--accent);
+  font-weight: 700;
+  margin-left: 6px;
+  font-size: 13px;
+}
+
+/* ====== تنقل ====== */
+.mushaf-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  gap: 12px;
+}
+
+.nav-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.nav-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(107, 192, 119, 0.08);
 }
 
 .error-box {
@@ -121,13 +290,4 @@
   padding: 16px;
   text-align: center;
   color: var(--danger);
-}
-
-.surah-nav {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  gap: 12px;
 }

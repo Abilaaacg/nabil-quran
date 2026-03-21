@@ -18,6 +18,11 @@ const surahNames = [
   'الماعون','الكوثر','الكافرون','النصر','المسد','الإخلاص','الفلق','الناس',
 ]
 
+// أرقام الآيات بشكل دائري للمصحف
+function VerseNum({ n }) {
+  return <span className="mushaf-verse-num">﴾{n}﴿</span>
+}
+
 export default function Surah() {
   const { surahNumber } = useParams()
   const num = parseInt(surahNumber)
@@ -27,20 +32,21 @@ export default function Surah() {
   const [error, setError] = useState(null)
   const [showTranslation, setShowTranslation] = useState(false)
   const [translations, setTranslations] = useState([])
+  const [activeVerse, setActiveVerse] = useState(null)
 
   const surahName = surahNames[num - 1] || `سورة ${num}`
+  const fontSize = settings.quranFontSize || 32
 
   useEffect(() => {
     setLoading(true)
     setError(null)
+    setVerses([])
+    setActiveVerse(null)
     fetch(`https://api.alquran.cloud/v1/surah/${num}`)
       .then(r => r.json())
       .then(data => {
-        if (data.code === 200) {
-          setVerses(data.data.ayahs)
-        } else {
-          setError('تعذر تحميل السورة')
-        }
+        if (data.code === 200) setVerses(data.data.ayahs)
+        else setError('تعذر تحميل السورة')
       })
       .catch(() => setError('تعذر الاتصال بالخادم'))
       .finally(() => setLoading(false))
@@ -57,85 +63,139 @@ export default function Surah() {
     }
   }, [showTranslation, num])
 
-  const fontSize = settings.quranFontSize || 30
-
   return (
-    <div className="page-container fade-in">
-      <div className="surah-header">
-        <Link to="/quran" className="back-btn">← القرآن الكريم</Link>
-        <h1>{surahName}</h1>
-        <div className="surah-controls">
+    <div className="mushaf-layout fade-in">
+
+      {/* شريط التحكم */}
+      <div className="mushaf-toolbar">
+        <Link to="/quran" className="back-btn">← القرآن</Link>
+
+        <div className="mushaf-title">
+          <span className="mushaf-surah-name">{surahName}</span>
+          {verses.length > 0 && (
+            <span className="mushaf-verse-count">{verses.length} آية</span>
+          )}
+        </div>
+
+        <div className="mushaf-controls">
           <button
-            className="btn btn-secondary"
+            className={`ctrl-btn ${showTranslation ? 'active' : ''}`}
             onClick={() => setShowTranslation(t => !t)}
+            title="التفسير الميسر"
           >
-            {showTranslation ? '🔤 إخفاء التفسير' : '🔤 عرض التفسير'}
+            تفسير
           </button>
-          <div className="font-controls">
-            <button
-              className="btn-icon"
-              onClick={() => updateSettings({ quranFontSize: Math.max(20, fontSize - 2) })}
-            >أ-</button>
-            <span>{fontSize}px</span>
-            <button
-              className="btn-icon"
-              onClick={() => updateSettings({ quranFontSize: Math.min(50, fontSize + 2) })}
-            >أ+</button>
+          <div className="font-size-btns">
+            <button onClick={() => updateSettings({ quranFontSize: Math.max(22, fontSize - 2) })}>أ-</button>
+            <button onClick={() => updateSettings({ quranFontSize: Math.min(52, fontSize + 2) })}>أ+</button>
           </div>
         </div>
       </div>
 
-      {num !== 9 && (
-        <div className="basmala">
-          بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-        </div>
-      )}
+      {/* صفحة المصحف */}
+      <div className="mushaf-page">
 
-      {loading && (
-        <div className="loading-container">
-          <div className="spinner" />
-          <p>جاري التحميل...</p>
-        </div>
-      )}
-
-      {error && (
-        <div className="error-box">
-          <p>⚠️ {error}</p>
-        </div>
-      )}
-
-      {!loading && !error && (
-        <div className="verses-container">
-          {verses.map((ayah, i) => (
-            <div key={ayah.numberInSurah} className="verse-item">
-              <div
-                className="verse-text arabic-text"
-                style={{ fontSize: `${fontSize}px` }}
-              >
-                {ayah.text}
-                <span className="verse-number"> ﴿{ayah.numberInSurah}﴾</span>
-              </div>
-              {showTranslation && translations[i] && (
-                <div className="verse-translation">
-                  {translations[i].text}
-                </div>
-              )}
+        {/* عنوان السورة */}
+        <div className="mushaf-surah-header">
+          <div className="mushaf-header-decoration">
+            <span className="header-line" />
+            <span className="header-title">{surahName}</span>
+            <span className="header-line" />
+          </div>
+          {verses.length > 0 && (
+            <div className="mushaf-meta">
+              {verses.length} آية
             </div>
-          ))}
+          )}
         </div>
-      )}
 
-      <div className="surah-nav">
-        {num > 1 && (
-          <Link to={`/quran/${num - 1}`} className="btn btn-secondary">
-            ← السورة السابقة
-          </Link>
+        {/* البسملة */}
+        {num !== 9 && num !== 1 && !loading && verses.length > 0 && (
+          <div className="mushaf-basmala">
+            بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
+          </div>
         )}
-        {num < 114 && (
-          <Link to={`/quran/${num + 1}`} className="btn btn-secondary">
-            السورة التالية →
-          </Link>
+
+        {loading && (
+          <div className="loading-container">
+            <div className="spinner" />
+            <p>جاري تحميل السورة...</p>
+          </div>
         )}
+
+        {error && (
+          <div className="error-box" style={{ margin: '20px' }}>
+            ⚠️ {error}
+          </div>
+        )}
+
+        {/* النص المتصل - شكل المصحف */}
+        {!loading && !error && (
+          <>
+            <div
+              className="mushaf-text"
+              style={{ fontSize: `${fontSize}px` }}
+            >
+              {verses.map((ayah) => (
+                <React.Fragment key={ayah.numberInSurah}>
+                  <span
+                    className={`mushaf-word ${activeVerse === ayah.numberInSurah ? 'verse-highlight' : ''}`}
+                    onClick={() => setActiveVerse(
+                      activeVerse === ayah.numberInSurah ? null : ayah.numberInSurah
+                    )}
+                  >
+                    {ayah.text}
+                  </span>
+                  <VerseNum n={ayah.numberInSurah} />
+                  {' '}
+                </React.Fragment>
+              ))}
+            </div>
+
+            {/* التفسير - يظهر للآية المختارة أو كامل السورة */}
+            {showTranslation && (
+              <div className="mushaf-tafsir">
+                <div className="tafsir-title">التفسير الميسر</div>
+                {activeVerse ? (
+                  // تفسير آية محددة
+                  translations[activeVerse - 1] && (
+                    <div className="tafsir-single">
+                      <span className="tafsir-ayah-num">الآية {activeVerse}:</span>
+                      <span>{translations[activeVerse - 1].text}</span>
+                    </div>
+                  )
+                ) : (
+                  // كل التفسير
+                  translations.map((t, i) => (
+                    <div key={i} className="tafsir-item">
+                      <span className="tafsir-ayah-num">({i + 1})</span>
+                      {t.text}
+                    </div>
+                  ))
+                )}
+                {translations.length === 0 && (
+                  <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: 20 }}>
+                    جاري تحميل التفسير...
+                  </div>
+                )}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* تنقل بين السور */}
+        <div className="mushaf-nav">
+          {num > 1 && (
+            <Link to={`/quran/${num - 1}`} className="nav-btn">
+              ← {surahNames[num - 2]}
+            </Link>
+          )}
+          {num < 114 && (
+            <Link to={`/quran/${num + 1}`} className="nav-btn">
+              {surahNames[num]} →
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   )
