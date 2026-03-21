@@ -25,9 +25,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Update version.json
+      - name: Update version.json and changelog.json
         run: |
           echo "{\"version\": \"v${{ github.run_number }}\", \"url\": \"https://github.com/Abilaaacg/nabil-quran/releases/download/v${{ github.run_number }}/nabil-quran.apk\", \"size\": \"\"}" > public/version.json
+          node -e "
+          const fs = require('fs');
+          const cl = JSON.parse(fs.readFileSync('public/changelog.json','utf8'));
+          cl.version = 'v${{ github.run_number }}';
+          fs.writeFileSync('public/changelog.json', JSON.stringify(cl));
+          "
 
       - name: Build web app
         run: npm run build

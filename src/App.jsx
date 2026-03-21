@@ -15,12 +15,14 @@ import Radio from './pages/Radio'
 import Settings from './pages/Settings'
 import Qibla from './pages/Qibla'
 import UpdateChecker from './components/UpdateChecker'
+import WhatsNew from './components/WhatsNew'
 
 export default function App() {
   return (
     <AppProvider>
       <BrowserRouter>
         <div className="app-layout">
+          <WhatsNew />
           <UpdateChecker />
           <Sidebar />
           <main className="main-content">
