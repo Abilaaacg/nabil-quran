@@ -9,7 +9,7 @@ const isNative = () =>
   (window.Capacitor?.isNativePlatform?.() || window.navigator?.userAgent?.includes('CapacitorWebView'))
 
 const CURRENT = parseInt(import.meta.env.VITE_APP_VERSION || '0')
-const REPO = 'Abilaaacg/nabil-quran'
+const VERSION_URL = 'https://nabil-quran.netlify.app/version.json'
 const NOTIF_KEY = 'notified_version'
 
 async function sendUpdateNotification(version) {
@@ -42,13 +42,12 @@ export default function UpdateChecker() {
 
   useEffect(() => {
     if (!CURRENT) return
-    fetch(`https://api.github.com/repos/${REPO}/releases/latest`)
+    fetch(VERSION_URL + '?t=' + Date.now())
       .then(r => r.json())
       .then(data => {
-        const latest = parseInt(data.tag_name?.replace('v', '') || '0')
-        if (latest > CURRENT) {
-          const apk = data.assets?.find(a => a.name === 'nabil-quran.apk')
-          const info = { version: data.tag_name, url: apk?.browser_download_url || data.html_url }
+        const latest = parseInt(data.version?.replace('v', '') || '0')
+        if (latest > CURRENT && data.url) {
+          const info = { version: data.version, url: data.url }
           setInfo(info)
           sendUpdateNotification(info.version)
         }
