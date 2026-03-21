@@ -133,9 +133,139 @@
   background: rgba(107,192,119,0.22);
 }
 
+/* فورم التقييم */
+.sp-form {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(107,192,119,0.25);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 28px;
+}
+
+.sp-form-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 16px;
+  font-family: var(--font-arabic);
+}
+
+.sp-form-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.sp-input {
+  flex: 1;
+  min-width: 140px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: #fff;
+  font-size: 14px;
+  font-family: var(--font-arabic);
+  outline: none;
+  direction: rtl;
+  transition: border-color 0.2s;
+}
+
+.sp-input:focus {
+  border-color: rgba(107,192,119,0.5);
+}
+
+.sp-input::placeholder { color: rgba(255,255,255,0.3); }
+
+.sp-textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: #fff;
+  font-size: 14px;
+  font-family: var(--font-arabic);
+  outline: none;
+  direction: rtl;
+  resize: none;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+  transition: border-color 0.2s;
+}
+
+.sp-textarea:focus {
+  border-color: rgba(107,192,119,0.5);
+}
+
+.sp-textarea::placeholder { color: rgba(255,255,255,0.3); }
+
+/* اختيار النجوم */
+.sp-star-picker {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.sp-star-pick {
+  font-size: 26px;
+  color: rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: color 0.15s, transform 0.1s;
+  line-height: 1;
+}
+
+.sp-star-pick.active { color: #f3a049; }
+.sp-star-pick:hover { transform: scale(1.15); }
+
+/* زرار الإرسال */
+.sp-submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #6bc077, #4a9a56);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: var(--font-arabic);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.sp-submit-btn:hover { opacity: 0.9; }
+.sp-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* رسالة الشكر */
+.sp-form-thanks {
+  background: rgba(107,192,119,0.1);
+  border: 1px solid rgba(107,192,119,0.3);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.sp-thanks-icon { font-size: 32px; display: block; margin-bottom: 10px; }
+.sp-form-thanks p {
+  color: #6bc077;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: var(--font-arabic);
+  margin: 0;
+}
+
+/* تعليق جديد */
+.sp-card-new {
+  border-color: rgba(107,192,119,0.4);
+  background: rgba(107,192,119,0.06);
+}
+
 @media (max-width: 600px) {
-  .sp-grid {
-    grid-template-columns: 1fr;
-  }
+  .sp-grid { grid-template-columns: 1fr; }
   .sp-stat-num { font-size: 18px; }
+  .sp-form-row { flex-direction: column; align-items: stretch; }
+  .sp-star-picker { justify-content: center; }
 }

@@ -36,11 +36,111 @@ function Stars({ count }) {
   )
 }
 
+function StarPicker({ value, onChange }) {
+  const [hovered, setHovered] = useState(0)
+  return (
+    <div className="sp-star-picker">
+      {[1, 2, 3, 4, 5].map(n => (
+        <span
+          key={n}
+          className={`sp-star-pick ${n <= (hovered || value) ? 'active' : ''}`}
+          onMouseEnter={() => setHovered(n)}
+          onMouseLeave={() => setHovered(0)}
+          onClick={() => onChange(n)}
+        >★</span>
+      ))}
+    </div>
+  )
+}
+
+function ReviewForm({ onSubmit }) {
+  const [name, setName] = useState('')
+  const [stars, setStars] = useState(5)
+  const [text, setText] = useState('')
+  const [sent, setSent] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!name.trim() || !text.trim() || !stars) return
+    setLoading(true)
+
+    const formData = new FormData()
+    formData.append('form-name', 'reviews')
+    formData.append('name', name.trim())
+    formData.append('stars', stars)
+    formData.append('text', text.trim())
+
+    try {
+      await fetch('/', { method: 'POST', body: formData })
+    } catch { /* ignore */ }
+
+    onSubmit({ name: name.trim(), stars, text: text.trim() })
+    setSent(true)
+    setLoading(false)
+  }
+
+  if (sent) {
+    return (
+      <div className="sp-form-thanks">
+        <span className="sp-thanks-icon">🌟</span>
+        <p>جزاك الله خيراً على تقييمك! ظهر تعليقك.</p>
+      </div>
+    )
+  }
+
+  return (
+    <form
+      className="sp-form"
+      onSubmit={handleSubmit}
+      name="reviews"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+    >
+      <input type="hidden" name="form-name" value="reviews" />
+      <input type="hidden" name="bot-field" />
+
+      <h3 className="sp-form-title">✍️ أضف تقييمك</h3>
+
+      <div className="sp-form-row">
+        <input
+          className="sp-input"
+          type="text"
+          name="name"
+          placeholder="اسمك"
+          value={name}
+          onChange={e => setName(e.target.value)}
+          maxLength={40}
+          required
+        />
+        <StarPicker value={stars} onChange={setStars} />
+      </div>
+
+      <textarea
+        className="sp-textarea"
+        name="text"
+        placeholder="شاركنا رأيك في التطبيق..."
+        value={text}
+        onChange={e => setText(e.target.value)}
+        rows={3}
+        maxLength={300}
+        required
+      />
+
+      <button className="sp-submit-btn" type="submit" disabled={loading}>
+        {loading ? 'جاري الإرسال...' : 'إرسال التقييم ⬅'}
+      </button>
+    </form>
+  )
+}
+
 export default function SocialProof() {
   const [showAll, setShowAll] = useState(false)
+  const [userReviews, setUserReviews] = useState([])
   if (isNativeApp()) return null
 
-  const displayed = showAll ? REVIEWS : REVIEWS.slice(0, 6)
+  const allReviews = [...userReviews, ...REVIEWS]
+  const displayed = showAll ? allReviews : allReviews.slice(0, 6)
 
   return (
     <div className="sp-wrapper">
@@ -62,13 +162,16 @@ export default function SocialProof() {
         </div>
       </div>
 
+      {/* فورم التقييم */}
+      <ReviewForm onSubmit={r => setUserReviews(prev => [r, ...prev])} />
+
       {/* عنوان */}
       <h2 className="sp-title">ماذا يقول مستخدمونا؟</h2>
 
       {/* التعليقات */}
       <div className="sp-grid">
         {displayed.map((r, i) => (
-          <div key={i} className="sp-card">
+          <div key={i} className={`sp-card ${i < userReviews.length ? 'sp-card-new' : ''}`}>
             <div className="sp-card-top">
               <div className="sp-avatar">{r.name[0]}</div>
               <div>
@@ -81,7 +184,7 @@ export default function SocialProof() {
         ))}
       </div>
 
-      {!showAll && (
+      {!showAll && allReviews.length > 6 && (
         <button className="sp-more-btn" onClick={() => setShowAll(true)}>
           عرض المزيد من التقييمات ↓
         </button>
