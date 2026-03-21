@@ -1,4 +1,4 @@
-// Netlify Function — Islamic AI Assistant
+// Netlify Function — Islamic AI Assistant v2
 // يحتاج: MISTRAL_API_KEY في Netlify Environment Variables
 
 const SYSTEM_PROMPT = `أنت مساعد إسلامي ذكي متخصص في العلوم الإسلامية. اسمك "نور" وأنت جزء من تطبيق "نور الإسلام".
