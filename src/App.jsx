@@ -24,6 +24,7 @@ import UpdateChecker from './components/UpdateChecker'
 import WhatsNew from './components/WhatsNew'
 import WelcomeAudio from './components/WelcomeAudio'
 import TopBar from './components/TopBar'
+import ChatFAB from './components/ChatFAB'
 
 export default function App() {
   return (
@@ -57,6 +58,7 @@ export default function App() {
             </Routes>
           </main>
           <MobileNav />
+          <ChatFAB />
         </div>
       </BrowserRouter>
     </AppProvider>
