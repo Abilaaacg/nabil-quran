@@ -14,6 +14,8 @@ import HisnMuslim from './pages/HisnMuslim'
 import Radio from './pages/Radio'
 import Settings from './pages/Settings'
 import Qibla from './pages/Qibla'
+import SunnahPage from './pages/SunnahPage'
+import DailyChallenge from './pages/DailyChallenge'
 import UpdateChecker from './components/UpdateChecker'
 import WhatsNew from './components/WhatsNew'
 import WelcomeAudio from './components/WelcomeAudio'
@@ -41,6 +43,8 @@ export default function App() {
               <Route path="/hisnmuslim" element={<HisnMuslim />} />
               <Route path="/radio" element={<Radio />} />
               <Route path="/qibla" element={<Qibla />} />
+              <Route path="/sunnah" element={<SunnahPage />} />
+              <Route path="/challenge" element={<DailyChallenge />} />
               <Route path="/settings" element={<Settings />} />
             </Routes>
           </main>

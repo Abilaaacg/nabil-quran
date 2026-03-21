@@ -3,12 +3,16 @@ import { Link } from 'react-router-dom'
 import './Adhkar.css'
 
 const categories = [
-  { slug: 'morning', title: 'أذكار الصباح', icon: '🌅', desc: 'أذكار تقال في الصباح بعد صلاة الفجر', color: '#f3a049' },
-  { slug: 'evening', title: 'أذكار المساء', icon: '🌆', desc: 'أذكار تقال في المساء بعد صلاة العصر', color: '#5b8dee' },
-  { slug: 'prayer', title: 'أذكار الصلاة', icon: '🕌', desc: 'أذكار ما بعد الصلاة وأدعية التشهد', color: '#6bc077' },
-  { slug: 'sleeping', title: 'أذكار النوم', icon: '🌙', desc: 'أذكار تقال عند النوم والاستيقاظ', color: '#a779e9' },
-  { slug: 'tasbih', title: 'التسبيح والتهليل', icon: '📿', desc: 'سبحان الله، الحمد لله، الله أكبر', color: '#49b8c8' },
-  { slug: 'food', title: 'أذكار الطعام', icon: '🍽️', desc: 'دعاء الطعام والشرب والدعاء بعده', color: '#e96979' },
+  { slug: 'morning',  title: 'أذكار الصباح',       icon: '🌅', desc: 'أذكار تقال في الصباح بعد صلاة الفجر',         color: '#f3a049' },
+  { slug: 'evening',  title: 'أذكار المساء',       icon: '🌆', desc: 'أذكار تقال في المساء بعد صلاة العصر',         color: '#5b8dee' },
+  { slug: 'prayer',   title: 'أذكار الصلاة',       icon: '🕌', desc: 'أذكار ما بعد الصلاة وأدعية التشهد',           color: '#6bc077' },
+  { slug: 'sleeping', title: 'أذكار النوم',         icon: '🌙', desc: 'أذكار تقال عند النوم',                        color: '#a779e9' },
+  { slug: 'waking',   title: 'أذكار الاستيقاظ',   icon: '☀️', desc: 'أذكار تقال عند الاستيقاظ من النوم',           color: '#f3d049' },
+  { slug: 'mosque',   title: 'أذكار المسجد',       icon: '🏛️', desc: 'أذكار دخول وخروج المسجد',                    color: '#49c8a0' },
+  { slug: 'travel',   title: 'أذكار السفر',        icon: '✈️', desc: 'أذكار الركوب والسفر والقدوم',                 color: '#e9a049' },
+  { slug: 'wudu',     title: 'أذكار الوضوء',       icon: '💧', desc: 'أذكار قبل وبعد الوضوء',                       color: '#49a8e9' },
+  { slug: 'tasbih',   title: 'التسبيح والتهليل',   icon: '📿', desc: 'سبحان الله، الحمد لله، الله أكبر',            color: '#49b8c8' },
+  { slug: 'food',     title: 'أذكار الطعام',       icon: '🍽️', desc: 'دعاء الطعام والشرب والدعاء بعده',             color: '#e96979' },
 ]
 
 export default function Adhkar() {

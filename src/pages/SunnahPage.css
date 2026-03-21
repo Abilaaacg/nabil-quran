@@ -1,0 +1,100 @@
+.sunnah-intro {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(107,192,119,0.1);
+  border: 1px solid rgba(107,192,119,0.3);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 24px;
+  font-family: var(--font-arabic);
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.sunnah-intro span { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+
+.sunnah-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sunnah-card {
+  display: flex;
+  gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  transition: all 0.2s;
+}
+
+.sunnah-card:hover {
+  border-color: rgba(107,192,119,0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.sunnah-icon {
+  font-size: 36px;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(107,192,119,0.1);
+  border-radius: 14px;
+}
+
+.sunnah-body { flex: 1; }
+
+.sunnah-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-arabic);
+  margin-bottom: 4px;
+}
+
+.sunnah-importance {
+  font-size: 13px;
+  color: #6bc077;
+  font-family: var(--font-arabic);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.sunnah-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-family: var(--font-arabic);
+  line-height: 1.75;
+  margin-bottom: 12px;
+}
+
+.sunnah-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sunnah-benefit {
+  font-size: 12px;
+  color: var(--accent);
+  font-family: var(--font-arabic);
+}
+
+.sunnah-ref {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-arabic);
+}
+
+@media (max-width: 480px) {
+  .sunnah-card { padding: 14px; gap: 12px; }
+  .sunnah-icon { width: 46px; height: 46px; font-size: 28px; }
+  .sunnah-title { font-size: 15px; }
+}

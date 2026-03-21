@@ -10,6 +10,8 @@ const navItems = [
   { to: '/qibla',  label: 'اتجاه القبلة',  icon: '🧭' },
   { to: '/adhkar', label: 'الأذكار', icon: '📿' },
   { to: '/hisnmuslim', label: 'حصن المسلم', icon: '🛡️' },
+  { to: '/sunnah', label: 'السنن المهجورة', icon: '✨' },
+  { to: '/challenge', label: 'التحدي اليومي', icon: '🏆' },
   { to: '/radio', label: 'الإذاعة', icon: '📻' },
   { to: '/settings', label: 'الإعدادات', icon: '⚙️' },
 ]

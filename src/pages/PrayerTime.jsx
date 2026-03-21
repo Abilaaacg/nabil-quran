@@ -3,6 +3,15 @@ import * as adhan from 'adhan'
 import { useApp } from '../context/AppContext'
 import './PrayerTime.css'
 
+const isNativeApp = () =>
+  typeof window !== 'undefined' &&
+  (window.Capacitor?.isNativePlatform?.() || window.navigator?.userAgent?.includes('CapacitorWebView'))
+
+let LocalNotifications = null
+if (isNativeApp()) {
+  import('@capacitor/local-notifications').then(m => { LocalNotifications = m.LocalNotifications }).catch(() => {})
+}
+
 const ADHAN_SOUNDS = [
   { id: 'makkah',  name: 'أذان الحرم المكي',      url: 'https://www.islamcan.com/audio/adhan/azan1.mp3' },
   { id: 'madinah', name: 'أذان المسجد النبوي',     url: 'https://www.islamcan.com/audio/adhan/azan2.mp3' },
@@ -90,6 +99,44 @@ export default function PrayerTime() {
   const audioRef = useRef(null)
   const methodId = settings.calcMethod || 'UmmAlQura'
 
+  // جدولة إشعارات 5 دقائق قبل الأذان
+  const schedulePreAdhanNotifs = useCallback(async (prayerTimes, enabled) => {
+    if (!isNativeApp() || !LocalNotifications) return
+    try {
+      await LocalNotifications.cancel({ notifications: [1,2,3,4,5].map(id => ({ id })) }).catch(() => {})
+      if (!enabled) return
+      await LocalNotifications.requestPermissions()
+      await LocalNotifications.createChannel({
+        id: 'prayer-notifs',
+        name: 'تنبيهات الصلاة',
+        importance: 5,
+        sound: 'default',
+        vibration: true,
+      }).catch(() => {})
+      const now = new Date()
+      const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']
+      const pending = prayers
+        .map((key, idx) => {
+          const pt = prayerTimes[key]
+          if (!pt) return null
+          const notifTime = new Date(pt.getTime() - 5 * 60 * 1000)
+          if (notifTime <= now) return null
+          return {
+            id: idx + 1,
+            title: `🕌 ${PRAYER_NAMES[key].ar} بعد 5 دقائق`,
+            body: `استعد لصلاة ${PRAYER_NAMES[key].ar}`,
+            schedule: { at: notifTime, allowWhileIdle: true },
+            channelId: 'prayer-notifs',
+            smallIcon: 'ic_notification',
+          }
+        })
+        .filter(Boolean)
+      if (pending.length > 0) await LocalNotifications.schedule({ notifications: pending })
+    } catch (e) {
+      console.warn('Prayer notification scheduling failed:', e)
+    }
+  }, [])
+
   // احسب الأوقات
   const computeTimes = useCallback((lat, lng, method) => {
     try {
@@ -100,6 +147,11 @@ export default function PrayerTime() {
       setError('تعذر حساب مواقيت الصلاة: ' + e.message)
     }
   }, [])
+
+  // إعادة جدولة إشعارات الصلاة عند تغيير الأوقات أو حالة الأذان
+  useEffect(() => {
+    if (times) schedulePreAdhanNotifs(times, adhanEnabled)
+  }, [times, adhanEnabled, schedulePreAdhanNotifs])
 
   // تحديد الموقع
   const detectLocation = useCallback(() => {
@@ -137,12 +189,25 @@ export default function PrayerTime() {
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        pos => onSuccess(pos.coords.latitude, pos.coords.longitude),
+        async pos => {
+          const lat = pos.coords.latitude
+          const lng = pos.coords.longitude
+          let city = ''
+          try {
+            const r = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=ar`,
+              { headers: { 'Accept-Language': 'ar' } }
+            )
+            const d = await r.json()
+            city = d.address?.city || d.address?.town || d.address?.village || d.address?.county || ''
+          } catch (_) {}
+          onSuccess(lat, lng, city)
+        },
         err => {
           console.warn('GPS denied:', err.message)
           ipFallback()
         },
-        { timeout: 8000, maximumAge: 60000 }
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
       )
     } else {
       ipFallback()
