@@ -104,16 +104,37 @@
   border-color: var(--accent);
 }
 
+/* ─── Top Row (Dhikr Name + Custom Input) ───────────────────────── */
+
+.tasbeeh-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  direction: rtl;
+}
+
+/* ─── Bottom Row (Fraction + Reset) ─────────────────────────────── */
+
+.tasbeeh-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  direction: rtl;
+}
+
 /* ─── Dhikr Name ────────────────────────────────────────────────── */
 
 .tasbeeh-dhikr-name {
   font-family: var(--font-arabic);
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--text-primary);
-  text-align: center;
   letter-spacing: 0.02em;
-  min-height: 34px;
+  flex: 1;
 }
 
 /* ─── Ring + Tap Button ─────────────────────────────────────────── */
@@ -345,17 +366,19 @@
 
   .pill-target { font-size: 10px; }
 
+  /* صف العلوي والسفلي */
+  .tasbeeh-top-row,
+  .tasbeeh-bottom-row { gap: 8px; }
+
   /* حقل مخصص */
-  .tasbeeh-custom { gap: 6px; }
-  .custom-label   { font-size: 12px; }
   .custom-input {
-    width: 80px;
+    width: 72px;
     font-size: 16px;
     padding: 4px 8px;
   }
 
   /* اسم الذكر */
-  .tasbeeh-dhikr-name { font-size: 15px; min-height: 20px; }
+  .tasbeeh-dhikr-name { font-size: 14px; }
 
   /* حلقة بحجم يناسب الشاشة */
   .tasbeeh-ring-wrapper {

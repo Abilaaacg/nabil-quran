@@ -12,11 +12,8 @@ const SUGGESTIONS = [
   'ما حكم الغيبة والنميمة؟',
 ]
 
-// على الموبايل (Capacitor) نستخدم الـ URL الكامل لأن localhost لا يعمل
-const isNative = typeof window !== 'undefined' && window.Capacitor?.isNativePlatform?.()
-const API = isNative
-  ? 'https://nabil-quran.netlify.app/.netlify/functions/islamic-ai'
-  : '/.netlify/functions/islamic-ai'
+// URL مطلق دائماً — يعمل على الويب والموبايل بدون استثناء
+const API = 'https://nabil-quran.netlify.app/.netlify/functions/islamic-ai'
 
 export default function IslamicAI() {
   const [messages, setMessages] = useState([

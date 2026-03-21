@@ -144,13 +144,8 @@ export default function Tasbeeh() {
 
   return (
     <div className="page-container fade-in tasbeeh-page">
-      {/* Header */}
-      <div className="page-header">
-        <h1>المسبحة</h1>
-        <p>عدّاد التسبيح الرقمي</p>
-      </div>
 
-      {/* Preset pills */}
+      {/* أقراص الاختيار */}
       <div className="tasbeeh-presets">
         {PRESETS.map((p, i) => (
           <button
@@ -164,13 +159,13 @@ export default function Tasbeeh() {
         ))}
       </div>
 
-      {/* Custom target */}
-      <div className="tasbeeh-custom">
-        <label className="custom-label">هدف مخصص:</label>
+      {/* اسم الذكر + هدف مخصص في صف واحد */}
+      <div className="tasbeeh-top-row">
+        <div className="tasbeeh-dhikr-name">{presetName}</div>
         <input
           type="number"
           className={`custom-input${useCustom ? ' active' : ''}`}
-          placeholder="أدخل العدد"
+          placeholder="هدف"
           value={customTarget}
           min="1"
           onChange={handleCustomTargetChange}
@@ -178,41 +173,14 @@ export default function Tasbeeh() {
         />
       </div>
 
-      {/* Preset name display */}
-      <div className="tasbeeh-dhikr-name">{presetName}</div>
-
-      {/* Progress ring + tap button */}
+      {/* الحلقة + الزر */}
       <div className="tasbeeh-ring-wrapper">
-        <svg
-          className="tasbeeh-progress-svg"
-          viewBox="0 0 220 220"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {/* Track */}
-          <circle
-            className="ring-track"
-            cx="110"
-            cy="110"
-            r={RADIUS}
-            fill="none"
-            strokeWidth="8"
-          />
-          {/* Progress */}
-          <circle
-            className="ring-progress"
-            cx="110"
-            cy="110"
-            r={RADIUS}
-            fill="none"
-            strokeWidth="8"
-            strokeDasharray={CIRCUMFERENCE}
-            strokeDashoffset={strokeOffset}
-            strokeLinecap="round"
-            transform="rotate(-90 110 110)"
-          />
+        <svg className="tasbeeh-progress-svg" viewBox="0 0 220 220">
+          <circle className="ring-track"    cx="110" cy="110" r={RADIUS} fill="none" strokeWidth="8" />
+          <circle className="ring-progress" cx="110" cy="110" r={RADIUS} fill="none" strokeWidth="8"
+            strokeDasharray={CIRCUMFERENCE} strokeDashoffset={strokeOffset}
+            strokeLinecap="round" transform="rotate(-90 110 110)" />
         </svg>
-
-        {/* Tap button */}
         <button
           className={`tasbeeh-tap-btn${pulsing ? ' pulse' : ''}${completed ? ' completed' : ''}`}
           onClick={handleTap}
@@ -225,28 +193,23 @@ export default function Tasbeeh() {
         </button>
       </div>
 
-      {/* Progress fraction */}
-      <div className="tasbeeh-fraction">
-        <span className="fraction-current">{safeCount}</span>
-        <span className="fraction-sep">/</span>
-        <span className="fraction-target">{safeTarget}</span>
+      {/* الكسر + إعادة في صف واحد */}
+      <div className="tasbeeh-bottom-row">
+        <div className="tasbeeh-fraction">
+          <span className="fraction-current">{safeCount}</span>
+          <span className="fraction-sep">/</span>
+          <span className="fraction-target">{safeTarget}</span>
+        </div>
+        <button className="tasbeeh-reset-btn" onClick={handleReset}>↺ إعادة</button>
       </div>
 
-      {/* Action buttons */}
-      <div className="tasbeeh-actions">
-        <button className="tasbeeh-reset-btn" onClick={handleReset}>
-          إعادة تعيين
-        </button>
-      </div>
-
-      {/* Lifetime total */}
+      {/* إجمالي التسبيح */}
       <div className="tasbeeh-total-card">
         <div className="total-label">إجمالي التسبيح</div>
         <div className="total-number">{totalCount.toLocaleString('ar-EG')}</div>
-        <button className="total-reset-btn" onClick={handleResetTotal}>
-          مسح الكل
-        </button>
+        <button className="total-reset-btn" onClick={handleResetTotal}>مسح</button>
       </div>
+
     </div>
   )
 }
