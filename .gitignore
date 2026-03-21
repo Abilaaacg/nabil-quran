@@ -6,3 +6,6 @@ makezip.py
 android/app/build/
 android/.gradle/
 android/local.properties
+
+# Local Netlify folder
+.netlify
