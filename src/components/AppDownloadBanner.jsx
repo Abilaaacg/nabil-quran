@@ -1,18 +1,16 @@
 import { useState, useEffect } from 'react'
 import './AppDownloadBanner.css'
 
-// إخفاء البانر داخل تطبيق الأندرويد
 const isNativeApp = () =>
   typeof window !== 'undefined' &&
   (window.Capacitor?.isNativePlatform?.() || window.navigator?.userAgent?.includes('CapacitorWebView'))
 
 export default function AppDownloadBanner() {
   const [release, setRelease] = useState(null)
-  const [downloading, setDownloading] = useState(false)
+  const [step, setStep] = useState('idle') // idle | downloading | done
 
   useEffect(() => {
-    if (isNativeApp()) return // لا تظهر داخل التطبيق
-
+    if (isNativeApp()) return
     fetch('/version.json?t=' + Date.now())
       .then(r => r.json())
       .then(data => {
@@ -26,9 +24,49 @@ export default function AppDownloadBanner() {
   if (isNativeApp() || !release) return null
 
   const handleDownload = () => {
-    setDownloading(true)
-    window.location.href = release.url
-    setTimeout(() => setDownloading(false), 3000)
+    setStep('downloading')
+    const a = document.createElement('a')
+    a.href = release.url
+    a.download = 'nabil-quran.apk'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    setTimeout(() => setStep('done'), 2000)
+  }
+
+  // بعد التحميل — تعليمات التثبيت
+  if (step === 'done') {
+    return (
+      <div className="apk-banner apk-banner-done">
+        <div className="apk-banner-glow" />
+        <div className="done-header">
+          <span className="done-icon">✅</span>
+          <div>
+            <div className="done-title">تم بدء التحميل!</div>
+            <div className="done-sub">اتبع الخطوات لتثبيت التحديث</div>
+          </div>
+        </div>
+
+        <div className="install-steps">
+          <div className="install-step">
+            <span className="step-num">١</span>
+            <span>افتح ملف <strong>nabil-quran.apk</strong> من التنزيلات</span>
+          </div>
+          <div className="install-step">
+            <span className="step-num">٢</span>
+            <span>اضغط <strong>تثبيت</strong> — لو ظهر "تعارض" أو "خطأ في التثبيت":</span>
+          </div>
+          <div className="install-step conflict-hint">
+            <span className="step-num">!</span>
+            <span>اذهب لإعدادات الهاتف ← التطبيقات ← نور الإسلام ← <strong>إزالة التثبيت</strong>، ثم ثبّت الملف مجدداً</span>
+          </div>
+        </div>
+
+        <button className="done-dismiss" onClick={() => setStep('idle')}>
+          حسناً، فهمت
+        </button>
+      </div>
+    )
   }
 
   return (
@@ -51,10 +89,11 @@ export default function AppDownloadBanner() {
         </div>
 
         <button
-          className={`apk-download-btn ${downloading ? 'downloading' : ''}`}
+          className={`apk-download-btn ${step === 'downloading' ? 'downloading' : ''}`}
           onClick={handleDownload}
+          disabled={step === 'downloading'}
         >
-          {downloading ? (
+          {step === 'downloading' ? (
             <><span className="apk-spinner" /> جاري التحميل</>
           ) : (
             <><span className="apk-download-icon">⬇</span> تحميل التطبيق</>
@@ -65,9 +104,9 @@ export default function AppDownloadBanner() {
       <div className="apk-features">
         <span>📖 القرآن كاملاً</span>
         <span>🕌 مواقيت الصلاة</span>
+        <span>🧭 القبلة</span>
         <span>📿 الأذكار</span>
         <span>📻 الإذاعة</span>
-        <span>🎙️ القراء</span>
       </div>
     </div>
   )

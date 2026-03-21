@@ -214,3 +214,103 @@
   .apk-download-btn { width: 100%; justify-content: center; }
   .apk-features { gap: 10px; }
 }
+
+/* ====== حالة ما بعد التحميل ====== */
+.apk-banner-done {
+  background: linear-gradient(135deg, #1a2a1f 0%, #0f1a14 100%);
+}
+
+.done-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.done-icon {
+  font-size: 32px;
+}
+
+.done-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  font-family: var(--font-arabic);
+}
+
+.done-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  font-family: var(--font-arabic);
+  margin-top: 2px;
+}
+
+.install-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.install-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: var(--font-arabic);
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.5;
+}
+
+.step-num {
+  background: rgba(107,192,119,0.2);
+  color: #6bc077;
+  border: 1px solid rgba(107,192,119,0.3);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.conflict-hint {
+  background: rgba(243,73,73,0.08);
+  border: 1px solid rgba(243,73,73,0.2);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: rgba(255,200,200,0.85);
+}
+
+.conflict-hint .step-num {
+  background: rgba(243,73,73,0.2);
+  color: #f37373;
+  border-color: rgba(243,73,73,0.3);
+}
+
+.done-dismiss {
+  width: 100%;
+  background: rgba(107,192,119,0.15);
+  border: 1px solid rgba(107,192,119,0.3);
+  border-radius: 10px;
+  color: #6bc077;
+  padding: 11px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--font-arabic);
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  transition: all 0.2s;
+}
+
+.done-dismiss:hover {
+  background: rgba(107,192,119,0.25);
+}
