@@ -6,7 +6,13 @@ const stations = [
     name: 'إذاعة القرآن الكريم - مكة المكرمة',
     url: 'https://Qurango.net/radio/tarateel',
     flag: '🇸🇦',
-    desc: 'البث المباشر من الحرم المكي الشريف',
+    desc: 'تراتيل - بث مباشر',
+  },
+  {
+    name: 'إذاعة القرآن المرتل',
+    url: 'https://Qurango.net/radio/murattal',
+    flag: '🌍',
+    desc: 'مرتل - بث مباشر',
   },
   {
     name: 'إذاعة القرآن الكريم - مصر',
@@ -15,22 +21,16 @@ const stations = [
     desc: 'القرآن الكريم من القاهرة',
   },
   {
-    name: 'إذاعة القرآن الكريم - المدينة',
+    name: 'إذاعة القرآن - السعودية',
     url: 'https://stream.radiojar.com/0tpy1h0kxtzuv',
     flag: '🇸🇦',
-    desc: 'البث المباشر من المسجد النبوي',
+    desc: 'إذاعة القرآن الكريم السعودية',
   },
   {
     name: 'Qatar Quran Radio',
     url: 'https://stream.radiojar.com/8s5u5tpdtwzuv',
     flag: '🇶🇦',
     desc: 'إذاعة قرآن كريم قطر',
-  },
-  {
-    name: 'Murattal Radio',
-    url: 'https://Qurango.net/radio/murattal',
-    flag: '🌍',
-    desc: 'إذاعة مرتل',
   },
   {
     name: 'Radio Islam',
@@ -44,6 +44,7 @@ export default function Radio() {
   const [current, setCurrent] = useState(null)
   const [playing, setPlaying] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
   const [volume, setVolume] = useState(80)
   const audioRef = useRef(null)
 
@@ -56,14 +57,21 @@ export default function Radio() {
     setCurrent(station)
     setLoading(true)
     setPlaying(false)
+    setError(false)
     setTimeout(() => {
       if (audioRef.current) {
+        audioRef.current.volume = volume / 100
         audioRef.current.load()
-        audioRef.current.play()
-          .then(() => { setPlaying(true); setLoading(false) })
-          .catch(() => setLoading(false))
+        audioRef.current.play().catch(() => {
+          setLoading(false)
+          setError(true)
+        })
       }
     }, 100)
+  }
+
+  const retry = () => {
+    if (current) playStation(current)
   }
 
   const handleVolumeChange = (e) => {
@@ -90,8 +98,17 @@ export default function Radio() {
           </div>
           <div className="radio-controls">
             <div className="live-indicator">
-              <span className={`live-dot ${playing ? 'active' : ''}`}></span>
-              {loading ? 'جاري التحميل...' : playing ? 'بث مباشر' : 'متوقف'}
+              {error ? (
+                <>
+                  <span style={{ color: 'var(--danger)' }}>⚠️ البث غير متاح</span>
+                  <button onClick={retry} className="retry-btn">إعادة المحاولة</button>
+                </>
+              ) : (
+                <>
+                  <span className={`live-dot ${playing ? 'active' : ''}`}></span>
+                  {loading ? 'جاري التحميل...' : playing ? 'بث مباشر 🔴' : 'متوقف'}
+                </>
+              )}
             </div>
             <div className="volume-control">
               <span>🔊</span>
@@ -109,9 +126,10 @@ export default function Radio() {
           <audio
             ref={audioRef}
             src={current.url}
-            onPlaying={() => { setPlaying(true); setLoading(false) }}
+            onPlaying={() => { setPlaying(true); setLoading(false); setError(false) }}
             onPause={() => setPlaying(false)}
             onWaiting={() => setLoading(true)}
+            onError={() => { setLoading(false); setPlaying(false); setError(true) }}
           />
         </div>
       )}
@@ -130,6 +148,7 @@ export default function Radio() {
             </div>
             <div className="station-play">
               {current?.name === station.name && loading ? '⏳' :
+               current?.name === station.name && error ? '⚠️' :
                current?.name === station.name && playing ? '⏸' : '▶'}
             </div>
           </button>

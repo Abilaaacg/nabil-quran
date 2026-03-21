@@ -140,3 +140,19 @@
 .station-item.active .station-play {
   color: #49b8c8;
 }
+
+.retry-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: var(--font-arabic);
+  transition: var(--transition);
+}
+
+.retry-btn:hover {
+  background: rgba(243, 73, 73, 0.1);
+}

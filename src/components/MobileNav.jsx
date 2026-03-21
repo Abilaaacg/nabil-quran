@@ -4,9 +4,10 @@ import { NavLink } from 'react-router-dom'
 const navItems = [
   { to: '/', label: 'الرئيسية', icon: '🏠', end: true },
   { to: '/quran', label: 'القرآن', icon: '📖' },
+  { to: '/audio', label: 'القراء', icon: '🎙️' },
   { to: '/prayer', label: 'الصلاة', icon: '🕌' },
   { to: '/adhkar', label: 'الأذكار', icon: '📿' },
-  { to: '/settings', label: 'إعدادات', icon: '⚙️' },
+  { to: '/radio', label: 'الإذاعة', icon: '📻' },
 ]
 
 export default function MobileNav() {
