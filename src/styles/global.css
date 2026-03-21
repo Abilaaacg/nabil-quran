@@ -118,6 +118,10 @@ input, select, textarea {
   margin: 0 auto;
 }
 
+@media (max-width: 480px) {
+  .page-container { padding: 16px 12px; }
+}
+
 /* ====== Sidebar ====== */
 .sidebar {
   position: fixed;

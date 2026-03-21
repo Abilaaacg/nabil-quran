@@ -22,9 +22,24 @@
 
 .home-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
   margin-top: 8px;
+}
+
+@media (max-width: 480px) {
+  .home-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .home-hero { padding: 24px 0 20px; }
+  .home-hero-icon { font-size: 44px; margin-bottom: 10px; }
+  .home-hero h1 { font-size: 24px; }
+  .home-hero p { font-size: 14px; }
+  .home-card { padding: 16px 12px; gap: 8px; }
+  .home-card-icon { width: 44px; height: 44px; font-size: 22px; }
+  .home-card h2 { font-size: 14px; }
+  .home-card p { font-size: 11px; }
 }
 
 .home-card {
