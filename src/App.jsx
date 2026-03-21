@@ -13,12 +13,14 @@ import AdhkarCategory from './pages/AdhkarCategory'
 import HisnMuslim from './pages/HisnMuslim'
 import Radio from './pages/Radio'
 import Settings from './pages/Settings'
+import UpdateChecker from './components/UpdateChecker'
 
 export default function App() {
   return (
     <AppProvider>
       <BrowserRouter>
         <div className="app-layout">
+          <UpdateChecker />
           <Sidebar />
           <main className="main-content">
             <Routes>
