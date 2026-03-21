@@ -48,11 +48,14 @@ jobs:
           cd android
           ./gradlew assembleDebug --no-daemon
 
+      - name: Rename APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk nabil-quran.apk
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: nabil-quran-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: nabil-quran.apk
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -63,10 +66,10 @@ jobs:
             ## 📱 تطبيق نبيل قرآن للأندرويد
 
             ### تحميل التطبيق:
-            قم بتحميل ملف `app-debug.apk` من الأسفل وثبته على هاتفك
+            قم بتحميل ملف `nabil-quran.apk` من الأسفل وثبته على هاتفك
 
             > ملاحظة: قد تحتاج لتفعيل "السماح بمصادر غير معروفة" في إعدادات هاتفك
-          files: android/app/build/outputs/apk/debug/app-debug.apk
+          files: nabil-quran.apk
           draft: false
           prerelease: false
         env:
