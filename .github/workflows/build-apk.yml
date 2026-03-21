@@ -25,6 +25,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Update version.json
+        run: |
+          echo "{\"version\": \"v${{ github.run_number }}\", \"url\": \"https://github.com/Abilaaacg/nabil-quran/releases/download/v${{ github.run_number }}/nabil-quran.apk\", \"size\": \"\"}" > public/version.json
+
       - name: Build web app
         run: npm run build
         env:
