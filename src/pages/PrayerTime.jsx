@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import * as adhan from 'adhan'
+import { Geolocation } from '@capacitor/geolocation'
 import { useApp } from '../context/AppContext'
 import './PrayerTime.css'
 
@@ -153,80 +154,94 @@ export default function PrayerTime() {
     if (times) schedulePreAdhanNotifs(times, adhanEnabled)
   }, [times, adhanEnabled, schedulePreAdhanNotifs])
 
+  // جلب اسم المدينة من الإحداثيات
+  const reverseGeocode = async (lat, lng) => {
+    try {
+      const r = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=ar`,
+        { headers: { 'Accept-Language': 'ar' } }
+      )
+      const d = await r.json()
+      return d.address?.city || d.address?.town || d.address?.village || d.address?.county || ''
+    } catch (_) { return '' }
+  }
+
   // تحديد الموقع
-  const detectLocation = useCallback(() => {
+  const detectLocation = useCallback(async () => {
     setLoading(true)
     setError(null)
-    setStatus('جاري تحديد الموقع...')
+    setShowSearch(false)
+    setStatus('جاري طلب صلاحية الموقع...')
 
-    const saveLocation = async (lat, lng) => {
-      let city = ''
-      try {
-        const r = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=ar`,
-          { headers: { 'Accept-Language': 'ar' } }
-        )
-        const d = await r.json()
-        city = d.address?.city || d.address?.town || d.address?.village || d.address?.county || ''
-      } catch (_) {}
+    const applyCoords = async (lat, lng, acc) => {
+      setStatus(`تم التحديد ✓ دقة ${Math.round(acc)} م — جاري الحصول على اسم المدينة...`)
+      const city = await reverseGeocode(lat, lng)
       updateSettings({ location: { lat, lng, city } })
-      computeTimes(lat, lng, methodId)
+      try {
+        const t = calcTimes(lat, lng, methodId)
+        setTimes(t)
+        setError(null)
+      } catch (e) { setError('تعذر حساب المواقيت') }
+      setLocUpdated(true)
+      setTimeout(() => setLocUpdated(false), 4000)
       setLoading(false)
       setStatus('')
     }
 
-    const onFail = (msg) => {
-      setError(msg)
-      setLoading(false)
-      setStatus('')
-    }
-
-    if (!navigator.geolocation) {
-      onFail('المتصفح لا يدعم تحديد الموقع. ابحث عن مدينتك أدناه.')
-      return
-    }
-
-    // watchPosition للحصول على أفضل دقة
-    let bestAccuracy = Infinity
-    let bestPos = null
-    let watchId = null
-    let done = false
-
-    const finish = () => {
-      if (done) return
-      done = true
-      if (watchId !== null) navigator.geolocation.clearWatch(watchId)
-      if (bestPos) {
-        saveLocation(bestPos.coords.latitude, bestPos.coords.longitude)
+    try {
+      if (isNativeApp()) {
+        // ← الطريقة الصحيحة على Android
+        const perm = await Geolocation.requestPermissions()
+        if (perm.location !== 'granted' && perm.coarseLocation !== 'granted') {
+          setError('الرجاء السماح للتطبيق بالوصول إلى الموقع من إعدادات الهاتف ثم حاول مجدداً')
+          setLoading(false)
+          setStatus('')
+          return
+        }
+        setStatus('جاري تحديد الموقع...')
+        // جمع عدة قراءات وأخذ أدقها
+        let best = null
+        const tryRead = async () => {
+          const pos = await Geolocation.getCurrentPosition({ enableHighAccuracy: true, timeout: 10000 })
+          if (!best || pos.coords.accuracy < best.coords.accuracy) best = pos
+        }
+        await tryRead().catch(() => {})
+        // قراءة ثانية بعد ثانية للتحسين
+        await new Promise(r => setTimeout(r, 1200))
+        await tryRead().catch(() => {})
+        if (!best) throw new Error('no position')
+        await applyCoords(best.coords.latitude, best.coords.longitude, best.coords.accuracy)
       } else {
-        onFail('تعذر تحديد الموقع. ابحث عن مدينتك أدناه.')
+        // ← الويب: watchPosition
+        if (!navigator.geolocation) throw new Error('unsupported')
+        setStatus('جاري تحديد الموقع...')
+        let bestAcc = Infinity, bestPos = null, done = false, watchId = null
+        const finish = () => {
+          if (done) return
+          done = true
+          navigator.geolocation.clearWatch(watchId)
+          if (bestPos) applyCoords(bestPos.coords.latitude, bestPos.coords.longitude, bestPos.coords.accuracy)
+          else { setError('تعذر تحديد الموقع — ابحث عن مدينتك'); setLoading(false); setStatus('') }
+        }
+        const tid = setTimeout(finish, 15000)
+        watchId = navigator.geolocation.watchPosition(
+          pos => {
+            const acc = pos.coords.accuracy
+            setStatus(`دقة: ${Math.round(acc)} م`)
+            if (acc < bestAcc) { bestAcc = acc; bestPos = pos }
+            if (acc < 80) { clearTimeout(tid); finish() }
+          },
+          () => { clearTimeout(tid); done = true; navigator.geolocation.clearWatch(watchId)
+            setError('تعذر تحديد الموقع — ابحث عن مدينتك'); setLoading(false); setStatus('') },
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+        )
       }
+    } catch (e) {
+      setError('تعذر تحديد الموقع — ابحث عن مدينتك من زرار 🔍')
+      setLoading(false)
+      setStatus('')
     }
-
-    const timeoutId = setTimeout(finish, 15000)
-
-    watchId = navigator.geolocation.watchPosition(
-      pos => {
-        const acc = pos.coords.accuracy
-        setStatus(`جاري تحديد الموقع... دقة: ${Math.round(acc)} م`)
-        if (acc < bestAccuracy) {
-          bestAccuracy = acc
-          bestPos = pos
-        }
-        if (acc < 100) {
-          clearTimeout(timeoutId)
-          finish()
-        }
-      },
-      err => {
-        clearTimeout(timeoutId)
-        done = true
-        if (watchId !== null) navigator.geolocation.clearWatch(watchId)
-        onFail('تعذر الوصول إلى GPS. ابحث عن مدينتك أدناه.')
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
-    )
-  }, [computeTimes, methodId, updateSettings])
+  }, [methodId, updateSettings])
 
   // auto-detect عند أول تحميل إذا لا يوجد موقع محفوظ
   useEffect(() => {
