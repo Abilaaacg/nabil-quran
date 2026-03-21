@@ -8,6 +8,7 @@ const navItems = [
   { to: '/audio', label: 'القراء', icon: '🎙️' },
   { to: '/prayer', label: 'مواقيت الصلاة', icon: '🕌' },
   { to: '/qibla',  label: 'اتجاه القبلة',  icon: '🧭' },
+  { to: '/ai',       label: 'المساعد الذكي',    icon: '🤖' },
   { to: '/adhkar',   label: 'الأذكار',          icon: '📿' },
   { to: '/hisnmuslim', label: 'حصن المسلم',   icon: '🛡️' },
   { to: '/tasbeeh',  label: 'عداد التسبيح',    icon: '🔢' },

@@ -6,8 +6,8 @@ const navItems = [
   { to: '/quran',    label: 'القرآن',   icon: '📖' },
   { to: '/prayer',   label: 'الصلاة',   icon: '🕌' },
   { to: '/adhkar',   label: 'الأذكار',  icon: '📿' },
+  { to: '/ai',       label: 'المساعد',  icon: '🤖' },
   { to: '/tasbeeh',  label: 'التسبيح',  icon: '🔢' },
-  { to: '/names',    label: 'الأسماء',  icon: '✨' },
   { to: '/settings', label: 'إعدادات',  icon: '⚙️' },
 ]
 
