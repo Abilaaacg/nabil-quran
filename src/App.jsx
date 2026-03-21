@@ -17,12 +17,14 @@ import Qibla from './pages/Qibla'
 import UpdateChecker from './components/UpdateChecker'
 import WhatsNew from './components/WhatsNew'
 import WelcomeAudio from './components/WelcomeAudio'
+import TopBar from './components/TopBar'
 
 export default function App() {
   return (
     <AppProvider>
       <BrowserRouter>
         <div className="app-layout">
+          <TopBar />
           <WhatsNew />
           <UpdateChecker />
           <WelcomeAudio />

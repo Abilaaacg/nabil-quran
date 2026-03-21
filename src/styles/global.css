@@ -221,6 +221,60 @@ input, select, textarea {
   border-top: 1px solid var(--border);
 }
 
+/* ====== Top Bar (mobile only) ====== */
+.topbar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 52px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    z-index: 101;
+  }
+
+  .main-content {
+    padding-top: 52px;
+  }
+}
+
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-arabic);
+}
+
+.topbar-logo span:first-child { font-size: 20px; }
+
+.topbar-theme-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.topbar-theme-btn:hover {
+  background: var(--bg-card-hover);
+}
+
 /* ====== Mobile Navbar ====== */
 .mobile-nav {
   display: none;
