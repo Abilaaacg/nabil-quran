@@ -39,16 +39,13 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Restore consistent debug keystore
-        uses: actions/cache@v4
-        with:
-          path: ~/.android/debug.keystore
-          key: android-debug-keystore-v1
-
-      - name: Generate debug keystore if missing
+      - name: Setup consistent signing keystore
         run: |
-          if [ ! -f ~/.android/debug.keystore ]; then
-            mkdir -p ~/.android
+          mkdir -p ~/.android
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > ~/.android/debug.keystore
+            echo "✅ Keystore loaded from secret"
+          else
             keytool -genkey -v \
               -keystore ~/.android/debug.keystore \
               -storepass android \
@@ -56,10 +53,16 @@ jobs:
               -keypass android \
               -keyalg RSA -keysize 2048 -validity 10000 \
               -dname "CN=Android Debug,O=Android,C=US"
-            echo "✅ Keystore generated"
-          else
-            echo "✅ Keystore restored from cache"
+            echo ""
+            echo "========================================"
+            echo "⚠️  ADD THIS AS GitHub Secret: KEYSTORE_BASE64"
+            echo "========================================"
+            base64 -w 0 ~/.android/debug.keystore
+            echo ""
+            echo "========================================"
           fi
+        env:
+          KEYSTORE_B64: ${{ secrets.KEYSTORE_BASE64 }}
 
       - name: Sync Capacitor
         run: npx cap sync android
