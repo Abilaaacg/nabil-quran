@@ -21,18 +21,30 @@ async function sendUpdateNotification(version) {
     const perm = await LocalNotifications.requestPermissions()
     if (perm.display !== 'granted') return
 
+    await LocalNotifications.createChannel({
+      id: 'updates',
+      name: 'تحديثات التطبيق',
+      importance: 5,
+      visibility: 1,
+      vibration: true,
+      sound: 'default',
+    })
+
     await LocalNotifications.schedule({
       notifications: [{
         id: 1001,
         title: '📲 تحديث جديد متاح!',
         body: `نور الإسلام ${version} — اضغط للتحديث الآن`,
-        actionTypeId: '',
+        channelId: 'updates',
+        smallIcon: 'ic_launcher',
         extra: null,
       }]
     })
 
     localStorage.setItem(NOTIF_KEY, version)
-  } catch { /* ignore */ }
+  } catch (e) {
+    console.error('notification error:', e)
+  }
 }
 
 export default function UpdateChecker() {
