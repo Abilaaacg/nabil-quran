@@ -93,9 +93,9 @@ export default function PrayerTime() {
   const [now, setNow] = useState(new Date())
   const [adhanEnabled, setAdhanEnabled] = useState(settings.adhanEnabled ?? false)
   const [selectedAdhan, setSelectedAdhan] = useState(settings.adhanSound || 'makkah')
-  const [previewAudio, setPreviewAudio] = useState(null)
   const [previewing, setPreviewing] = useState(false)
-  const playedRef = useRef({})
+  const [showSearch, setShowSearch] = useState(false)
+  const [locUpdated, setLocUpdated] = useState(false)
   const audioRef = useRef(null)
   const methodId = settings.calcMethod || 'UmmAlQura'
 
@@ -279,6 +279,21 @@ export default function PrayerTime() {
     return () => clearInterval(t)
   }, [times, adhanEnabled, selectedAdhan, computeTimes, methodId, settings.location])
 
+  const applyLocation = (lat, lng, city) => {
+    updateSettings({ location: { lat, lng, city } })
+    setTimes(null)
+    try {
+      const t = calcTimes(lat, lng, methodId)
+      setTimes(t)
+      setError(null)
+    } catch (e) {
+      setError('تعذر حساب المواقيت')
+    }
+    setShowSearch(false)
+    setLocUpdated(true)
+    setTimeout(() => setLocUpdated(false), 3000)
+  }
+
   const toggleAdhan = () => {
     const val = !adhanEnabled
     setAdhanEnabled(val)
@@ -315,15 +330,47 @@ export default function PrayerTime() {
         <p>{todayDate}</p>
       </div>
 
-      {/* Errors */}
-      {error && (
+      {/* شريط الموقع — دايماً أعلى الصفحة */}
+      <div className="location-bar">
+        <div className="location-bar-info">
+          <span className="location-bar-icon">📍</span>
+          <span className="location-bar-city">
+            {loading ? status : (settings.location?.city || 'لم يتم تحديد الموقع')}
+          </span>
+          {locUpdated && <span className="location-updated">✓ تم التحديث</span>}
+        </div>
+        <div className="location-bar-btns">
+          <button
+            className={`loc-btn ${loading ? 'loc-btn-loading' : ''}`}
+            onClick={detectLocation}
+            disabled={loading}
+            title="تحديد موقعي بدقة"
+          >
+            {loading ? '⏳' : '📡'} GPS
+          </button>
+          <button
+            className={`loc-btn ${showSearch ? 'loc-btn-active' : ''}`}
+            onClick={() => setShowSearch(s => !s)}
+          >
+            🔍 مدينة
+          </button>
+        </div>
+      </div>
+
+      {/* بحث المدينة */}
+      {showSearch && (
+        <CitySearch onSet={applyLocation} />
+      )}
+
+      {/* خطأ */}
+      {error && !loading && (
         <div className="prayer-error mb-4">
           ⚠️ {error}
           <button className="retry-btn" onClick={detectLocation}>إعادة المحاولة</button>
         </div>
       )}
 
-      {/* Loading */}
+      {/* تحميل */}
       {loading && (
         <div className="loading-container">
           <div className="spinner" />
@@ -331,7 +378,7 @@ export default function PrayerTime() {
         </div>
       )}
 
-      {/* Countdown */}
+      {/* العداد التنازلي */}
       {!loading && times && next && (
         <div className="countdown-card">
           <p>الصلاة القادمة</p>
@@ -340,7 +387,7 @@ export default function PrayerTime() {
         </div>
       )}
 
-      {/* Prayer Cards */}
+      {/* بطاقات الصلوات */}
       {!loading && times && (
         <div className="prayers-grid">
           {Object.entries(PRAYER_NAMES).map(([key, info]) => {
@@ -357,27 +404,9 @@ export default function PrayerTime() {
         </div>
       )}
 
-      {/* Controls */}
+      {/* إعدادات */}
       {!loading && (
         <div className="prayer-footer mt-4">
-          <div className="prayer-actions">
-            <button className="btn btn-secondary" onClick={detectLocation}>
-              📍 تحديث الموقع
-            </button>
-            {settings.location?.city && (
-              <span className="location-label">
-                📍 {settings.location.city}
-                {settings.location.lat && ` (${settings.location.lat.toFixed(2)}°, ${settings.location.lng.toFixed(2)}°)`}
-              </span>
-            )}
-          </div>
-
-          {/* بحث بالمدينة */}
-          <CitySearch onSet={(lat, lng, city) => {
-            updateSettings({ location: { lat, lng, city } })
-            computeTimes(lat, lng, methodId)
-          }} />
-
           {/* Method */}
           <div className="calc-method-select mt-4">
             <label>طريقة الحساب:</label>
@@ -446,7 +475,7 @@ function CitySearch({ onSet }) {
       setSearching(true)
       try {
         const r = await fetch(
-          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=6&accept-language=ar&featuretype=city`
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=7&accept-language=ar`
         )
         const d = await r.json()
         setResults(d)
