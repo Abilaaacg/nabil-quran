@@ -1,0 +1,142 @@
+.radio-player {
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(73, 184, 200, 0.1), rgba(107, 192, 119, 0.05));
+  border-color: rgba(73, 184, 200, 0.3);
+}
+
+.radio-player-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.radio-flag {
+  font-size: 40px;
+}
+
+.radio-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.radio-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.radio-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.live-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.live-dot.active {
+  background: #e96979;
+  box-shadow: 0 0 6px rgba(233, 105, 121, 0.6);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.volume-slider {
+  width: 120px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.stations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.station-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  width: 100%;
+  text-align: right;
+  font-family: var(--font-ui);
+  transition: var(--transition);
+}
+
+.station-item:hover {
+  border-color: rgba(73, 184, 200, 0.3);
+  background: var(--bg-card-hover);
+}
+
+.station-item.active {
+  border-color: #49b8c8;
+  background: rgba(73, 184, 200, 0.08);
+}
+
+.station-flag {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.station-info {
+  flex: 1;
+}
+
+.station-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+
+.station-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.station-play {
+  color: var(--text-muted);
+  font-size: 18px;
+  transition: var(--transition);
+}
+
+.station-item:hover .station-play {
+  color: #49b8c8;
+}
+
+.station-item.active .station-play {
+  color: #49b8c8;
+}

@@ -1,0 +1,242 @@
+.section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.reciters-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.reciter-btn {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  padding: 8px 14px;
+  font-size: 13px;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.reciter-btn:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.reciter-btn.active {
+  background: rgba(107, 192, 119, 0.15);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ====== Player ====== */
+.audio-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 28px;
+  background: linear-gradient(135deg, rgba(107, 192, 119, 0.1), rgba(91, 141, 238, 0.05));
+  border-color: rgba(107, 192, 119, 0.3);
+}
+
+.now-playing {
+  text-align: center;
+}
+
+.player-surah-name {
+  font-family: var(--font-arabic);
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.player-reciter {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.player-error {
+  background: rgba(243, 73, 73, 0.12);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  color: var(--danger);
+  font-size: 13px;
+  text-align: center;
+  width: 100%;
+}
+
+/* Progress Bar */
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-secondary);
+  border-radius: 3px;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.3s linear;
+}
+
+.progress-times {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+  direction: ltr;
+  margin-top: -6px;
+}
+
+/* Controls */
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.player-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.player-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.play-btn {
+  width: 64px;
+  height: 64px;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-size: 24px;
+}
+
+.play-btn:hover:not(:disabled) {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.mini-spinner {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Volume */
+.volume-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.volume-slider {
+  width: 130px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* Surah List */
+.audio-surah-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.audio-surah-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  transition: var(--transition);
+  text-align: right;
+  width: 100%;
+}
+
+.audio-surah-item:hover {
+  border-color: rgba(107, 192, 119, 0.3);
+  background: var(--bg-card-hover);
+}
+
+.audio-surah-item.active {
+  border-color: var(--accent);
+  background: rgba(107, 192, 119, 0.1);
+}
+
+.audio-surah-num {
+  width: 32px;
+  height: 32px;
+  background: rgba(107, 192, 119, 0.15);
+  color: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.audio-surah-name {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.audio-play-icon {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.audio-surah-item.active .audio-play-icon {
+  color: var(--accent);
+}

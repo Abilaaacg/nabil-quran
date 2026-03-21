@@ -1,0 +1,197 @@
+.countdown-card {
+  background: linear-gradient(135deg, rgba(107, 192, 119, 0.15), rgba(107, 192, 119, 0.05));
+  border: 1px solid rgba(107, 192, 119, 0.3);
+  border-radius: var(--radius);
+  padding: 28px;
+  text-align: center;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.countdown-card p {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.countdown-card strong {
+  font-size: 22px;
+  color: var(--accent);
+}
+
+.countdown-time {
+  font-size: 52px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 4px;
+  font-variant-numeric: tabular-nums;
+  font-family: monospace;
+}
+
+.prayers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 500px) {
+  .prayers-grid { grid-template-columns: repeat(2, 1fr); }
+  .countdown-time { font-size: 38px; }
+}
+
+.prayer-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 12px;
+  text-align: center;
+  position: relative;
+  transition: var(--transition);
+}
+
+.prayer-card:hover {
+  background: var(--bg-card-hover);
+}
+
+.prayer-card.prayer-next {
+  border-color: var(--accent);
+  background: rgba(107, 192, 119, 0.08);
+}
+
+.prayer-icon {
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.prayer-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.prayer-time {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+  direction: ltr;
+}
+
+.prayer-badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.prayer-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.prayer-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.location-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.prayer-error {
+  background: rgba(243, 73, 73, 0.1);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  color: var(--danger);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.retry-btn {
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  transition: var(--transition);
+}
+
+.retry-btn:hover {
+  opacity: 0.85;
+}
+
+.calc-method-select {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.calc-method-select label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.method-select {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: var(--font-ui);
+}
+
+.method-select:focus {
+  border-color: var(--accent);
+}
+
+.manual-location {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.manual-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 8px;
+  animation: fadeIn 0.2s ease;
+}
+
+.location-prompt {
+  text-align: center;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}

@@ -1,0 +1,133 @@
+.surah-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.surah-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: var(--font-arabic);
+  text-align: center;
+}
+
+.back-btn {
+  color: var(--text-secondary);
+  font-size: 14px;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.back-btn:hover {
+  color: var(--accent);
+}
+
+.surah-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.font-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+}
+
+.font-controls span {
+  font-size: 13px;
+  color: var(--text-secondary);
+  min-width: 40px;
+  text-align: center;
+}
+
+.font-controls .btn-icon {
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 16px;
+  padding: 4px 8px;
+}
+
+.basmala {
+  font-family: var(--font-arabic);
+  font-size: 26px;
+  color: var(--accent);
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 16px;
+  background: rgba(107, 192, 119, 0.08);
+  border-radius: var(--radius);
+  border: 1px solid rgba(107, 192, 119, 0.2);
+}
+
+.verses-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.verse-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  transition: var(--transition);
+}
+
+.verse-item:hover {
+  border-color: rgba(107, 192, 119, 0.3);
+  background: var(--bg-card-hover);
+}
+
+.verse-text {
+  font-family: var(--font-arabic);
+  line-height: 2.2;
+  color: var(--text-primary);
+  direction: rtl;
+  text-align: right;
+}
+
+.verse-number {
+  color: var(--accent);
+  font-size: 0.85em;
+  margin-right: 4px;
+}
+
+.verse-translation {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  font-family: var(--font-arabic);
+  direction: rtl;
+}
+
+.error-box {
+  background: rgba(243, 73, 73, 0.1);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  text-align: center;
+  color: var(--danger);
+}
+
+.surah-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  gap: 12px;
+}
