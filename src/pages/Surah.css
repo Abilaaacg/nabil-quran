@@ -163,6 +163,20 @@
   letter-spacing: 0.5px;
 }
 
+/* ====== صفحة واحدة من المصحف ====== */
+.mushaf-page-block {
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.mushaf-page-num {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 12px;
+  letter-spacing: 2px;
+}
+
 /* ====== النص المتصل - قلب المصحف ====== */
 .mushaf-text {
   font-family: 'Amiri', 'Traditional Arabic', serif;

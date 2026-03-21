@@ -132,25 +132,37 @@ export default function Surah() {
         {/* النص المتصل - شكل المصحف */}
         {!loading && !error && (
           <>
-            <div
-              className="mushaf-text"
-              style={{ fontSize: `${fontSize}px` }}
-            >
-              {verses.map((ayah) => (
-                <React.Fragment key={ayah.numberInSurah}>
-                  <span
-                    className={`mushaf-word ${activeVerse === ayah.numberInSurah ? 'verse-highlight' : ''}`}
-                    onClick={() => setActiveVerse(
-                      activeVerse === ayah.numberInSurah ? null : ayah.numberInSurah
-                    )}
-                  >
-                    {ayah.text}
-                  </span>
-                  <VerseNum n={ayah.numberInSurah} />
-                  {' '}
-                </React.Fragment>
-              ))}
-            </div>
+            {Object.entries(
+              verses.reduce((acc, ayah) => {
+                const p = ayah.page || 1
+                if (!acc[p]) acc[p] = []
+                acc[p].push(ayah)
+                return acc
+              }, {})
+            ).map(([pageNum, pageVerses]) => (
+              <div key={pageNum} className="mushaf-page-block">
+                <div
+                  className="mushaf-text"
+                  style={{ fontSize: `${fontSize}px` }}
+                >
+                  {pageVerses.map((ayah) => (
+                    <React.Fragment key={ayah.numberInSurah}>
+                      <span
+                        className={`mushaf-word ${activeVerse === ayah.numberInSurah ? 'verse-highlight' : ''}`}
+                        onClick={() => setActiveVerse(
+                          activeVerse === ayah.numberInSurah ? null : ayah.numberInSurah
+                        )}
+                      >
+                        {ayah.text}
+                      </span>
+                      <VerseNum n={ayah.numberInSurah} />
+                      {' '}
+                    </React.Fragment>
+                  ))}
+                </div>
+                <div className="mushaf-page-num">— {pageNum} —</div>
+              </div>
+            ))}
 
             {/* التفسير - يظهر للآية المختارة أو كامل السورة */}
             {showTranslation && (
