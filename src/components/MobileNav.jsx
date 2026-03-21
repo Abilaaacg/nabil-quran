@@ -2,13 +2,13 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 const navItems = [
-  { to: '/', label: 'الرئيسية', icon: '🏠', end: true },
-  { to: '/quran', label: 'القرآن', icon: '📖' },
-  { to: '/prayer', label: 'الصلاة', icon: '🕌' },
-  { to: '/adhkar', label: 'الأذكار', icon: '📿' },
-  { to: '/challenge', label: 'التحدي', icon: '🏆' },
-  { to: '/sunnah', label: 'السنن', icon: '✨' },
-  { to: '/settings', label: 'إعدادات', icon: '⚙️' },
+  { to: '/',         label: 'الرئيسية', icon: '🏠', end: true },
+  { to: '/quran',    label: 'القرآن',   icon: '📖' },
+  { to: '/prayer',   label: 'الصلاة',   icon: '🕌' },
+  { to: '/adhkar',   label: 'الأذكار',  icon: '📿' },
+  { to: '/tasbeeh',  label: 'التسبيح',  icon: '🔢' },
+  { to: '/names',    label: 'الأسماء',  icon: '✨' },
+  { to: '/settings', label: 'إعدادات',  icon: '⚙️' },
 ]
 
 export default function MobileNav() {

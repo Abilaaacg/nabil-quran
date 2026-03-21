@@ -8,12 +8,15 @@ const navItems = [
   { to: '/audio', label: 'القراء', icon: '🎙️' },
   { to: '/prayer', label: 'مواقيت الصلاة', icon: '🕌' },
   { to: '/qibla',  label: 'اتجاه القبلة',  icon: '🧭' },
-  { to: '/adhkar', label: 'الأذكار', icon: '📿' },
-  { to: '/hisnmuslim', label: 'حصن المسلم', icon: '🛡️' },
-  { to: '/sunnah', label: 'السنن المهجورة', icon: '✨' },
-  { to: '/challenge', label: 'التحدي اليومي', icon: '🏆' },
-  { to: '/radio', label: 'الإذاعة', icon: '📻' },
-  { to: '/settings', label: 'الإعدادات', icon: '⚙️' },
+  { to: '/adhkar',   label: 'الأذكار',          icon: '📿' },
+  { to: '/hisnmuslim', label: 'حصن المسلم',   icon: '🛡️' },
+  { to: '/tasbeeh',  label: 'عداد التسبيح',    icon: '🔢' },
+  { to: '/names',    label: 'أسماء الله الحسنى', icon: '✨' },
+  { to: '/zakat',    label: 'حاسبة الزكاة',    icon: '💰' },
+  { to: '/sunnah',   label: 'السنن المهجورة',  icon: '🌟' },
+  { to: '/challenge',label: 'التحدي اليومي',   icon: '🏆' },
+  { to: '/radio',    label: 'الإذاعة',          icon: '📻' },
+  { to: '/settings', label: 'الإعدادات',        icon: '⚙️' },
 ]
 
 export default function Sidebar() {

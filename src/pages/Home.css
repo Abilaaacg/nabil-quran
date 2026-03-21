@@ -20,6 +20,18 @@
   color: var(--text-secondary);
 }
 
+.home-hijri {
+  margin-top: 10px;
+  display: inline-block;
+  padding: 5px 16px;
+  background: rgba(107,192,119,0.12);
+  border: 1px solid rgba(107,192,119,0.3);
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--accent);
+  font-family: var(--font-arabic);
+}
+
 .home-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
