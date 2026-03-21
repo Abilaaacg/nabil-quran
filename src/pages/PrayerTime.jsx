@@ -143,11 +143,23 @@ export default function PrayerTime() {
   // ─── حساب الأوقات عند تغيير الطريقة أو الموقع ───────────────────────
   useEffect(() => {
     if (settings.location) {
-      try {
-        setTimes(calcTimes(settings.location.lat, settings.location.lng, methodId))
-      } catch (_) {}
+      try { setTimes(calcTimes(settings.location.lat, settings.location.lng, methodId)) } catch (_) {}
     }
   }, [methodId, settings.location?.lat, settings.location?.lng])
+
+  // ─── كشف تلقائي من الـ IP عند أول دخول (بدون أذونات) ───────────────
+  useEffect(() => {
+    if (settings.location) return
+    setGpsStatus('جاري تحديد موقعك تلقائياً...')
+    fetch('https://ip-api.com/json/?fields=status,city,lat,lon&lang=ar')
+      .then(r => r.json())
+      .then(d => {
+        if (d.status === 'success' && d.lat && d.lon) {
+          pickLocation(d.lat, d.lon, d.city || '')
+        } else setGpsStatus('')
+      })
+      .catch(() => setGpsStatus(''))
+  }, [pickLocation])
 
   // ─── عداد تنازلي + أذان ──────────────────────────────────────────────
   useEffect(() => {
@@ -184,14 +196,14 @@ export default function PrayerTime() {
     return () => clearInterval(t)
   }, [times, adhanEnabled, selectedAdhan, methodId, settings.location])
 
-  // ─── اختيار موقع (مدينة أو GPS) ─────────────────────────────────────
-  const pickLocation = (lat, lng, city) => {
+  // ─── اختيار موقع (مدينة أو GPS أو IP) ──────────────────────────────
+  const pickLocation = useCallback((lat, lng, city) => {
     updateSettings({ location: { lat, lng, city } })
     try { setTimes(calcTimes(lat, lng, methodId)) } catch (_) {}
     setShowPicker(false)
     setGpsStatus('')
     setGpsLoading(false)
-  }
+  }, [methodId, updateSettings])
 
   // GPS
   const doGps = async () => {
