@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react'
 
 const CURRENT = parseInt(import.meta.env.VITE_APP_VERSION || '0')
-const VERSION_URL = 'https://nabil-quran.netlify.app/version.json'
+const REPO = 'Abilaaacg/nabil-quran'
 
 export default function UpdateChecker() {
   const [info, setInfo] = useState(null)
 
   useEffect(() => {
-    if (!CURRENT) return // بيئة dev
-    fetch(VERSION_URL + '?t=' + Date.now())
+    if (!CURRENT) return
+    fetch(`https://api.github.com/repos/${REPO}/releases/latest`)
       .then(r => r.json())
       .then(data => {
-        const latest = parseInt(data.version?.replace('v', '') || '0')
+        const latest = parseInt(data.tag_name?.replace('v', '') || '0')
         if (latest > CURRENT) {
-          setInfo({ version: data.version, url: data.url })
+          const apk = data.assets?.find(a => a.name === 'nabil-quran.apk')
+          setInfo({ version: data.tag_name, url: apk?.browser_download_url || data.html_url })
         }
       })
       .catch(() => {})
@@ -34,7 +35,7 @@ export default function UpdateChecker() {
         pointerEvents: 'all', maxWidth: 420, width: '100%',
       }}>
         <span style={{ flex: 1, fontSize: 14, fontFamily: 'var(--font-arabic)' }}>
-          🎉 تحديث جديد متاح ({info.version})
+          تحديث جديد متاح ({info.version})
         </span>
         <a
           href={info.url}
@@ -55,7 +56,7 @@ export default function UpdateChecker() {
             borderRadius: 6, width: 28, height: 28, cursor: 'pointer',
             fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}
-        >✕</button>
+        >x</button>
       </div>
     </div>
   )
