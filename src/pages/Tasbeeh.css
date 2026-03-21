@@ -317,92 +317,89 @@
   color: #e05c5c;
 }
 
-/* ─── Mobile / Capacitor ────────────────────────────────────────── */
+/* ─── Mobile ────────────────────────────────────────────────────── */
 
-@media (max-width: 480px) {
+@media (max-width: 540px) {
   .tasbeeh-page {
-    gap: 10px;
-    padding-bottom: 16px;
+    gap: 8px;
+    padding-bottom: 12px;
   }
 
+  /* إخفاء الهيدر — يوفر مساحة كبيرة */
   .tasbeeh-page .page-header {
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
-
-  .tasbeeh-page .page-header h1 {
-    font-size: 20px;
-  }
-
-  .tasbeeh-page .page-header p {
-    font-size: 12px;
+    display: none;
   }
 
   .tasbeeh-presets {
-    padding-bottom: 4px;
+    padding-bottom: 2px;
   }
 
   .tasbeeh-pill {
-    font-size: 12px;
-    padding: 6px 12px;
+    font-size: 11px;
+    padding: 5px 10px;
+    gap: 4px;
+  }
+
+  .pill-target {
+    font-size: 10px;
   }
 
   .tasbeeh-custom {
-    gap: 8px;
+    gap: 6px;
   }
 
   .custom-label {
     font-size: 12px;
   }
 
+  /* font-size: 16px يمنع zoom تلقائي على iOS */
   .custom-input {
-    width: 90px;
-    font-size: 13px;
-    padding: 5px 10px;
+    width: 80px;
+    font-size: 16px;
+    padding: 5px 8px;
   }
 
   .tasbeeh-dhikr-name {
-    font-size: 17px;
-    min-height: 26px;
+    font-size: 16px;
+    min-height: 22px;
   }
 
+  /* حجم تكيفي بالـ vw — يناسب أي شاشة */
   .tasbeeh-ring-wrapper {
-    width: 160px;
-    height: 160px;
+    width: min(175px, 48vw);
+    height: min(175px, 48vw);
   }
 
   .tasbeeh-tap-btn {
-    width: 142px;
-    height: 142px;
+    width: min(157px, 43vw);
+    height: min(157px, 43vw);
   }
 
   .tap-count {
-    font-size: 48px;
+    font-size: clamp(36px, 12vw, 56px);
+    letter-spacing: -1px;
   }
 
   .completed-label {
-    font-size: 18px;
+    font-size: clamp(13px, 4vw, 20px);
   }
 
-  .fraction-current {
-    font-size: 22px;
-  }
-
+  .fraction-current { font-size: 20px; }
   .fraction-sep,
-  .fraction-target {
-    font-size: 16px;
-  }
-
-  .tasbeeh-total-card {
-    padding: 12px 28px;
-  }
-
-  .total-number {
-    font-size: 24px;
-  }
+  .fraction-target  { font-size: 15px; }
 
   .tasbeeh-reset-btn {
     font-size: 13px;
-    padding: 8px 22px;
+    padding: 7px 20px;
   }
+
+  .tasbeeh-total-card {
+    padding: 10px 24px;
+    gap: 4px;
+    min-width: unset;
+    width: 100%;
+  }
+
+  .total-label  { font-size: 12px; }
+  .total-number { font-size: 22px; }
 }
