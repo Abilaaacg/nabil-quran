@@ -111,3 +111,17 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy website to Netlify
+        run: |
+          cd dist
+          zip -r ../dist.zip .
+          cd ..
+          curl -s -X POST \
+            "https://api.netlify.com/api/v1/sites/bae8dbee-a4ef-428b-9f38-f806e20445ed/deploys" \
+            -H "Authorization: Bearer $NETLIFY_TOKEN" \
+            -H "Content-Type: application/zip" \
+            --data-binary @dist.zip \
+            | python3 -c "import sys,json; d=json.load(sys.stdin); print('Netlify deploy state:', d.get('state'))"
+        env:
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
