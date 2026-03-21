@@ -159,9 +159,17 @@ export default function PrayerTime() {
     setError(null)
     setStatus('جاري تحديد الموقع...')
 
-    const onSuccess = (lat, lng, city = '') => {
-      const loc = { lat, lng, city }
-      updateSettings({ location: loc })
+    const saveLocation = async (lat, lng) => {
+      let city = ''
+      try {
+        const r = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=ar`,
+          { headers: { 'Accept-Language': 'ar' } }
+        )
+        const d = await r.json()
+        city = d.address?.city || d.address?.town || d.address?.village || d.address?.county || ''
+      } catch (_) {}
+      updateSettings({ location: { lat, lng, city } })
       computeTimes(lat, lng, methodId)
       setLoading(false)
       setStatus('')
@@ -173,45 +181,51 @@ export default function PrayerTime() {
       setStatus('')
     }
 
-    const ipFallback = () => {
-      setStatus('جاري الاستعلام عن الموقع...')
-      fetch('https://ipapi.co/json/')
-        .then(r => r.json())
-        .then(d => {
-          if (d.latitude && d.longitude) {
-            onSuccess(d.latitude, d.longitude, d.city || d.country_name || '')
-          } else {
-            onFail('تعذر تحديد الموقع تلقائيًا. يرجى إدخال الإحداثيات يدويًا.')
-          }
-        })
-        .catch(() => onFail('تعذر الاتصال بخدمة تحديد الموقع'))
+    if (!navigator.geolocation) {
+      onFail('المتصفح لا يدعم تحديد الموقع. ابحث عن مدينتك أدناه.')
+      return
     }
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async pos => {
-          const lat = pos.coords.latitude
-          const lng = pos.coords.longitude
-          let city = ''
-          try {
-            const r = await fetch(
-              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=ar`,
-              { headers: { 'Accept-Language': 'ar' } }
-            )
-            const d = await r.json()
-            city = d.address?.city || d.address?.town || d.address?.village || d.address?.county || ''
-          } catch (_) {}
-          onSuccess(lat, lng, city)
-        },
-        err => {
-          console.warn('GPS denied:', err.message)
-          ipFallback()
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
-      )
-    } else {
-      ipFallback()
+    // watchPosition للحصول على أفضل دقة
+    let bestAccuracy = Infinity
+    let bestPos = null
+    let watchId = null
+    let done = false
+
+    const finish = () => {
+      if (done) return
+      done = true
+      if (watchId !== null) navigator.geolocation.clearWatch(watchId)
+      if (bestPos) {
+        saveLocation(bestPos.coords.latitude, bestPos.coords.longitude)
+      } else {
+        onFail('تعذر تحديد الموقع. ابحث عن مدينتك أدناه.')
+      }
     }
+
+    const timeoutId = setTimeout(finish, 15000)
+
+    watchId = navigator.geolocation.watchPosition(
+      pos => {
+        const acc = pos.coords.accuracy
+        setStatus(`جاري تحديد الموقع... دقة: ${Math.round(acc)} م`)
+        if (acc < bestAccuracy) {
+          bestAccuracy = acc
+          bestPos = pos
+        }
+        if (acc < 100) {
+          clearTimeout(timeoutId)
+          finish()
+        }
+      },
+      err => {
+        clearTimeout(timeoutId)
+        done = true
+        if (watchId !== null) navigator.geolocation.clearWatch(watchId)
+        onFail('تعذر الوصول إلى GPS. ابحث عن مدينتك أدناه.')
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+    )
   }, [computeTimes, methodId, updateSettings])
 
   // auto-detect عند أول تحميل إذا لا يوجد موقع محفوظ
@@ -358,9 +372,9 @@ export default function PrayerTime() {
             )}
           </div>
 
-          {/* Manual Coords */}
-          <ManualLocation onSet={(lat, lng) => {
-            updateSettings({ location: { lat, lng, city: 'موقع مخصص' } })
+          {/* بحث بالمدينة */}
+          <CitySearch onSet={(lat, lng, city) => {
+            updateSettings({ location: { lat, lng, city } })
             computeTimes(lat, lng, methodId)
           }} />
 
@@ -418,46 +432,60 @@ export default function PrayerTime() {
   )
 }
 
-function ManualLocation({ onSet }) {
-  const [show, setShow] = useState(false)
-  const [lat, setLat] = useState('')
-  const [lng, setLng] = useState('')
+function CitySearch({ onSet }) {
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState([])
+  const [searching, setSearching] = useState(false)
+  const debounceRef = useRef(null)
 
-  const submit = () => {
-    const la = parseFloat(lat)
-    const lo = parseFloat(lng)
-    if (!isNaN(la) && !isNaN(lo) && la >= -90 && la <= 90 && lo >= -180 && lo <= 180) {
-      onSet(la, lo)
-      setShow(false)
-    }
+  const search = (q) => {
+    setResults([])
+    if (!q.trim() || q.length < 2) return
+    clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(async () => {
+      setSearching(true)
+      try {
+        const r = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=6&accept-language=ar&featuretype=city`
+        )
+        const d = await r.json()
+        setResults(d)
+      } catch (_) {}
+      setSearching(false)
+    }, 500)
+  }
+
+  const pick = (item) => {
+    const name = item.display_name.split(',')[0].trim()
+    onSet(parseFloat(item.lat), parseFloat(item.lon), name)
+    setQuery(name)
+    setResults([])
   }
 
   return (
-    <div className="manual-location mt-4">
-      <button className="btn btn-secondary" onClick={() => setShow(s => !s)}>
-        🗺️ إدخال الإحداثيات يدويًا
-      </button>
-      {show && (
-        <div className="manual-form">
-          <input
-            type="number"
-            placeholder="خط العرض (مثال: 24.68)"
-            value={lat}
-            onChange={e => setLat(e.target.value)}
-            className="search-input"
-            style={{ marginBottom: 8 }}
-          />
-          <input
-            type="number"
-            placeholder="خط الطول (مثال: 46.72)"
-            value={lng}
-            onChange={e => setLng(e.target.value)}
-            className="search-input"
-            style={{ marginBottom: 8 }}
-          />
-          <button className="btn btn-primary" onClick={submit}>تأكيد</button>
-        </div>
-      )}
+    <div className="city-search mt-4">
+      <label className="city-search-label">🔍 ابحث عن مدينتك</label>
+      <div className="city-search-wrap">
+        <input
+          className="search-input"
+          placeholder="اكتب اسم المدينة... مثال: القاهرة"
+          value={query}
+          onChange={e => { setQuery(e.target.value); search(e.target.value) }}
+          style={{ marginTop: 8 }}
+        />
+        {searching && (
+          <div className="city-searching">جاري البحث...</div>
+        )}
+        {results.length > 0 && (
+          <div className="city-results">
+            {results.map((r, i) => (
+              <button key={i} className="city-result-item" onClick={() => pick(r)}>
+                📍 {r.display_name}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

@@ -282,3 +282,67 @@
 .adhan-preview:hover {
   background: rgba(107,192,119,0.2);
 }
+
+/* ====== بحث المدينة ====== */
+.city-search {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.city-search-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.city-search-wrap {
+  position: relative;
+}
+
+.city-searching {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.city-results {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  left: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  z-index: 50;
+  max-height: 240px;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  animation: fadeIn 0.15s ease;
+}
+
+.city-result-item {
+  display: block;
+  width: 100%;
+  text-align: right;
+  padding: 11px 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-family: var(--font-arabic);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.city-result-item:last-child {
+  border-bottom: none;
+}
+
+.city-result-item:hover {
+  background: rgba(107,192,119,0.08);
+  color: var(--accent);
+}
