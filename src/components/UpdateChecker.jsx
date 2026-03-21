@@ -50,22 +50,20 @@ async function sendUpdateNotification(version) {
 export default function UpdateChecker() {
   const [info, setInfo] = useState(null)
   const [step, setStep] = useState('idle')
-  const [dbg, setDbg] = useState(`v=${CURRENT}`)
 
   useEffect(() => {
-    if (!CURRENT) { setDbg('CURRENT=0 no check'); return }
+    if (!CURRENT) return
     fetch(VERSION_URL + '?t=' + Date.now())
       .then(r => r.json())
       .then(data => {
         const latest = parseInt(data.version?.replace('v', '') || '0')
-        setDbg(`cur=${CURRENT} latest=${latest}`)
         if (latest > CURRENT && data.url) {
           const info = { version: data.version, url: data.url }
           setInfo(info)
           sendUpdateNotification(info.version)
         }
       })
-      .catch(e => setDbg(`cur=${CURRENT} err:${e.message}`))
+      .catch(() => {})
   }, [])
 
   if (!info) return null
@@ -83,17 +81,8 @@ export default function UpdateChecker() {
     }
   }
 
-  // DEBUG BAR — remove after testing
-  const debugBar = (
-    <div style={{position:'fixed',top:0,left:0,right:0,zIndex:99999,background:'#c00',color:'#fff',fontSize:11,padding:'4px 8px',textAlign:'center',fontFamily:'monospace'}}>
-      {dbg}
-    </div>
-  )
-
   if (step === 'downloading') {
     return (
-      <>
-      {debugBar}
       <div style={{
         position: 'fixed', bottom: 70, left: 0, right: 0, zIndex: 999,
         display: 'flex', justifyContent: 'center', padding: '0 16px',
@@ -117,13 +106,10 @@ export default function UpdateChecker() {
           </div>
         </div>
       </div>
-      </>
     )
   }
 
   return (
-    <>
-    {debugBar}
     <div style={{
       position: 'fixed', bottom: 70, left: 0, right: 0, zIndex: 999,
       display: 'flex', justifyContent: 'center', padding: '0 16px',
@@ -159,6 +145,5 @@ export default function UpdateChecker() {
         >×</button>
       </div>
     </div>
-    </>
   )
 }
