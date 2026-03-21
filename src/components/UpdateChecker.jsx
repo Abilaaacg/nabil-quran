@@ -44,6 +44,34 @@ export default function UpdateChecker() {
     }
   }
 
+  if (step === 'downloading') {
+    return (
+      <div style={{
+        position: 'fixed', bottom: 70, left: 0, right: 0, zIndex: 999,
+        display: 'flex', justifyContent: 'center', padding: '0 16px',
+        pointerEvents: 'none',
+      }}>
+        <div style={{
+          background: '#1a2f1a', border: '1px solid rgba(107,192,119,0.4)',
+          color: '#fff', borderRadius: 12, padding: '14px 18px',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+          pointerEvents: 'all', maxWidth: 420, width: '100%',
+          fontFamily: 'var(--font-arabic)',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+            <span style={{ fontSize: 18 }}>⬇</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: '#6bc077' }}>جاري تحميل التحديث...</span>
+          </div>
+          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>
+            لو ظهرت رسالة <strong style={{ color: 'rgba(255,255,255,0.85)' }}>تعارض في التوقيع</strong>:<br />
+            ١. أزل التطبيق القديم من الإعدادات<br />
+            ٢. افتح <strong style={{ color: '#6bc077' }}>إشعار التحميل</strong> في شريط الحالة لإكمال التثبيت
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div style={{
       position: 'fixed', bottom: 70, left: 0, right: 0, zIndex: 999,
@@ -65,7 +93,7 @@ export default function UpdateChecker() {
             padding: '6px 14px', fontSize: 13, fontWeight: 700,
             whiteSpace: 'nowrap', fontFamily: 'var(--font-arabic)',
           }}>
-            جاري التحميل...
+            ⬇ جاري التحميل...
           </span>
         ) : (
           <button
