@@ -285,31 +285,63 @@ input, select, textarea {
   background: var(--bg-secondary);
   border-top: 1px solid var(--border);
   z-index: 100;
-  padding: 8px 0;
+  padding: 6px 0 8px;
+  height: 62px;
 }
 
 @media (max-width: 768px) {
   .sidebar { display: none; }
-  .mobile-nav { display: flex; justify-content: space-around; }
+  .mobile-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .main-content { margin-bottom: 62px; }
 }
 
 .mobile-nav a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   color: var(--text-muted);
   font-size: 10px;
-  padding: 6px 10px;
-  transition: var(--transition);
+  padding: 4px 14px;
+  border-radius: 12px;
+  transition: color 0.2s, background 0.2s;
+  min-width: 52px;
 }
 
 .mobile-nav a.active {
   color: var(--accent);
+  background: rgba(107,192,119,0.1);
+}
+
+.mobile-nav a.active .nav-icon {
+  transform: scale(1.15);
 }
 
 .mobile-nav .nav-icon {
-  font-size: 20px;
+  font-size: 22px;
+  transition: transform 0.2s;
+  line-height: 1;
+}
+
+/* ====== Page Transition ====== */
+.page-transition {
+  animation: pageSlideIn 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform, opacity;
+}
+
+@keyframes pageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /* ====== Cards ====== */
