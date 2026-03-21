@@ -2,24 +2,32 @@
   position: fixed;
   bottom: 90px;
   left: 20px;
-  height: 48px;
-  padding: 0 18px 0 14px;
+  height: 46px;
+  padding: 0 16px 0 12px;
   border-radius: 28px;
-  background: linear-gradient(135deg, #4a9a56, #2d7a3a);
-  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(107, 192, 119, 0.35);
   cursor: pointer;
   z-index: 900;
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 4px 18px rgba(58,138,74,0.45);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(107,192,119,0.15) inset,
+    0 1px 0 rgba(255,255,255,0.12) inset;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
   direction: rtl;
 }
 
 .chat-fab:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 22px rgba(58,138,74,0.6);
+  background: rgba(107, 192, 119, 0.15);
+  box-shadow:
+    0 6px 24px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(107,192,119,0.3) inset;
 }
 
 .chat-fab:active {
@@ -27,21 +35,24 @@
 }
 
 .chat-fab-icon {
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1;
   position: relative;
   z-index: 1;
   flex-shrink: 0;
+  filter: drop-shadow(0 0 6px rgba(107,192,119,0.7));
 }
 
 .chat-fab-label {
   font-size: 13px;
-  font-weight: 700;
-  color: #fff;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
   font-family: var(--font-arabic, 'Tajawal', sans-serif);
   white-space: nowrap;
   position: relative;
   z-index: 1;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  letter-spacing: 0.01em;
 }
 
 /* نبضة */
@@ -49,14 +60,27 @@
   position: absolute;
   inset: 0;
   border-radius: 28px;
-  background: rgba(107,192,119,0.35);
-  animation: fab-pulse 2.6s ease-out infinite;
+  background: rgba(107, 192, 119, 0.2);
+  animation: fab-pulse 3s ease-out infinite;
 }
 
 @keyframes fab-pulse {
-  0%   { transform: scale(1); opacity: 0.8; }
-  70%  { transform: scale(1.12); opacity: 0; }
-  100% { transform: scale(1.12); opacity: 0; }
+  0%   { transform: scale(1);    opacity: 0.7; }
+  70%  { transform: scale(1.14); opacity: 0;   }
+  100% { transform: scale(1.14); opacity: 0;   }
+}
+
+[data-theme="light"] .chat-fab {
+  background: rgba(255, 255, 255, 0.55);
+  border-color: rgba(74, 154, 86, 0.4);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.12),
+    0 0 0 1px rgba(74,154,86,0.2) inset;
+}
+
+[data-theme="light"] .chat-fab-label {
+  color: rgba(30, 60, 35, 0.9);
+  text-shadow: none;
 }
 
 @media (min-width: 769px) {
