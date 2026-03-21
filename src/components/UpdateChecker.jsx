@@ -1,10 +1,18 @@
 import { useEffect, useState } from 'react'
+import { registerPlugin } from '@capacitor/core'
+
+const UpdatePlugin = registerPlugin('UpdatePlugin')
+
+const isNative = () =>
+  typeof window !== 'undefined' &&
+  (window.Capacitor?.isNativePlatform?.() || window.navigator?.userAgent?.includes('CapacitorWebView'))
 
 const CURRENT = parseInt(import.meta.env.VITE_APP_VERSION || '0')
 const REPO = 'Abilaaacg/nabil-quran'
 
 export default function UpdateChecker() {
   const [info, setInfo] = useState(null)
+  const [step, setStep] = useState('idle') // idle | downloading
 
   useEffect(() => {
     if (!CURRENT) return
@@ -22,6 +30,20 @@ export default function UpdateChecker() {
 
   if (!info) return null
 
+  const handleUpdate = async () => {
+    if (isNative()) {
+      setStep('downloading')
+      try {
+        await UpdatePlugin.downloadAndInstall({ url: info.url })
+        // download started — install dialog will appear automatically when done
+      } catch {
+        setStep('idle')
+      }
+    } else {
+      window.open(info.url, '_blank')
+    }
+  }
+
   return (
     <div style={{
       position: 'fixed', bottom: 70, left: 0, right: 0, zIndex: 999,
@@ -37,18 +59,27 @@ export default function UpdateChecker() {
         <span style={{ flex: 1, fontSize: 14, fontFamily: 'var(--font-arabic)' }}>
           تحديث جديد متاح ({info.version})
         </span>
-        <a
-          href={info.url}
-          target="_blank"
-          rel="noreferrer"
-          style={{
-            background: '#fff', color: 'var(--accent)', borderRadius: 8,
+        {step === 'downloading' ? (
+          <span style={{
+            background: 'rgba(255,255,255,0.2)', borderRadius: 8,
             padding: '6px 14px', fontSize: 13, fontWeight: 700,
-            textDecoration: 'none', whiteSpace: 'nowrap',
-          }}
-        >
-          تحديث الآن
-        </a>
+            whiteSpace: 'nowrap', fontFamily: 'var(--font-arabic)',
+          }}>
+            جاري التحميل...
+          </span>
+        ) : (
+          <button
+            onClick={handleUpdate}
+            style={{
+              background: '#fff', color: 'var(--accent)', borderRadius: 8,
+              padding: '6px 14px', fontSize: 13, fontWeight: 700,
+              border: 'none', cursor: 'pointer', whiteSpace: 'nowrap',
+              fontFamily: 'var(--font-arabic)',
+            }}
+          >
+            تحديث الآن
+          </button>
+        )}
         <button
           onClick={() => setInfo(null)}
           style={{
@@ -56,7 +87,7 @@ export default function UpdateChecker() {
             borderRadius: 6, width: 28, height: 28, cursor: 'pointer',
             fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}
-        >x</button>
+        >×</button>
       </div>
     </div>
   )
