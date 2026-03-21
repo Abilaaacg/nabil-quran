@@ -6,6 +6,7 @@ const navItems = [
   { to: '/quran', label: 'القرآن', icon: '📖' },
   { to: '/audio', label: 'القراء', icon: '🎙️' },
   { to: '/prayer', label: 'الصلاة', icon: '🕌' },
+  { to: '/qibla',  label: 'القبلة',  icon: '🧭' },
   { to: '/adhkar', label: 'الأذكار', icon: '📿' },
   { to: '/radio', label: 'الإذاعة', icon: '📻' },
 ]

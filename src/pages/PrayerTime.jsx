@@ -3,6 +3,14 @@ import * as adhan from 'adhan'
 import { useApp } from '../context/AppContext'
 import './PrayerTime.css'
 
+const ADHAN_SOUNDS = [
+  { id: 'makkah',  name: 'أذان الحرم المكي',      url: 'https://www.islamcan.com/audio/adhan/azan1.mp3' },
+  { id: 'madinah', name: 'أذان المسجد النبوي',     url: 'https://www.islamcan.com/audio/adhan/azan2.mp3' },
+  { id: 'egypt',   name: 'أذان مصري',              url: 'https://www.islamcan.com/audio/adhan/azan3.mp3' },
+  { id: 'mishary', name: 'مشاري العفاسي',           url: 'https://www.islamcan.com/audio/adhan/azan4.mp3' },
+  { id: 'turkish', name: 'أذان تركي',              url: 'https://www.islamcan.com/audio/adhan/azan5.mp3' },
+]
+
 const PRAYER_NAMES = {
   fajr:    { ar: 'الفجر',   icon: '🌙' },
   sunrise: { ar: 'الشروق',  icon: '🌅' },
@@ -74,6 +82,12 @@ export default function PrayerTime() {
   const [status, setStatus] = useState('')
   const [error, setError] = useState(null)
   const [now, setNow] = useState(new Date())
+  const [adhanEnabled, setAdhanEnabled] = useState(settings.adhanEnabled ?? false)
+  const [selectedAdhan, setSelectedAdhan] = useState(settings.adhanSound || 'makkah')
+  const [previewAudio, setPreviewAudio] = useState(null)
+  const [previewing, setPreviewing] = useState(false)
+  const playedRef = useRef({})
+  const audioRef = useRef(null)
   const methodId = settings.calcMethod || 'UmmAlQura'
 
   // احسب الأوقات
@@ -144,15 +158,60 @@ export default function PrayerTime() {
     }
   }, [methodId]) // إعادة الحساب عند تغيير الطريقة
 
-  // عداد تنازلي
+  // عداد تنازلي + أذان
   useEffect(() => {
     const t = setInterval(() => {
       const n = new Date()
       setNow(n)
-      if (times) setNext(getNextPrayer(times))
+      if (times) {
+        setNext(getNextPrayer(times))
+        // تشغيل الأذان عند وقت الصلاة
+        if (adhanEnabled) {
+          const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']
+          const today = n.toDateString()
+          prayers.forEach(key => {
+            const pt = times[key]
+            if (!pt) return
+            const diff = Math.abs(n - pt)
+            const playKey = `${today}_${key}`
+            if (diff < 30000 && !playedRef.current[playKey]) {
+              playedRef.current[playKey] = true
+              const sound = ADHAN_SOUNDS.find(s => s.id === selectedAdhan) || ADHAN_SOUNDS[0]
+              if (audioRef.current) audioRef.current.pause()
+              audioRef.current = new Audio(sound.url)
+              audioRef.current.play().catch(() => {})
+            }
+          })
+        }
+      }
     }, 1000)
     return () => clearInterval(t)
-  }, [times])
+  }, [times, adhanEnabled, selectedAdhan])
+
+  const toggleAdhan = () => {
+    const val = !adhanEnabled
+    setAdhanEnabled(val)
+    updateSettings({ adhanEnabled: val })
+  }
+
+  const changeAdhan = (id) => {
+    setSelectedAdhan(id)
+    updateSettings({ adhanSound: id })
+  }
+
+  const previewAdhan = () => {
+    if (previewing) {
+      audioRef.current?.pause()
+      setPreviewing(false)
+      return
+    }
+    const sound = ADHAN_SOUNDS.find(s => s.id === selectedAdhan) || ADHAN_SOUNDS[0]
+    if (audioRef.current) audioRef.current.pause()
+    audioRef.current = new Audio(sound.url)
+    audioRef.current.play().catch(() => {})
+    audioRef.current.onended = () => setPreviewing(false)
+    setPreviewing(true)
+  }
 
   const todayDate = now.toLocaleDateString('ar-EG', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
@@ -240,6 +299,41 @@ export default function PrayerTime() {
                 <option key={m.id} value={m.id}>{m.name}</option>
               ))}
             </select>
+          </div>
+
+          {/* الأذان */}
+          <div className="adhan-section mt-4">
+            <div className="adhan-header">
+              <span className="adhan-label">🔔 الأذان التلقائي</span>
+              <button
+                className={`adhan-toggle ${adhanEnabled ? 'on' : 'off'}`}
+                onClick={toggleAdhan}
+              >
+                {adhanEnabled ? 'مفعّل' : 'معطّل'}
+              </button>
+            </div>
+
+            {adhanEnabled && (
+              <div className="adhan-picker">
+                <label style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 8, display: 'block' }}>
+                  اختر صوت المؤذن:
+                </label>
+                <div className="adhan-list">
+                  {ADHAN_SOUNDS.map(s => (
+                    <button
+                      key={s.id}
+                      className={`adhan-item ${selectedAdhan === s.id ? 'active' : ''}`}
+                      onClick={() => changeAdhan(s.id)}
+                    >
+                      {s.name}
+                    </button>
+                  ))}
+                </div>
+                <button className="adhan-preview" onClick={previewAdhan}>
+                  {previewing ? '⏹ إيقاف' : '▶ معاينة الأذان'}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

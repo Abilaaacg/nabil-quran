@@ -195,3 +195,90 @@
   align-items: center;
   gap: 16px;
 }
+
+/* ====== قسم الأذان ====== */
+.adhan-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.adhan-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.adhan-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-arabic);
+}
+
+.adhan-toggle {
+  padding: 6px 18px;
+  border-radius: 20px;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-arabic);
+  transition: var(--transition);
+}
+
+.adhan-toggle.on {
+  background: var(--accent);
+  color: #fff;
+}
+
+.adhan-toggle.off {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.adhan-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.adhan-item {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  padding: 10px 14px;
+  text-align: right;
+  font-size: 14px;
+  font-family: var(--font-arabic);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.adhan-item:hover, .adhan-item.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(107,192,119,0.08);
+}
+
+.adhan-preview {
+  width: 100%;
+  background: rgba(107,192,119,0.1);
+  border: 1px solid rgba(107,192,119,0.3);
+  border-radius: 8px;
+  color: var(--accent);
+  padding: 10px;
+  font-size: 14px;
+  font-family: var(--font-arabic);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.adhan-preview:hover {
+  background: rgba(107,192,119,0.2);
+}

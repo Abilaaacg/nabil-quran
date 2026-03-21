@@ -13,6 +13,7 @@ import AdhkarCategory from './pages/AdhkarCategory'
 import HisnMuslim from './pages/HisnMuslim'
 import Radio from './pages/Radio'
 import Settings from './pages/Settings'
+import Qibla from './pages/Qibla'
 import UpdateChecker from './components/UpdateChecker'
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
               <Route path="/adhkar/:category" element={<AdhkarCategory />} />
               <Route path="/hisnmuslim" element={<HisnMuslim />} />
               <Route path="/radio" element={<Radio />} />
+              <Route path="/qibla" element={<Qibla />} />
               <Route path="/settings" element={<Settings />} />
             </Routes>
           </main>
