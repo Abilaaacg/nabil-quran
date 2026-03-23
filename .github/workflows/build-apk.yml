@@ -59,7 +59,7 @@ jobs:
             keytool -genkeypair -noprompt \
               -keystore ~/.android/release.keystore \
               -storepass android \
-              -alias appkey \
+              -alias androiddebugkey \
               -keypass android \
               -keyalg RSA -keysize 2048 -validity 10000 \
               -dname "CN=Nabil Quran,O=NabilQuran,C=EG"

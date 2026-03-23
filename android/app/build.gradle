@@ -20,7 +20,7 @@ android {
         release {
             storeFile file("${System.getProperty('user.home')}/.android/release.keystore")
             storePassword "android"
-            keyAlias "appkey"
+            keyAlias "androiddebugkey"
             keyPassword "android"
         }
     }
