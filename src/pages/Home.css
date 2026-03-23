@@ -42,16 +42,18 @@
 @media (max-width: 480px) {
   .home-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 8px;
   }
-  .home-hero { padding: 24px 0 20px; }
-  .home-hero-icon { font-size: 44px; margin-bottom: 10px; }
-  .home-hero h1 { font-size: 24px; }
-  .home-hero p { font-size: 14px; }
-  .home-card { padding: 16px 12px; gap: 8px; }
-  .home-card-icon { width: 44px; height: 44px; font-size: 22px; }
-  .home-card h2 { font-size: 14px; }
-  .home-card p { font-size: 11px; }
+  .home-hero { padding: 12px 0 8px; }
+  .home-hero-icon { font-size: 32px; margin-bottom: 6px; }
+  .home-hero h1 { font-size: 20px; }
+  .home-hero p { font-size: 12px; }
+  .home-hijri { font-size: 11px; margin-top: 6px; padding: 3px 12px; }
+  .home-card { padding: 12px 10px; gap: 6px; }
+  .home-card-icon { width: 36px; height: 36px; font-size: 18px; border-radius: 10px; }
+  .home-card h2 { font-size: 13px; }
+  .home-card p { font-size: 10px; line-height: 1.4; }
+  .home-footer { margin-top: 20px; }
 }
 
 .home-card {

@@ -210,9 +210,33 @@
 }
 
 @media (max-width: 600px) {
-  .apk-banner-inner { flex-direction: column; align-items: flex-start; }
-  .apk-download-btn { width: 100%; justify-content: center; }
-  .apk-features { gap: 10px; }
+  .apk-banner {
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 12px;
+  }
+  .apk-banner-glow { display: none; }
+  .apk-banner-inner {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+  .apk-icon-ring { display: none; }
+  .apk-icon { width: 40px; height: 40px; font-size: 20px; }
+  .apk-title { font-size: 13px; margin-bottom: 2px; }
+  .apk-meta { gap: 4px; }
+  .apk-version { font-size: 10px; padding: 1px 6px; }
+  .apk-badge { font-size: 9px; padding: 1px 6px; }
+  .apk-download-btn {
+    padding: 8px 14px;
+    font-size: 12px;
+    border-radius: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .apk-download-icon { font-size: 14px; }
+  .apk-features { display: none; }
 }
 
 /* ====== حالة ما بعد التحميل ====== */
