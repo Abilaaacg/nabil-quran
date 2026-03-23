@@ -1,77 +1,60 @@
-.wn-banner {
-  position: relative;
-  z-index: 100;
-  margin: 0 12px 8px;
+.wn-toast {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 1000;
+  background: var(--bg-card);
+  border: 1px solid rgba(107,192,119,0.35);
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid rgba(107,192,119,0.3);
-  background: var(--bg-card);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  animation: wn-slide-down 0.3s ease;
   direction: rtl;
 }
 
-.wn-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  cursor: pointer;
-  background: rgba(107,192,119,0.08);
+@keyframes wn-slide-down {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
 }
 
-.wn-bar-text {
+.wn-toast-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+}
+
+.wn-toast-icon { font-size: 20px; }
+
+.wn-toast-text {
   flex: 1;
-  font-family: var(--font-arabic);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--accent);
-}
-
-.wn-bar-arrow {
-  font-size: 10px;
-  color: var(--text-muted);
-}
-
-.wn-close {
-  background: rgba(255,255,255,0.1);
-  border: none;
-  color: var(--text-muted);
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.wn-details {
-  padding: 8px 12px 10px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-}
-
-.wn-change {
   font-family: var(--font-arabic);
-  font-size: 12px;
-  color: var(--text-secondary);
-  padding: 4px 8px;
-  background: var(--bg-secondary);
-  border-radius: 6px;
-  line-height: 1.5;
 }
 
-.wn-got-it {
-  margin-top: 6px;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 6px;
+.wn-toast-text strong {
   font-size: 13px;
-  font-weight: 700;
-  font-family: var(--font-arabic);
-  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.wn-toast-sub {
+  font-size: 11px;
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+.wn-toast-timer {
+  font-size: 12px;
+  color: var(--text-muted);
+  min-width: 16px;
+  text-align: center;
+}
+
+.wn-toast-bar {
+  height: 3px;
+  background: var(--accent);
+  transition: width 1s linear;
+  border-radius: 0 0 2px 2px;
 }

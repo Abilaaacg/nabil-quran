@@ -1,161 +1,152 @@
-/* ─── Tasbeeh Presets ────────────────────────────────────────────── */
-
-.tasbeeh-presets {
+.tasbeeh-page {
   display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 0 0 8px;
-  width: 100%;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding-top: 12px !important;
+}
+
+/* ─── Presets ─────────────────────────────── */
+.tb-presets {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
   direction: rtl;
 }
-.tasbeeh-presets::-webkit-scrollbar { display: none; }
 
-.tasbeeh-pill {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border-radius: 999px;
+.tb-pill {
+  padding: 6px 12px;
+  border-radius: 20px;
   border: 1.5px solid var(--border);
   background: var(--bg-card);
   color: var(--text-secondary);
   font-family: var(--font-arabic);
-  font-size: 13px;
+  font-size: 12px;
   cursor: pointer;
   transition: all 0.2s;
-  white-space: nowrap;
 }
-.tasbeeh-pill:hover { border-color: var(--accent); color: var(--text-primary); }
-.tasbeeh-pill.active {
+.tb-pill.active {
   border-color: var(--accent);
-  background: rgba(107, 192, 119, 0.15);
+  background: rgba(107,192,119,0.15);
   color: var(--accent);
   font-weight: 700;
 }
 
-.pill-target {
-  font-size: 10px;
-  opacity: 0.6;
-  background: rgba(255,255,255,0.08);
-  border-radius: 999px;
-  padding: 1px 6px;
-}
-
-/* ─── Main Card ──────────────────────────────────────────────────── */
-
-.tasbeeh-main-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  padding: 20px;
-}
-
-.tasbeeh-dhikr-name {
+/* ─── Dhikr Name ──────────────────────────── */
+.tb-name {
   font-family: var(--font-arabic);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--accent);
   text-align: center;
 }
 
-/* ─── Ring ────────────────────────────────────────────────────────── */
-
-.tasbeeh-ring-wrapper {
+/* ─── Main Button ─────────────────────────── */
+.tb-btn {
   position: relative;
-  width: 180px;
-  height: 180px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(145deg, #7ed68a, #3a8a4a);
+  box-shadow: 0 6px 20px rgba(107,192,119,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.tb-btn:active { transform: scale(0.94); }
+.tb-btn.pulse { animation: tb-pulse 0.15s ease-out; }
+.tb-btn.done {
+  background: linear-gradient(145deg, #f9d04a, #c98d0f);
+  box-shadow: 0 6px 20px rgba(233,184,60,0.4);
+}
+
+@keyframes tb-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.tb-ring {
+  position: absolute;
+  inset: 4px;
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
+}
+
+.tb-count {
+  position: relative;
+  z-index: 1;
+  font-size: 48px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* ─── Info Row ────────────────────────────── */
+.tb-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tb-fraction {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  direction: ltr;
+}
+
+.tb-reset {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.tasbeeh-progress-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.ring-track    { stroke: var(--bg-secondary); }
-.ring-progress { stroke: var(--accent); transition: stroke-dashoffset 0.25s ease; }
-
-.tasbeeh-tap-btn {
-  position: relative; z-index: 1;
-  width: 160px; height: 160px;
-  border-radius: 50%; border: none; cursor: pointer;
-  background: linear-gradient(145deg, #7ed68a 0%, #4faa5e 50%, #3a8a4a 100%);
-  box-shadow: 0 6px 24px rgba(107,192,119,0.4), 0 2px 8px rgba(0,0,0,0.2);
-  display: flex; align-items: center; justify-content: center;
-  transition: transform 0.1s; -webkit-tap-highlight-color: transparent; user-select: none;
-}
-.tasbeeh-tap-btn:active { transform: scale(0.95); }
-.tasbeeh-tap-btn.pulse { animation: tap-pulse 0.2s ease-out; }
-.tasbeeh-tap-btn.completed {
-  background: linear-gradient(145deg, #f9d04a 0%, #e6a817 50%, #c98d0f 100%);
-  box-shadow: 0 6px 24px rgba(233,184,60,0.5);
+/* ─── Total ───────────────────────────────── */
+.tb-total {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-arabic);
+  font-size: 13px;
+  color: var(--text-secondary);
 }
 
-@keyframes tap-pulse { 0% { transform: scale(1); } 40% { transform: scale(1.06); } 100% { transform: scale(1); } }
-
-.tap-count {
-  font-family: var(--font-ui); font-size: 56px; font-weight: 700;
-  color: #fff; line-height: 1; text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+.tb-total-clear {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-arabic);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 2px 6px;
 }
+.tb-total-clear:hover { color: #e05c5c; }
 
-.completed-label {
-  font-family: var(--font-arabic); font-size: 20px; font-weight: 700;
-  color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+/* ─── Mobile ──────────────────────────────── */
+@media (max-width: 480px) {
+  .tasbeeh-page { gap: 10px; padding-top: 8px !important; }
+  .tb-pill { font-size: 11px; padding: 5px 10px; }
+  .tb-name { font-size: 16px; }
+  .tb-btn { width: 140px; height: 140px; }
+  .tb-count { font-size: 40px; }
+  .tb-fraction { font-size: 16px; }
 }
-@keyframes pop-in { 0% { transform: scale(0.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-
-/* ─── Fraction ───────────────────────────────────────────────────── */
-
-.tasbeeh-fraction { display: flex; align-items: baseline; gap: 4px; direction: ltr; }
-.fraction-current { font-size: 24px; font-weight: 700; color: var(--accent); }
-.fraction-sep     { font-size: 18px; color: var(--text-muted); }
-.fraction-target  { font-size: 16px; color: var(--text-secondary); }
-
-/* ─── Reset Button ───────────────────────────────────────────────── */
-
-.tasbeeh-reset-btn {
-  padding: 8px 24px; border-radius: var(--radius);
-  border: 1.5px solid var(--border); background: var(--bg-card);
-  color: var(--text-secondary); font-family: var(--font-arabic); font-size: 14px;
-  cursor: pointer; transition: all 0.2s;
-}
-.tasbeeh-reset-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-/* ─── Custom Target Card ─────────────────────────────────────────── */
-
-.tasbeeh-custom-card {
-  display: flex; align-items: center; gap: 12px;
-  padding: 14px 16px; direction: rtl;
-}
-.custom-label {
-  font-family: var(--font-arabic); font-size: 14px;
-  color: var(--text-secondary); white-space: nowrap;
-}
-.custom-input {
-  flex: 1; padding: 8px 12px; border-radius: var(--radius);
-  border: 1.5px solid var(--border); background: var(--bg-secondary);
-  color: var(--text-primary); font-size: 16px; text-align: center;
-  outline: none; transition: border-color 0.2s; -moz-appearance: textfield;
-}
-.custom-input::-webkit-inner-spin-button,
-.custom-input::-webkit-outer-spin-button { -webkit-appearance: none; }
-.custom-input:focus, .custom-input.active { border-color: var(--accent); }
-
-/* ─── Total Card ─────────────────────────────────────────────────── */
-
-.tasbeeh-total-card {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 16px; direction: rtl;
-}
-.total-info { display: flex; align-items: center; gap: 12px; }
-.total-label { font-family: var(--font-arabic); font-size: 14px; color: var(--text-secondary); }
-.total-number { font-size: 22px; font-weight: 700; color: var(--text-primary); direction: ltr; }
-.total-reset-btn {
-  background: none; border: 1px solid var(--border); border-radius: var(--radius);
-  color: var(--text-muted); font-family: var(--font-arabic); font-size: 12px;
-  cursor: pointer; padding: 4px 12px; transition: all 0.2s;
-}
-.total-reset-btn:hover { color: #e05c5c; border-color: #e05c5c; }

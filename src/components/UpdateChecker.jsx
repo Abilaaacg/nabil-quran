@@ -81,48 +81,36 @@ export default function UpdateChecker() {
     }
   }
 
+  const s = {
+    bar: { position: 'fixed', bottom: 62, left: 10, right: 10, zIndex: 999 },
+    pill: {
+      background: 'var(--accent)', color: '#fff', borderRadius: 8,
+      padding: '6px 10px', display: 'flex', alignItems: 'center',
+      gap: 6, boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+      fontSize: 12, fontFamily: 'var(--font-arabic)',
+    },
+    btn: {
+      background: '#fff', color: 'var(--accent)', borderRadius: 5,
+      padding: '3px 8px', fontSize: 11, fontWeight: 700,
+      border: 'none', cursor: 'pointer',
+    },
+    x: {
+      background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff',
+      borderRadius: 4, width: 18, height: 18, cursor: 'pointer', fontSize: 10,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    },
+  }
+
   if (step === 'downloading') {
-    return (
-      <div style={{
-        position: 'fixed', bottom: 64, left: 12, right: 12, zIndex: 999,
-        pointerEvents: 'none',
-      }}>
-        <div style={{
-          background: '#1a2f1a', border: '1px solid rgba(107,192,119,0.3)',
-          color: '#fff', borderRadius: 10, padding: '10px 14px',
-          boxShadow: '0 2px 12px rgba(0,0,0,0.3)',
-          pointerEvents: 'all', fontSize: 13, fontFamily: 'var(--font-arabic)',
-          display: 'flex', alignItems: 'center', gap: 8,
-        }}>
-          <span>⬇</span>
-          <span style={{ color: '#6bc077', fontWeight: 700 }}>جاري التحميل...</span>
-        </div>
-      </div>
-    )
+    return <div style={s.bar}><div style={{ ...s.pill, background: '#1a2f1a' }}>⬇ <span style={{ color: '#6bc077' }}>جاري التحميل...</span></div></div>
   }
 
   return (
-    <div style={{
-      position: 'fixed', bottom: 64, left: 12, right: 12, zIndex: 999,
-      pointerEvents: 'none',
-    }}>
-      <div style={{
-        background: 'var(--accent)', color: '#fff', borderRadius: 10,
-        padding: '8px 12px', display: 'flex', alignItems: 'center',
-        gap: 8, boxShadow: '0 2px 12px rgba(0,0,0,0.25)',
-        pointerEvents: 'all', fontSize: 13, fontFamily: 'var(--font-arabic)',
-      }}>
-        <span style={{ flex: 1 }}>📲 تحديث جديد</span>
-        <button onClick={handleUpdate} style={{
-          background: '#fff', color: 'var(--accent)', borderRadius: 6,
-          padding: '4px 10px', fontSize: 12, fontWeight: 700,
-          border: 'none', cursor: 'pointer', fontFamily: 'var(--font-arabic)',
-        }}>تحديث</button>
-        <button onClick={() => setInfo(null)} style={{
-          background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff',
-          borderRadius: 4, width: 22, height: 22, cursor: 'pointer', fontSize: 12,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>×</button>
+    <div style={s.bar}>
+      <div style={s.pill}>
+        <span style={{ flex: 1 }}>📲 تحديث</span>
+        <button onClick={handleUpdate} style={s.btn}>تحديث</button>
+        <button onClick={() => setInfo(null)} style={s.x}>×</button>
       </div>
     </div>
   )
