@@ -26,6 +26,7 @@ import Lessons from './pages/Lessons'
 import UpdateChecker from './components/UpdateChecker'
 import WhatsNew from './components/WhatsNew'
 import WelcomeAudio from './components/WelcomeAudio'
+import PermissionRequest from './components/PermissionRequest'
 import TopBar from './components/TopBar'
 import { initNotifications } from './services/notifications'
 import * as adhan from 'adhan'
@@ -151,6 +152,7 @@ function AppLayout() {
       <WhatsNew />
       <UpdateChecker />
       <WelcomeAudio />
+      <PermissionRequest />
       <Sidebar />
       <main className="main-content">
         <div key={location.key} className="page-transition">

@@ -61,14 +61,13 @@ export default function Home() {
       {/* بانر تحميل التطبيق */}
       <AppDownloadBanner />
 
-      <div className="home-grid">
+      <div className="home-circles">
         {features.map(f => (
-          <Link key={f.to} to={f.to} className="home-card">
-            <div className="home-card-icon" style={{ background: `${f.color}22`, color: f.color }}>
-              {f.icon}
+          <Link key={f.to} to={f.to} className="home-circle-item">
+            <div className="home-circle-icon" style={{ background: `${f.color}20`, borderColor: `${f.color}50` }}>
+              <span>{f.icon}</span>
             </div>
-            <h2>{f.title}</h2>
-            <p>{f.desc}</p>
+            <span className="home-circle-label">{f.title}</span>
           </Link>
         ))}
       </div>
