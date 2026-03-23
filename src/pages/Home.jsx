@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import AppDownloadBanner from '../components/AppDownloadBanner'
+import NewsTicker from '../components/NewsTicker'
 import SocialProof from '../components/SocialProof'
 import './Home.css'
 
@@ -54,6 +55,8 @@ export default function Home() {
         <p>تطبيق القرآن الكريم والأذكار الإسلامية</p>
         {hijri && <div className="home-hijri">{hijri}</div>}
       </div>
+
+      <NewsTicker />
 
       {/* بانر تحميل التطبيق */}
       <AppDownloadBanner />

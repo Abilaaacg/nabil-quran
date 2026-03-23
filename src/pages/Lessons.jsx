@@ -3,67 +3,83 @@ import './Lessons.css'
 
 const CATEGORIES = [
   {
-    name: '📖 تفسير القرآن', lessons: [
-      { title: 'تفسير سورة الفاتحة', speaker: 'الشيخ الشعراوي', videoId: 'XKhMWcRm0yA' },
-      { title: 'تفسير سورة البقرة', speaker: 'الشيخ الشعراوي', videoId: 'Y_2YmCwTxoQ' },
-      { title: 'تفسير سورة يس', speaker: 'الشيخ الشعراوي', videoId: 'QKJqN3c9FYc' },
-      { title: 'تفسير سورة الرحمن', speaker: 'الشيخ الشعراوي', videoId: '8HaF8Abchg0' },
-      { title: 'تفسير سورة الملك', speaker: 'الشيخ الشعراوي', videoId: 'vCqN9xFJd9M' },
+    name: '📖 تفسير القرآن',
+    lessons: [
+      { title: 'تفسير سورة الفاتحة — الشعراوي', id: 'dkFVdPkxbIE' },
+      { title: 'تفسير سورة البقرة — الشعراوي', id: '8HjEQi1g3Dg' },
+      { title: 'تفسير سورة يس — الشعراوي', id: 'PdhGggvN6d4' },
+      { title: 'تفسير آية الكرسي — النابلسي', id: 'g01gN7P3oz0' },
+      { title: 'تفسير سورة الكهف — الشعراوي', id: 'W7ZIz4w_xF0' },
+      { title: 'تفسير سورة الملك — الشعراوي', id: 'rQQZ6Y3F5JI' },
     ]
   },
   {
-    name: '🕌 الفقه والعبادات', lessons: [
-      { title: 'أحكام الصلاة كاملة', speaker: 'د. محمد راتب النابلسي', videoId: '7q6FhDLSktU' },
-      { title: 'أحكام الصيام', speaker: 'د. محمد راتب النابلسي', videoId: '1sFVrYbnmDI' },
-      { title: 'أحكام الزكاة', speaker: 'د. عمر عبد الكافي', videoId: 'ZjIxRFtGnWs' },
-      { title: 'أحكام الحج والعمرة', speaker: 'د. عمر عبد الكافي', videoId: 'hQzXpbl7tPU' },
-      { title: 'أحكام الوضوء والطهارة', speaker: 'الشيخ ابن عثيمين', videoId: 'Dd7qJx4MfHE' },
+    name: '💚 السيرة النبوية',
+    lessons: [
+      { title: 'مولد النبي ﷺ — نبيل العوضي', id: 'MhZB7mOEBaA' },
+      { title: 'بعثة النبي ﷺ — نبيل العوضي', id: 'a3GTBqe9nJo' },
+      { title: 'الهجرة النبوية — طارق السويدان', id: 'i5OYkgj-uZk' },
+      { title: 'غزوة بدر — طارق السويدان', id: 'c3ue-rZonuo' },
+      { title: 'فتح مكة — نبيل العوضي', id: 'AxShb-MzVoY' },
     ]
   },
   {
-    name: '💚 السيرة النبوية', lessons: [
-      { title: 'مولد النبي ﷺ ونشأته', speaker: 'الشيخ نبيل العوضي', videoId: 'MhZB7mOEBaA' },
-      { title: 'بعثة النبي ﷺ', speaker: 'الشيخ نبيل العوضي', videoId: 'a3GTBqe9nJo' },
-      { title: 'الهجرة النبوية', speaker: 'د. طارق السويدان', videoId: 'i5OYkgj-uZk' },
-      { title: 'غزوة بدر الكبرى', speaker: 'د. طارق السويدان', videoId: 'c3ue-rZonuo' },
-      { title: 'فتح مكة', speaker: 'الشيخ نبيل العوضي', videoId: 'AxShb-MzVoY' },
+    name: '🌟 قصص الأنبياء',
+    lessons: [
+      { title: 'قصة آدم عليه السلام', id: 'qctE50a-w_E' },
+      { title: 'قصة نوح عليه السلام', id: 'aDIH9YVMbFA' },
+      { title: 'قصة إبراهيم عليه السلام', id: 'SqCFWOkj1Es' },
+      { title: 'قصة يوسف عليه السلام', id: '6uyuxU-dLj0' },
+      { title: 'قصة موسى عليه السلام', id: 'S19UNEhz1WQ' },
     ]
   },
   {
-    name: '🌟 قصص الأنبياء', lessons: [
-      { title: 'قصة آدم عليه السلام', speaker: 'الشيخ نبيل العوضي', videoId: 'qctE50a-w_E' },
-      { title: 'قصة نوح عليه السلام', speaker: 'الشيخ نبيل العوضي', videoId: 'aDIH9YVMbFA' },
-      { title: 'قصة إبراهيم عليه السلام', speaker: 'الشيخ نبيل العوضي', videoId: 'SqCFWOkj1Es' },
-      { title: 'قصة يوسف عليه السلام', speaker: 'الشيخ نبيل العوضي', videoId: '6uyuxU-dLj0' },
-      { title: 'قصة موسى عليه السلام', speaker: 'الشيخ نبيل العوضي', videoId: 'S19UNEhz1WQ' },
+    name: '🕌 أحكام وفقه',
+    lessons: [
+      { title: 'أحكام الصلاة — ابن عثيمين', id: 'Dd7qJx4MfHE' },
+      { title: 'أحكام الصيام — النابلسي', id: '1sFVrYbnmDI' },
+      { title: 'أحكام الوضوء', id: '7q6FhDLSktU' },
+      { title: 'أحكام الزكاة — عمر عبد الكافي', id: 'ZjIxRFtGnWs' },
+      { title: 'أحكام الحج — عمر عبد الكافي', id: 'hQzXpbl7tPU' },
     ]
   },
   {
-    name: '🤲 الرقائق والإيمانيات', lessons: [
-      { title: 'الخشوع في الصلاة', speaker: 'د. محمد راتب النابلسي', videoId: 'g01gN7P3oz0' },
-      { title: 'التوبة والرجوع إلى الله', speaker: 'الشيخ محمد حسان', videoId: 'KZ5rrsHqBwQ' },
-      { title: 'حسن الخلق', speaker: 'د. عمر عبد الكافي', videoId: 'TpGnAeBhJB0' },
-      { title: 'الصبر على البلاء', speaker: 'الشيخ محمد حسان', videoId: 'HLxjsqLvbXs' },
-      { title: 'فضل الذكر', speaker: 'د. محمد راتب النابلسي', videoId: 'EJRa_cJzo0I' },
+    name: '🤲 خطب ومواعظ',
+    lessons: [
+      { title: 'التوبة — محمد حسان', id: 'KZ5rrsHqBwQ' },
+      { title: 'الخشوع في الصلاة — النابلسي', id: 'EJRa_cJzo0I' },
+      { title: 'حسن الخلق — عمر عبد الكافي', id: 'TpGnAeBhJB0' },
+      { title: 'الصبر على البلاء — محمد حسان', id: 'HLxjsqLvbXs' },
+      { title: 'فضل الذكر — النابلسي', id: 'g01gN7P3oz0' },
+    ]
+  },
+  {
+    name: '👶 أطفال',
+    lessons: [
+      { title: 'تعليم الصلاة للأطفال', id: 'T4t9MR9sCpA' },
+      { title: 'تعليم الوضوء للأطفال', id: 'mQVsFQ3WDxs' },
+      { title: 'أنشودة الحروف العربية', id: 'ZGFgALJjmzM' },
+      { title: 'سورة الفاتحة مكررة للأطفال', id: 'biBSJEHPFJg' },
     ]
   },
 ]
 
 export default function Lessons() {
-  const [selectedCat, setSelectedCat] = useState(0)
+  const [cat, setCat] = useState(0)
   const [playing, setPlaying] = useState(null)
 
   return (
     <div className="page-container fade-in">
       <div className="page-header">
         <h1>🎓 دروس ومحاضرات</h1>
-        <p>تعلّم دينك من أفضل العلماء والدعاة</p>
+        <p>تعلّم دينك من أفضل العلماء</p>
       </div>
 
       <div className="lessons-cats">
-        {CATEGORIES.map((cat, i) => (
-          <button key={i} className={`lesson-cat-btn${selectedCat === i ? ' active' : ''}`} onClick={() => { setSelectedCat(i); setPlaying(null) }}>
-            {cat.name}
+        {CATEGORIES.map((c, i) => (
+          <button key={i} className={`lesson-cat-btn${cat === i ? ' active' : ''}`}
+            onClick={() => { setCat(i); setPlaying(null) }}>
+            {c.name}
           </button>
         ))}
       </div>
@@ -72,28 +88,25 @@ export default function Lessons() {
         <div className="lesson-player card">
           <div className="lesson-video-wrap">
             <iframe
-              src={`https://www.youtube.com/embed/${CATEGORIES[selectedCat].lessons[playing].videoId}?autoplay=1`}
-              title={CATEGORIES[selectedCat].lessons[playing].title}
+              src={`https://www.youtube-nocookie.com/embed/${CATEGORIES[cat].lessons[playing].id}?autoplay=1&rel=0`}
+              title="video"
               frameBorder="0"
-              allow="autoplay; encrypted-media"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
           </div>
           <div className="lesson-playing-info">
-            <strong>{CATEGORIES[selectedCat].lessons[playing].title}</strong>
-            <span>{CATEGORIES[selectedCat].lessons[playing].speaker}</span>
+            <strong>{CATEGORIES[cat].lessons[playing].title}</strong>
           </div>
         </div>
       )}
 
       <div className="lessons-list">
-        {CATEGORIES[selectedCat].lessons.map((lesson, i) => (
-          <button key={i} className={`lesson-item card${playing === i ? ' active' : ''}`} onClick={() => setPlaying(i)}>
+        {CATEGORIES[cat].lessons.map((l, i) => (
+          <button key={i} className={`lesson-item card${playing === i ? ' active' : ''}`}
+            onClick={() => setPlaying(i)}>
             <span className="lesson-play-icon">{playing === i ? '⏸' : '▶'}</span>
-            <div className="lesson-info">
-              <div className="lesson-title">{lesson.title}</div>
-              <div className="lesson-speaker">{lesson.speaker}</div>
-            </div>
+            <span className="lesson-title">{l.title}</span>
           </button>
         ))}
       </div>

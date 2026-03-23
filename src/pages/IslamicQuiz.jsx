@@ -50,6 +50,8 @@ function getLevel(score) {
 
 export default function IslamicQuiz() {
   const [mode, setMode] = useState('menu') // menu | playing | result
+  const [versus, setVersus] = useState(false) // منافسة ضد AI
+  const [aiScore, setAiScore] = useState(0)
   const [questions, setQuestions] = useState([])
   const [current, setCurrent] = useState(0)
   const [score, setScore] = useState(0)
@@ -57,6 +59,7 @@ export default function IslamicQuiz() {
   const [totalScore, setTotalScore] = useState(() => parseInt(localStorage.getItem('quiz_total') || '0'))
   const [streak, setStreak] = useState(0)
   const [timer, setTimer] = useState(15)
+  const [wins, setWins] = useState(() => parseInt(localStorage.getItem('quiz_wins') || '0'))
 
   useEffect(() => { localStorage.setItem('quiz_total', String(totalScore)) }, [totalScore])
 
@@ -68,10 +71,13 @@ export default function IslamicQuiz() {
     return () => clearTimeout(t)
   }, [timer, mode, selected])
 
-  function startQuiz() {
+  useEffect(() => { localStorage.setItem('quiz_wins', String(wins)) }, [wins])
+
+  function startQuiz(vsAi = false) {
     const shuffled = [...QUESTIONS].sort(() => Math.random() - 0.5).slice(0, 10)
     setQuestions(shuffled)
-    setCurrent(0); setScore(0); setSelected(null); setStreak(0); setTimer(15)
+    setCurrent(0); setScore(0); setAiScore(0); setSelected(null); setStreak(0); setTimer(15)
+    setVersus(vsAi)
     setMode('playing')
   }
 
@@ -87,8 +93,14 @@ export default function IslamicQuiz() {
     } else {
       setStreak(0)
     }
+    // AI opponent يجاوب (70% صح)
+    if (versus) {
+      const aiCorrect = Math.random() < 0.7
+      if (aiCorrect) setAiScore(s => s + 2)
+    }
     setTimeout(() => {
       if (current + 1 >= questions.length) {
+        if (versus && score > aiScore) setWins(w => w + 1)
         setMode('result')
       } else {
         setCurrent(c => c + 1); setSelected(null); setTimer(15)
@@ -104,8 +116,10 @@ export default function IslamicQuiz() {
         <div className="quiz-stats card">
           <div className="quiz-stat"><span className="quiz-stat-num">{totalScore}</span><span>نقطة</span></div>
           <div className="quiz-stat"><span className="quiz-stat-num" style={{ color: level.color }}>{level.name}</span><span>المستوى</span></div>
+          <div className="quiz-stat"><span className="quiz-stat-num">{wins}</span><span>انتصار</span></div>
         </div>
-        <button className="quiz-start-btn" onClick={startQuiz}>🎯 ابدأ المسابقة (10 أسئلة)</button>
+        <button className="quiz-start-btn" onClick={() => startQuiz(false)}>🎯 تدريب فردي (10 أسئلة)</button>
+        <button className="quiz-start-btn" style={{ background: 'linear-gradient(135deg, #e96979, #c0392b)', marginTop: 8 }} onClick={() => startQuiz(true)}>⚔️ نافس الذكاء الاصطناعي</button>
         <p style={{ textAlign: 'center', fontSize: 12, color: 'var(--text-muted)', marginTop: 12 }}>أجب بسرعة عشان تاخد نقاط أكتر!</p>
       </div>
     )
@@ -118,11 +132,19 @@ export default function IslamicQuiz() {
         <div className="page-header"><h1>🎉 النتيجة</h1></div>
         <div className="quiz-result card">
           <div className="quiz-result-score">{score}</div>
-          <div className="quiz-result-label">نقطة من 30</div>
+          <div className="quiz-result-label">نقطتك</div>
+          {versus && (
+            <div style={{ marginTop: 12 }}>
+              <div style={{ fontSize: 16, color: 'var(--text-muted)' }}>🤖 الذكاء الاصطناعي: {aiScore}</div>
+              <div style={{ fontSize: 22, fontWeight: 700, marginTop: 8, color: score > aiScore ? '#6bc077' : score < aiScore ? '#e96979' : '#f3a049' }}>
+                {score > aiScore ? '🎉 فزت!' : score < aiScore ? '😔 الـ AI فاز' : '🤝 تعادل'}
+              </div>
+            </div>
+          )}
           <div className="quiz-result-level" style={{ color: level.color }}>المستوى: {level.name}</div>
-          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 8 }}>الإجمالي: {totalScore} نقطة</div>
+          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 8 }}>الإجمالي: {totalScore} نقطة | الانتصارات: {wins}</div>
         </div>
-        <button className="quiz-start-btn" onClick={startQuiz}>🔄 العب مرة تانية</button>
+        <button className="quiz-start-btn" onClick={() => startQuiz(versus)}>🔄 العب مرة تانية</button>
         <button className="quiz-back-btn" onClick={() => setMode('menu')}>← رجوع</button>
       </div>
     )
@@ -136,7 +158,7 @@ export default function IslamicQuiz() {
       <div className="quiz-header">
         <span className="quiz-progress">{current + 1}/{questions.length}</span>
         <span className="quiz-timer" style={{ color: timer <= 5 ? '#e96979' : 'var(--accent)' }}>{timer}⏱</span>
-        <span className="quiz-score-live">🔥 {score}</span>
+        <span className="quiz-score-live">🔥 {score}{versus ? ` ⚔️ 🤖${aiScore}` : ''}</span>
       </div>
       {streak >= 3 && <div className="quiz-streak">🔥 سلسلة {streak} إجابات صحيحة!</div>}
       <div className="quiz-question card">{q.q}</div>

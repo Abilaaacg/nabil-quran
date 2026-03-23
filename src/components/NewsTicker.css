@@ -1,0 +1,27 @@
+.ticker-wrap {
+  background: linear-gradient(90deg, rgba(107,192,119,0.12), rgba(107,192,119,0.05));
+  border: 1px solid rgba(107,192,119,0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 8px 0;
+  direction: rtl;
+}
+
+.ticker-content {
+  display: flex;
+  white-space: nowrap;
+  animation: ticker-scroll 60s linear infinite;
+}
+
+.ticker-item {
+  padding: 8px 24px;
+  font-family: var(--font-arabic);
+  font-size: 12px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(50%); }
+}
