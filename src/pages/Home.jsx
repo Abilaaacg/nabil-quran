@@ -66,27 +66,30 @@ export default function Home() {
       {/* بانر تحميل التطبيق */}
       <AppDownloadBanner />
 
-      {/* الدائرة الرئيسية */}
+      {/* الدائرة الدوارة */}
       <div className="home-orbit">
         <div className="home-orbit-center">☪️</div>
-        {mainFeatures.map((f, i) => {
-          const angle = (i * 360 / mainFeatures.length) - 90
-          const rad = angle * Math.PI / 180
-          return (
-            <Link key={f.to} to={f.to} className="home-orbit-item"
-              style={{
-                '--angle': `${angle}deg`,
-                '--x': `${Math.cos(rad) * 120}px`,
-                '--y': `${Math.sin(rad) * 120}px`,
-                animationDelay: `${i * 0.08}s`,
-              }}>
-              <div className="home-orbit-icon" style={{ background: `${f.color}20`, borderColor: `${f.color}60` }}>
-                {f.icon}
-              </div>
-              <span className="home-orbit-label">{f.title}</span>
-            </Link>
-          )
-        })}
+        <div className="home-orbit-ring">
+          {mainFeatures.map((f, i) => {
+            const angle = (i * 360 / mainFeatures.length) - 90
+            const rad = angle * Math.PI / 180
+            return (
+              <Link key={f.to} to={f.to} className="home-orbit-item"
+                style={{
+                  '--x': `${Math.cos(rad) * 115}px`,
+                  '--y': `${Math.sin(rad) * 115}px`,
+                  animationDelay: `${i * 0.1}s`,
+                }}>
+                <div className="home-orbit-inner">
+                  <div className="home-orbit-icon" style={{ background: `${f.color}20`, borderColor: `${f.color}60` }}>
+                    {f.icon}
+                  </div>
+                  <span className="home-orbit-label">{f.title}</span>
+                </div>
+              </Link>
+            )
+          })}
+        </div>
       </div>
 
       {/* ميزات إضافية */}
