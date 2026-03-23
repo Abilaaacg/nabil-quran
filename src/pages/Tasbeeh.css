@@ -1,26 +1,15 @@
-/* ─── Tasbeeh Page ──────────────────────────────────────────────── */
-
-.tasbeeh-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  padding: 20px 20px 32px;
-}
-
-/* ─── Preset Pills ──────────────────────────────────────────────── */
+/* ─── Tasbeeh Presets ────────────────────────────────────────────── */
 
 .tasbeeh-presets {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   overflow-x: auto;
-  padding: 4px 2px 8px;
+  padding: 0 0 8px;
   width: 100%;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   direction: rtl;
 }
-
 .tasbeeh-presets::-webkit-scrollbar { display: none; }
 
 .tasbeeh-pill {
@@ -28,23 +17,18 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
+  padding: 8px 14px;
   border-radius: 999px;
   border: 1.5px solid var(--border);
   background: var(--bg-card);
   color: var(--text-secondary);
   font-family: var(--font-arabic);
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s, color 0.2s;
+  transition: all 0.2s;
   white-space: nowrap;
 }
-
-.tasbeeh-pill:hover {
-  border-color: var(--accent);
-  color: var(--text-primary);
-}
-
+.tasbeeh-pill:hover { border-color: var(--accent); color: var(--text-primary); }
 .tasbeeh-pill.active {
   border-color: var(--accent);
   background: rgba(107, 192, 119, 0.15);
@@ -53,364 +37,125 @@
 }
 
 .pill-target {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  opacity: 0.7;
-  background: rgba(255, 255, 255, 0.08);
+  font-size: 10px;
+  opacity: 0.6;
+  background: rgba(255,255,255,0.08);
   border-radius: 999px;
   padding: 1px 6px;
 }
 
-/* ─── Top Row (Dhikr Name + Custom Input) ───────────────────────── */
+/* ─── Main Card ──────────────────────────────────────────────────── */
 
-.tasbeeh-top-row {
+.tasbeeh-main-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
-  width: 100%;
-  direction: rtl;
+  padding: 20px;
 }
-
-/* ─── Bottom Row (Fraction + Reset) ─────────────────────────────── */
-
-.tasbeeh-bottom-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-  direction: rtl;
-}
-
-/* ─── Dhikr Name ────────────────────────────────────────────────── */
 
 .tasbeeh-dhikr-name {
   font-family: var(--font-arabic);
   font-size: 20px;
   font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: 0.02em;
-  flex: 1;
-}
-
-/* ─── Custom Target ─────────────────────────────────────────────── */
-
-.custom-input {
-  width: 110px;
-  padding: 7px 12px;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text-primary);
-  font-family: var(--font-ui);
-  font-size: 14px;
+  color: var(--accent);
   text-align: center;
-  outline: none;
-  transition: border-color 0.2s;
-  -moz-appearance: textfield;
 }
 
-.custom-input::-webkit-inner-spin-button,
-.custom-input::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-}
-
-.custom-input:focus,
-.custom-input.active {
-  border-color: var(--accent);
-}
-
-/* ─── Ring + Tap Button ─────────────────────────────────────────── */
+/* ─── Ring ────────────────────────────────────────────────────────── */
 
 .tasbeeh-ring-wrapper {
   position: relative;
-  width: 220px;
-  height: 220px;
+  width: 180px;
+  height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
 }
 
-.tasbeeh-progress-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
+.tasbeeh-progress-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .ring-track    { stroke: var(--bg-secondary); }
-.ring-progress {
-  stroke: var(--accent);
-  transition: stroke-dashoffset 0.25s ease;
-}
-
-/* ─── Tap Button ────────────────────────────────────────────────── */
+.ring-progress { stroke: var(--accent); transition: stroke-dashoffset 0.25s ease; }
 
 .tasbeeh-tap-btn {
-  position: relative;
-  z-index: 1;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
+  position: relative; z-index: 1;
+  width: 160px; height: 160px;
+  border-radius: 50%; border: none; cursor: pointer;
   background: linear-gradient(145deg, #7ed68a 0%, #4faa5e 50%, #3a8a4a 100%);
-  box-shadow:
-    0 8px 32px rgba(107, 192, 119, 0.4),
-    0 2px 8px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
+  box-shadow: 0 6px 24px rgba(107,192,119,0.4), 0 2px 8px rgba(0,0,0,0.2);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.1s; -webkit-tap-highlight-color: transparent; user-select: none;
 }
-
-.tasbeeh-tap-btn:active {
-  transform: scale(0.95);
-  box-shadow:
-    0 4px 16px rgba(107, 192, 119, 0.3),
-    0 1px 4px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-}
-
-.tasbeeh-tap-btn.pulse   { animation: tap-pulse 0.2s ease-out; }
-
+.tasbeeh-tap-btn:active { transform: scale(0.95); }
+.tasbeeh-tap-btn.pulse { animation: tap-pulse 0.2s ease-out; }
 .tasbeeh-tap-btn.completed {
   background: linear-gradient(145deg, #f9d04a 0%, #e6a817 50%, #c98d0f 100%);
-  box-shadow:
-    0 8px 32px rgba(233, 184, 60, 0.5),
-    0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 24px rgba(233,184,60,0.5);
 }
 
-@keyframes tap-pulse {
-  0%   { transform: scale(1);    }
-  40%  { transform: scale(1.06); }
-  100% { transform: scale(1);    }
-}
+@keyframes tap-pulse { 0% { transform: scale(1); } 40% { transform: scale(1.06); } 100% { transform: scale(1); } }
 
 .tap-count {
-  font-family: var(--font-ui);
-  font-size: 72px;
-  font-weight: 700;
-  color: #ffffff;
-  line-height: 1;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  letter-spacing: -2px;
+  font-family: var(--font-ui); font-size: 56px; font-weight: 700;
+  color: #fff; line-height: 1; text-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
 .completed-label {
-  font-family: var(--font-arabic);
-  font-size: 22px;
-  font-weight: 700;
-  color: #ffffff;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  text-align: center;
+  font-family: var(--font-arabic); font-size: 20px; font-weight: 700;
+  color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.2);
   animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+@keyframes pop-in { 0% { transform: scale(0.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-@keyframes pop-in {
-  0%   { transform: scale(0.6); opacity: 0; }
-  100% { transform: scale(1);   opacity: 1; }
-}
+/* ─── Fraction ───────────────────────────────────────────────────── */
 
-/* ─── Fraction display ──────────────────────────────────────────── */
+.tasbeeh-fraction { display: flex; align-items: baseline; gap: 4px; direction: ltr; }
+.fraction-current { font-size: 24px; font-weight: 700; color: var(--accent); }
+.fraction-sep     { font-size: 18px; color: var(--text-muted); }
+.fraction-target  { font-size: 16px; color: var(--text-secondary); }
 
-.tasbeeh-fraction {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  direction: ltr;
-}
-
-.fraction-current {
-  font-family: var(--font-ui);
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--accent);
-}
-
-.fraction-sep {
-  font-family: var(--font-ui);
-  font-size: 20px;
-  color: var(--text-muted);
-}
-
-.fraction-target {
-  font-family: var(--font-ui);
-  font-size: 18px;
-  color: var(--text-secondary);
-}
-
-/* ─── Reset Button ──────────────────────────────────────────────── */
+/* ─── Reset Button ───────────────────────────────────────────────── */
 
 .tasbeeh-reset-btn {
-  padding: 10px 28px;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text-secondary);
-  font-family: var(--font-arabic);
-  font-size: 15px;
-  cursor: pointer;
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  padding: 8px 24px; border-radius: var(--radius);
+  border: 1.5px solid var(--border); background: var(--bg-card);
+  color: var(--text-secondary); font-family: var(--font-arabic); font-size: 14px;
+  cursor: pointer; transition: all 0.2s;
 }
+.tasbeeh-reset-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-.tasbeeh-reset-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: rgba(107, 192, 119, 0.08);
+/* ─── Custom Target Card ─────────────────────────────────────────── */
+
+.tasbeeh-custom-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; direction: rtl;
 }
+.custom-label {
+  font-family: var(--font-arabic); font-size: 14px;
+  color: var(--text-secondary); white-space: nowrap;
+}
+.custom-input {
+  flex: 1; padding: 8px 12px; border-radius: var(--radius);
+  border: 1.5px solid var(--border); background: var(--bg-secondary);
+  color: var(--text-primary); font-size: 16px; text-align: center;
+  outline: none; transition: border-color 0.2s; -moz-appearance: textfield;
+}
+.custom-input::-webkit-inner-spin-button,
+.custom-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+.custom-input:focus, .custom-input.active { border-color: var(--accent); }
 
-/* ─── Lifetime Total Card ───────────────────────────────────────── */
+/* ─── Total Card ─────────────────────────────────────────────────── */
 
 .tasbeeh-total-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px 40px;
-  min-width: 200px;
-  text-align: center;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; direction: rtl;
 }
-
-.total-label  {
-  font-family: var(--font-arabic);
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-.total-number {
-  font-family: var(--font-ui);
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--text-primary);
-  direction: ltr;
-}
-
+.total-info { display: flex; align-items: center; gap: 12px; }
+.total-label { font-family: var(--font-arabic); font-size: 14px; color: var(--text-secondary); }
+.total-number { font-size: 22px; font-weight: 700; color: var(--text-primary); direction: ltr; }
 .total-reset-btn {
-  margin-top: 4px;
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-family: var(--font-arabic);
-  font-size: 12px;
-  cursor: pointer;
-  transition: color 0.2s;
-  padding: 2px 8px;
-  border-radius: 4px;
+  background: none; border: 1px solid var(--border); border-radius: var(--radius);
+  color: var(--text-muted); font-family: var(--font-arabic); font-size: 12px;
+  cursor: pointer; padding: 4px 12px; transition: all 0.2s;
 }
-
-.total-reset-btn:hover { color: #e05c5c; }
-
-/* ─── Mobile ─────────────────────────────────────────────────────── */
-
-@media (max-width: 768px) {
-
-  /* الصفحة تأخد كل المساحة المتاحة بين الهيدر والناف بدون تمرير */
-  .tasbeeh-page.page-container {
-    height: calc(100dvh - 62px);
-    max-height: calc(100dvh - 62px);
-    overflow: hidden;
-    padding: 6px 12px 4px;
-    max-width: 100%;
-    gap: 6px;
-    justify-content: space-between;
-    padding-bottom: 0;
-  }
-
-  /* إخفاء الهيدر */
-  .tasbeeh-page .page-header { display: none; }
-
-  /* أقراص */
-  .tasbeeh-presets {
-    padding: 0 0 2px;
-    flex-shrink: 0;
-  }
-
-  .tasbeeh-pill {
-    font-size: 11px;
-    padding: 5px 10px;
-    gap: 4px;
-  }
-
-  .pill-target { font-size: 10px; }
-
-  /* صف العلوي */
-  .tasbeeh-top-row {
-    gap: 8px;
-    flex-shrink: 0;
-  }
-
-  .tasbeeh-dhikr-name {
-    font-size: 15px;
-  }
-
-  .custom-input {
-    width: 72px;
-    font-size: 16px;
-    padding: 5px 8px;
-    flex-shrink: 0;
-  }
-
-  /* الحلقة — تتمدد لملء المساحة المتبقية */
-  .tasbeeh-ring-wrapper {
-    flex: 1;
-    min-height: 0;
-    aspect-ratio: 1;
-    max-width: min(72vw, 52dvh);
-    max-height: min(72vw, 52dvh);
-    align-self: center;
-    width: auto;
-    height: auto;
-  }
-
-  .tasbeeh-tap-btn {
-    width: 91%;
-    height: 91%;
-  }
-
-  .tap-count {
-    font-size: clamp(28px, 12vw, 56px);
-    letter-spacing: -1px;
-  }
-
-  .completed-label { font-size: clamp(13px, 4vw, 20px); }
-
-  /* صف السفلي */
-  .tasbeeh-bottom-row {
-    gap: 8px;
-    flex-shrink: 0;
-  }
-
-  .fraction-current { font-size: 20px; }
-  .fraction-sep,
-  .fraction-target  { font-size: 15px; }
-
-  .tasbeeh-reset-btn {
-    font-size: 13px;
-    padding: 7px 18px;
-  }
-
-  /* بطاقة الإجمالي — شريط أفقي في الأسفل */
-  .tasbeeh-total-card {
-    padding: 8px 16px;
-    gap: 0;
-    min-width: unset;
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0;
-  }
-
-  .total-label      { font-size: 12px; }
-  .total-number     { font-size: 20px; }
-  .total-reset-btn  { font-size: 12px; margin-top: 0; }
-}
+.total-reset-btn:hover { color: #e05c5c; border-color: #e05c5c; }
