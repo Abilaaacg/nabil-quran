@@ -65,8 +65,11 @@ public class AdhanPlugin extends Plugin {
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
                 );
 
-                // استخدام setExactAndAllowWhileIdle عشان يشتغل حتى في Doze mode
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // جدولة الأذان — مع fallback لو الصلاحية مش متاحة
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !am.canScheduleExactAlarms()) {
+                    // Android 12+ بدون صلاحية exact — استخدم inexact (بيشتغل بس مش دقيق 100%)
+                    am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeMs, pi);
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeMs, pi);
                 } else {
                     am.setExact(AlarmManager.RTC_WAKEUP, timeMs, pi);

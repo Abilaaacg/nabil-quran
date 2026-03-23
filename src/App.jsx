@@ -56,11 +56,13 @@ function AppLayout() {
     initNotifications(settings)
   }, [settings.adhanEnabled, settings.salawatEnabled, settings.salawatInterval, settings.notifMinutesBefore, settings.location?.lat])
 
-  // ─── الأذان الصوتي — setTimeout دقيق لكل صلاة (مثل أنا مسلم) ──
+  // ─── الأذان الصوتي (web فقط — على native يتعامل AlarmManager) ──
   useEffect(() => {
-    // مسح أي timers قديمة
     timersRef.current.forEach(t => clearTimeout(t))
     timersRef.current = []
+
+    // على Android الأذان يشتغل عبر AlarmManager + AdhanReceiver (حتى لو التطبيق مغلق)
+    if (window.Capacitor?.isNativePlatform?.()) return
 
     if (!settings.adhanEnabled || !settings.location) return
 
@@ -83,23 +85,19 @@ function AppLayout() {
       adhanAudioRef.current = audio
     }
 
-    console.log('🔊 Setting up adhan audio timers...')
-    // جدول setTimeout لكل صلاة لسه مجاتش
     for (const key of ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
       const pTime = pt[key]
       if (!pTime) continue
       const ms = pTime.getTime() - now.getTime()
       if (ms > 0 && ms < 24 * 3600000) {
-        console.log(`  ⏰ ${key}: adhan in ${Math.round(ms/60000)} min`)
         const t = setTimeout(() => playAdhan(key), ms)
         timersRef.current.push(t)
       } else if (ms >= -30000 && ms <= 0) {
-        // الصلاة دلوقتي (خلال آخر 30 ثانية)
         playAdhan(key)
       }
     }
 
-    // لما المستخدم يرجع للتطبيق بعد ما كان في الخلفية
+    // لما المستخدم يرجع للموقع بعد ما كان في تاب تاني
     const onResume = () => {
       const n = new Date()
       const pt2 = new adhan.PrayerTimes(coords, n, params)
@@ -114,12 +112,13 @@ function AppLayout() {
         }
       }
     }
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) onResume() })
-    document.addEventListener('resume', onResume) // Capacitor resume
+    const onVisChange = () => { if (!document.hidden) onResume() }
+    document.addEventListener('visibilitychange', onVisChange)
 
     return () => {
       timersRef.current.forEach(t => clearTimeout(t))
       timersRef.current = []
+      document.removeEventListener('visibilitychange', onVisChange)
     }
   }, [settings.adhanEnabled, settings.adhanSound, settings.location?.lat, settings.location?.lng, settings.calcMethod])
 

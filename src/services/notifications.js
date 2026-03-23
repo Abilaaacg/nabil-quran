@@ -161,10 +161,15 @@ export async function scheduleSalawatReminders(settings) {
 
 // ─── جدولة الأذان الصوتي (native — يشتغل والتطبيق مغلق) ─────────
 export async function scheduleNativeAdhan(settings) {
-  if (!isNative() || !settings.location || !settings.adhanEnabled) return
+  if (!isNative()) return
   try {
     const { registerPlugin } = await import('@capacitor/core')
     const AdhanPlugin = registerPlugin('AdhanPlugin')
+
+    // دائماً امسح الـ alarms القديمة أولاً (حتى لو الأذان متقفل)
+    await AdhanPlugin.cancelAll()
+
+    if (!settings.adhanEnabled || !settings.location) return
 
     const ADHAN_URLS = {
       makkah:  'https://www.islamcan.com/audio/adhan/azan1.mp3',

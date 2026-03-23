@@ -25,7 +25,7 @@ export function AppProvider({ children }) {
         adhkarFontSize: 20,
         location: null,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        calcMethod: 4,
+        calcMethod: 'Egyptian',
         audioVolume: 80,
         adhanEnabled: true,
         adhanSound: 'makkah',
