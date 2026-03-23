@@ -46,17 +46,8 @@ export default function Home() {
   const [hijri, setHijri] = useState('')
   useEffect(() => { setHijri(toHijri(new Date())) }, [])
 
-  // أول 8 في الدائرة، الباقي تحت
-  const orbitItems = FEATURES.slice(0, 8)
-  const moreItems = FEATURES.slice(8)
-  const R = 90 // نصف قطر الدائرة (أصغر للموبايل)
-
   return (
-    <div className="page-container fade-in home-page">
-      {/* أمواج */}
-      <div className="home-waves"><div className="hw" /><div className="hw" /><div className="hw" /></div>
-
-      {/* هيرو مضغوط */}
+    <div className="page-container fade-in">
       <div className="home-hero">
         <h1>☪️ نور الإسلام</h1>
         {hijri && <span className="home-hijri">{hijri}</span>}
@@ -64,31 +55,13 @@ export default function Home() {
 
       <NewsTicker />
 
-      {/* الدائرة الدوارة */}
-      <div className="orbit" style={{ width: R * 2 + 90, height: R * 2 + 90 }}>
-        <div className="orbit-center">☪️</div>
-        <div className="orbit-ring">
-          {orbitItems.map((f, i) => {
-            const a = (i * 360 / orbitItems.length - 90) * Math.PI / 180
-            return (
-              <Link key={f.to} to={f.to} className="orbit-item"
-                style={{ '--ox': `${Math.cos(a) * R}px`, '--oy': `${Math.sin(a) * R}px`, animationDelay: `${i * 0.08}s` }}>
-                <div className="orbit-inner">
-                  <div className="orbit-icon" style={{ background: `${f.color}22`, borderColor: `${f.color}55` }}>{f.icon}</div>
-                  <span className="orbit-label">{f.title}</span>
-                </div>
-              </Link>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* باقي الميزات */}
-      <div className="more-grid">
-        {moreItems.map(f => (
-          <Link key={f.to} to={f.to} className="more-item">
-            <div className="more-icon" style={{ background: `${f.color}22`, borderColor: `${f.color}55` }}>{f.icon}</div>
-            <span>{f.title}</span>
+      <div className="home-grid">
+        {FEATURES.map((f, i) => (
+          <Link key={f.to} to={f.to} className="hg-item" style={{ animationDelay: `${i * 0.04}s` }}>
+            <div className="hg-icon" style={{ background: `${f.color}22`, borderColor: `${f.color}55` }}>
+              {f.icon}
+            </div>
+            <span className="hg-label">{f.title}</span>
           </Link>
         ))}
       </div>
@@ -98,7 +71,7 @@ export default function Home() {
 
       <div className="home-footer">
         <p>بسم الله الرحمن الرحيم</p>
-        <p style={{ fontSize: 12, marginTop: 8, color: 'var(--text-muted)' }}>تم برمجة التطبيق عن طريق المهندس أحمد نبيل</p>
+        <p style={{ fontSize: 11, marginTop: 6, color: 'var(--text-muted)' }}>تم برمجة التطبيق عن طريق المهندس أحمد نبيل</p>
       </div>
     </div>
   )
