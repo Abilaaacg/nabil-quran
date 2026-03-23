@@ -21,6 +21,8 @@ import Tasbeeh from './pages/Tasbeeh'
 import NamesOfAllah from './pages/NamesOfAllah'
 import Zakat from './pages/Zakat'
 import IslamicAI from './pages/IslamicAI'
+import IslamicQuiz from './pages/IslamicQuiz'
+import Lessons from './pages/Lessons'
 import UpdateChecker from './components/UpdateChecker'
 import WhatsNew from './components/WhatsNew'
 import WelcomeAudio from './components/WelcomeAudio'
@@ -170,6 +172,8 @@ function AppLayout() {
             <Route path="/names"               element={<NamesOfAllah />} />
             <Route path="/zakat"               element={<Zakat />} />
             <Route path="/ai"                  element={<IslamicAI />} />
+            <Route path="/quiz"                element={<IslamicQuiz />} />
+            <Route path="/lessons"             element={<Lessons />} />
             <Route path="/settings"            element={<Settings />} />
           </Routes>
         </div>

@@ -1,0 +1,46 @@
+.lessons-cats {
+  display: flex; gap: 6px; overflow-x: auto; padding: 0 0 8px;
+  scrollbar-width: none; direction: rtl;
+}
+.lessons-cats::-webkit-scrollbar { display: none; }
+.lesson-cat-btn {
+  flex-shrink: 0; padding: 8px 14px; border-radius: 20px;
+  border: 1.5px solid var(--border); background: var(--bg-card);
+  color: var(--text-secondary); font-size: 12px; font-family: var(--font-arabic);
+  cursor: pointer; white-space: nowrap; transition: all 0.2s;
+}
+.lesson-cat-btn.active {
+  border-color: var(--accent); background: rgba(107,192,119,0.15);
+  color: var(--accent); font-weight: 700;
+}
+
+.lesson-player { margin-top: 12px; padding: 0; overflow: hidden; }
+.lesson-video-wrap {
+  position: relative; padding-top: 56.25%; background: #000;
+}
+.lesson-video-wrap iframe {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+}
+.lesson-playing-info {
+  padding: 12px 16px; display: flex; flex-direction: column; gap: 4px;
+  direction: rtl;
+}
+.lesson-playing-info strong { font-size: 14px; color: var(--text-primary); }
+.lesson-playing-info span { font-size: 12px; color: var(--accent); }
+
+.lessons-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.lesson-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+  cursor: pointer; direction: rtl; border: 1.5px solid var(--border);
+  transition: all 0.2s;
+}
+.lesson-item:hover, .lesson-item.active { border-color: var(--accent); }
+.lesson-play-icon {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(107,192,119,0.15); color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.lesson-info { flex: 1; }
+.lesson-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.lesson-speaker { font-size: 12px; color: var(--text-muted); margin-top: 2px; }

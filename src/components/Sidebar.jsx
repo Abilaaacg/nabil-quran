@@ -15,7 +15,9 @@ const navItems = [
   { to: '/names',    label: 'أسماء الله الحسنى', icon: '✨' },
   { to: '/zakat',    label: 'حاسبة الزكاة',    icon: '💰' },
   { to: '/sunnah',   label: 'السنن المهجورة',  icon: '🌟' },
-  { to: '/challenge',label: 'التحدي اليومي',   icon: '🏆' },
+  { to: '/quiz',     label: 'المسابقة الإسلامية', icon: '🏆' },
+  { to: '/lessons',  label: 'دروس ومحاضرات',   icon: '🎓' },
+  { to: '/challenge',label: 'التحدي اليومي',   icon: '⭐' },
   { to: '/radio',    label: 'الإذاعة',          icon: '📻' },
   { to: '/settings', label: 'الإعدادات',        icon: '⚙️' },
 ]
