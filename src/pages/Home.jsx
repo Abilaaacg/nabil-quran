@@ -54,6 +54,11 @@ export default function Home() {
 
   return (
     <div className="page-container fade-in">
+      <div className="home-waves">
+        <div className="home-wave" />
+        <div className="home-wave" />
+        <div className="home-wave" />
+      </div>
       <div className="home-hero">
         <div className="home-hero-icon">☪️</div>
         <h1>نور الإسلام</h1>

@@ -1,6 +1,66 @@
+/* ─── أمواج البحر في خلفية الصفحة الرئيسية ──── */
+.home-waves {
+  position: fixed;
+  bottom: 60px;
+  left: -10%;
+  width: 120%;
+  height: 200px;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.home-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(180deg, transparent 30%, rgba(107,192,119,0.06) 100%);
+  border-radius: 40% 45% 0 0;
+  transform-origin: bottom center;
+}
+.home-wave:nth-child(1) {
+  animation: wave-flow1 7s ease-in-out infinite;
+  opacity: 0.7;
+}
+.home-wave:nth-child(2) {
+  animation: wave-flow2 9s ease-in-out infinite;
+  opacity: 0.5;
+  height: 80%;
+  bottom: -10px;
+  background: linear-gradient(180deg, transparent 20%, rgba(73,168,233,0.05) 100%);
+  border-radius: 43% 47% 0 0;
+}
+.home-wave:nth-child(3) {
+  animation: wave-flow3 11s ease-in-out infinite;
+  opacity: 0.3;
+  height: 60%;
+  bottom: -20px;
+  background: linear-gradient(180deg, transparent 10%, rgba(169,121,233,0.04) 100%);
+  border-radius: 48% 42% 0 0;
+}
+
+@keyframes wave-flow1 {
+  0%, 100% { transform: translateX(0) scaleY(1); }
+  25% { transform: translateX(-5%) scaleY(1.1); }
+  50% { transform: translateX(-10%) scaleY(0.95); }
+  75% { transform: translateX(-5%) scaleY(1.05); }
+}
+@keyframes wave-flow2 {
+  0%, 100% { transform: translateX(-5%) scaleY(1); }
+  33% { transform: translateX(0%) scaleY(1.15); }
+  66% { transform: translateX(-10%) scaleY(0.9); }
+}
+@keyframes wave-flow3 {
+  0%, 100% { transform: translateX(-10%) scaleY(1); }
+  50% { transform: translateX(0%) scaleY(1.2); }
+}
+
 .home-hero {
   text-align: center;
   padding: 40px 0 32px;
+  position: relative;
+  z-index: 1;
 }
 
 .home-hero-icon {
