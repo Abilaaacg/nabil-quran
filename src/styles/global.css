@@ -113,13 +113,19 @@ input, select, textarea {
 }
 
 .page-container {
-  padding: 24px;
+  padding: 20px;
   max-width: 1000px;
   margin: 0 auto;
+  width: 100%;
 }
 
 @media (max-width: 480px) {
-  .page-container { padding: 16px 12px; }
+  .page-container { padding: 12px 8px; }
+}
+
+@media (max-width: 768px) {
+  html, body { overflow-x: hidden; width: 100%; }
+  .app-layout { width: 100%; overflow-x: hidden; }
 }
 
 /* ====== Sidebar ====== */
