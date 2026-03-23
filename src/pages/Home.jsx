@@ -26,21 +26,26 @@ function toHijri(date) {
   return `${day} ${months[month - 1]} ${year} هـ`
 }
 
-const features = [
-  { to: '/quran',     icon: '📖', title: 'القرآن الكريم',   desc: 'تصفح وتلاوة سور القرآن الكريم',           color: '#6bc077' },
-  { to: '/audio',     icon: '🎙️', title: 'القراء',          desc: 'استمع لأشهر القراء في العالم',              color: '#5b8dee' },
-  { to: '/prayer',    icon: '🕌', title: 'مواقيت الصلاة',   desc: 'أوقات الصلاة بدقة حسب مدينتك',             color: '#f3a049' },
-  { to: '/adhkar',    icon: '📿', title: 'الأذكار',          desc: 'أذكار الصباح والمساء وكل المناسبات',       color: '#a779e9' },
-  { to: '/hisnmuslim',icon: '🛡️', title: 'حصن المسلم',      desc: 'أدعية وأذكار من حصن المسلم',               color: '#e96979' },
-  { to: '/tasbeeh',   icon: '📿', title: 'عداد التسبيح',    desc: 'سبّح واذكر الله بالعداد الرقمي',            color: '#6bc077' },
-  { to: '/names',     icon: '✨', title: 'أسماء الله الحسنى',desc: 'تعرف على أسماء الله الـ٩٩ ومعانيها',       color: '#f3d049' },
-  { to: '/zakat',     icon: '💰', title: 'حاسبة الزكاة',    desc: 'احسب زكاة مالك بسهولة ودقة',               color: '#49c8a0' },
-  { to: '/sunnah',    icon: '🌟', title: 'السنن المهجورة',  desc: '12 سنة نبوية مع الفوائد والأدلة',           color: '#49b8c8' },
-  { to: '/challenge', icon: '🏆', title: 'التحدي اليومي',   desc: 'مهام يومية ونقاط لتحسين عباداتك',          color: '#e9a049' },
-  { to: '/qibla',     icon: '🧭', title: 'اتجاه القبلة',    desc: 'اعرف اتجاه الكعبة بدقة',                   color: '#49a8e9' },
-  { to: '/quiz',      icon: '🏆', title: 'المسابقة الإسلامية', desc: 'اختبر معلوماتك الدينية واكسب نقاط',      color: '#e96979' },
-  { to: '/lessons',   icon: '🎓', title: 'دروس ومحاضرات',  desc: 'تعلّم من الشعراوي والنابلسي وغيرهم',        color: '#8b5cf6' },
-  { to: '/radio',     icon: '📻', title: 'الإذاعة',         desc: 'إذاعات إسلامية مباشرة من العالم',           color: '#b849c8' },
+// الأيقونات الرئيسية (تدور حول المركز)
+const mainFeatures = [
+  { to: '/quran',     icon: '📖', title: 'القرآن',     color: '#6bc077' },
+  { to: '/prayer',    icon: '🕌', title: 'الصلاة',     color: '#f3a049' },
+  { to: '/adhkar',    icon: '📿', title: 'الأذكار',    color: '#a779e9' },
+  { to: '/hisnmuslim',icon: '🛡️', title: 'حصن المسلم', color: '#e96979' },
+  { to: '/audio',     icon: '🎙️', title: 'القراء',     color: '#5b8dee' },
+  { to: '/qibla',     icon: '🧭', title: 'القبلة',     color: '#49a8e9' },
+  { to: '/names',     icon: '✨', title: 'الأسماء',    color: '#f3d049' },
+  { to: '/tasbeeh',   icon: '📿', title: 'التسبيح',    color: '#6bc077' },
+]
+
+// باقي الميزات
+const moreFeatures = [
+  { to: '/quiz',      icon: '🏆', title: 'المسابقة',   color: '#e96979' },
+  { to: '/lessons',   icon: '🎓', title: 'الدروس',     color: '#8b5cf6' },
+  { to: '/zakat',     icon: '💰', title: 'الزكاة',     color: '#49c8a0' },
+  { to: '/sunnah',    icon: '🌟', title: 'السنن',      color: '#49b8c8' },
+  { to: '/challenge', icon: '⭐', title: 'التحدي',     color: '#e9a049' },
+  { to: '/radio',     icon: '📻', title: 'الإذاعة',    color: '#b849c8' },
 ]
 
 export default function Home() {
@@ -61,13 +66,37 @@ export default function Home() {
       {/* بانر تحميل التطبيق */}
       <AppDownloadBanner />
 
-      <div className="home-circles">
-        {features.map(f => (
-          <Link key={f.to} to={f.to} className="home-circle-item">
-            <div className="home-circle-icon" style={{ background: `${f.color}20`, borderColor: `${f.color}50` }}>
-              <span>{f.icon}</span>
+      {/* الدائرة الرئيسية */}
+      <div className="home-orbit">
+        <div className="home-orbit-center">☪️</div>
+        {mainFeatures.map((f, i) => {
+          const angle = (i * 360 / mainFeatures.length) - 90
+          const rad = angle * Math.PI / 180
+          return (
+            <Link key={f.to} to={f.to} className="home-orbit-item"
+              style={{
+                '--angle': `${angle}deg`,
+                '--x': `${Math.cos(rad) * 120}px`,
+                '--y': `${Math.sin(rad) * 120}px`,
+                animationDelay: `${i * 0.08}s`,
+              }}>
+              <div className="home-orbit-icon" style={{ background: `${f.color}20`, borderColor: `${f.color}60` }}>
+                {f.icon}
+              </div>
+              <span className="home-orbit-label">{f.title}</span>
+            </Link>
+          )
+        })}
+      </div>
+
+      {/* ميزات إضافية */}
+      <div className="home-more">
+        {moreFeatures.map(f => (
+          <Link key={f.to} to={f.to} className="home-more-item">
+            <div className="home-more-icon" style={{ background: `${f.color}20`, borderColor: `${f.color}50` }}>
+              {f.icon}
             </div>
-            <span className="home-circle-label">{f.title}</span>
+            <span>{f.title}</span>
           </Link>
         ))}
       </div>
