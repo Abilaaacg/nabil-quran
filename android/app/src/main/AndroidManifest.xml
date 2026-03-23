@@ -24,6 +24,20 @@
 
         </activity>
 
+        <!-- مستقبل الأذان — يشتغل حتى لو التطبيق مغلق -->
+        <receiver
+            android:name=".AdhanReceiver"
+            android:exported="false" />
+
+        <!-- إعادة جدولة الأذان بعد إعادة تشغيل الجهاز -->
+        <receiver
+            android:name=".BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
