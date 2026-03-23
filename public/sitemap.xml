@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://nabil-quran.netlify.app/</loc><priority>1.0</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://nabil-quran.netlify.app/quran</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nabil-quran.netlify.app/prayer</loc><priority>0.9</priority><changefreq>daily</changefreq></url>
+  <url><loc>https://nabil-quran.netlify.app/adhkar</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nabil-quran.netlify.app/hisnmuslim</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nabil-quran.netlify.app/tasbeeh</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nabil-quran.netlify.app/names</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nabil-quran.netlify.app/qibla</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nabil-quran.netlify.app/audio</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nabil-quran.netlify.app/radio</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nabil-quran.netlify.app/zakat</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nabil-quran.netlify.app/ai</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nabil-quran.netlify.app/sunnah</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nabil-quran.netlify.app/challenge</loc><priority>0.6</priority><changefreq>daily</changefreq></url>
+  <url><loc>https://nabil-quran.netlify.app/settings</loc><priority>0.3</priority><changefreq>monthly</changefreq></url>
+</urlset>
