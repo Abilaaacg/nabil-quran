@@ -43,36 +43,11 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: '17'
           distribution: 'temurin'
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-
-      - name: Setup consistent signing keystore
-        run: |
-          mkdir -p ~/.android
-          if [ -n "$KEYSTORE_B64" ]; then
-            echo "$KEYSTORE_B64" | base64 -d > ~/.android/debug.keystore
-            echo "✅ Keystore loaded from secret"
-          else
-            keytool -genkey -v \
-              -keystore ~/.android/debug.keystore \
-              -storepass android \
-              -alias androiddebugkey \
-              -keypass android \
-              -keyalg RSA -keysize 2048 -validity 10000 \
-              -dname "CN=Android Debug,O=Android,C=US"
-            echo ""
-            echo "========================================"
-            echo "⚠️  ADD THIS AS GitHub Secret: KEYSTORE_BASE64"
-            echo "========================================"
-            base64 -w 0 ~/.android/debug.keystore
-            echo ""
-            echo "========================================"
-          fi
-        env:
-          KEYSTORE_B64: ${{ secrets.KEYSTORE_BASE64 }}
 
       - name: Sync Capacitor
         run: npx cap sync android
@@ -80,13 +55,11 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
-      - name: Build Release APK
-        run: |
-          cd android
-          ./gradlew assembleRelease --no-daemon
+      - name: Build Debug APK
+        run: cd android && ./gradlew assembleDebug --no-daemon
 
       - name: Rename APK
-        run: cp android/app/build/outputs/apk/release/app-release.apk nabil-quran.apk
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk nabil-quran.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -100,7 +73,7 @@ jobs:
           tag_name: v${{ github.run_number }}
           name: "نور الإسلام v${{ github.run_number }}"
           body: |
-            ## 📱 تطبيق نبيل قرآن للأندرويد
+            ## 📱 تطبيق نور الإسلام للأندرويد
 
             ### تحميل التطبيق:
             قم بتحميل ملف `nabil-quran.apk` من الأسفل وثبته على هاتفك
