@@ -6,7 +6,6 @@ import SocialProof from '../components/SocialProof'
 import './Home.css'
 
 function toHijri(date) {
-  // حساب التاريخ الهجري
   const jd = Math.floor((14 + 153 * (date.getMonth() + 1 > 2 ? date.getMonth() - 2 : date.getMonth() + 10) + 5) / 153)
     + 153 * Math.max(0, date.getMonth() - 2) / 5
   const n = 365 * date.getFullYear() + Math.floor(date.getFullYear() / 4)
@@ -26,8 +25,7 @@ function toHijri(date) {
   return `${day} ${months[month - 1]} ${year} هـ`
 }
 
-// الأيقونات الرئيسية (تدور حول المركز)
-const mainFeatures = [
+const FEATURES = [
   { to: '/quran',     icon: '📖', title: 'القرآن',     color: '#6bc077' },
   { to: '/prayer',    icon: '🕌', title: 'الصلاة',     color: '#f3a049' },
   { to: '/adhkar',    icon: '📿', title: 'الأذكار',    color: '#a779e9' },
@@ -36,10 +34,6 @@ const mainFeatures = [
   { to: '/qibla',     icon: '🧭', title: 'القبلة',     color: '#49a8e9' },
   { to: '/names',     icon: '✨', title: 'الأسماء',    color: '#f3d049' },
   { to: '/tasbeeh',   icon: '📿', title: 'التسبيح',    color: '#6bc077' },
-]
-
-// باقي الميزات
-const moreFeatures = [
   { to: '/quiz',      icon: '🏆', title: 'المسابقة',   color: '#e96979' },
   { to: '/lessons',   icon: '🎓', title: 'الدروس',     color: '#8b5cf6' },
   { to: '/zakat',     icon: '💰', title: 'الزكاة',     color: '#49c8a0' },
@@ -52,44 +46,36 @@ export default function Home() {
   const [hijri, setHijri] = useState('')
   useEffect(() => { setHijri(toHijri(new Date())) }, [])
 
+  // أول 8 في الدائرة، الباقي تحت
+  const orbitItems = FEATURES.slice(0, 8)
+  const moreItems = FEATURES.slice(8)
+  const R = 90 // نصف قطر الدائرة (أصغر للموبايل)
+
   return (
-    <div className="page-container fade-in">
-      <div className="home-waves">
-        <div className="home-wave" />
-        <div className="home-wave" />
-        <div className="home-wave" />
-      </div>
+    <div className="page-container fade-in home-page">
+      {/* أمواج */}
+      <div className="home-waves"><div className="hw" /><div className="hw" /><div className="hw" /></div>
+
+      {/* هيرو مضغوط */}
       <div className="home-hero">
-        <div className="home-hero-icon">☪️</div>
-        <h1>نور الإسلام</h1>
-        <p>تطبيق القرآن الكريم والأذكار الإسلامية</p>
-        {hijri && <div className="home-hijri">{hijri}</div>}
+        <h1>☪️ نور الإسلام</h1>
+        {hijri && <span className="home-hijri">{hijri}</span>}
       </div>
 
       <NewsTicker />
 
-      {/* بانر تحميل التطبيق */}
-      <AppDownloadBanner />
-
       {/* الدائرة الدوارة */}
-      <div className="home-orbit">
-        <div className="home-orbit-center">☪️</div>
-        <div className="home-orbit-ring">
-          {mainFeatures.map((f, i) => {
-            const angle = (i * 360 / mainFeatures.length) - 90
-            const rad = angle * Math.PI / 180
+      <div className="orbit" style={{ width: R * 2 + 90, height: R * 2 + 90 }}>
+        <div className="orbit-center">☪️</div>
+        <div className="orbit-ring">
+          {orbitItems.map((f, i) => {
+            const a = (i * 360 / orbitItems.length - 90) * Math.PI / 180
             return (
-              <Link key={f.to} to={f.to} className="home-orbit-item"
-                style={{
-                  '--x': `${Math.cos(rad) * 115}px`,
-                  '--y': `${Math.sin(rad) * 115}px`,
-                  animationDelay: `${i * 0.1}s`,
-                }}>
-                <div className="home-orbit-inner">
-                  <div className="home-orbit-icon" style={{ background: `${f.color}20`, borderColor: `${f.color}60` }}>
-                    {f.icon}
-                  </div>
-                  <span className="home-orbit-label">{f.title}</span>
+              <Link key={f.to} to={f.to} className="orbit-item"
+                style={{ '--ox': `${Math.cos(a) * R}px`, '--oy': `${Math.sin(a) * R}px`, animationDelay: `${i * 0.08}s` }}>
+                <div className="orbit-inner">
+                  <div className="orbit-icon" style={{ background: `${f.color}22`, borderColor: `${f.color}55` }}>{f.icon}</div>
+                  <span className="orbit-label">{f.title}</span>
                 </div>
               </Link>
             )
@@ -97,33 +83,22 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ميزات إضافية */}
-      <div className="home-more">
-        {moreFeatures.map(f => (
-          <Link key={f.to} to={f.to} className="home-more-item">
-            <div className="home-more-icon" style={{ background: `${f.color}20`, borderColor: `${f.color}50` }}>
-              {f.icon}
-            </div>
+      {/* باقي الميزات */}
+      <div className="more-grid">
+        {moreItems.map(f => (
+          <Link key={f.to} to={f.to} className="more-item">
+            <div className="more-icon" style={{ background: `${f.color}22`, borderColor: `${f.color}55` }}>{f.icon}</div>
             <span>{f.title}</span>
           </Link>
         ))}
       </div>
 
+      <AppDownloadBanner />
       <SocialProof />
 
       <div className="home-footer">
         <p>بسم الله الرحمن الرحيم</p>
-        <p style={{ fontSize: 12, marginTop: 8, color: 'var(--text-muted)' }}>
-          تم برمجة التطبيق عن طريق المهندس أحمد نبيل
-        </p>
-        <a
-          href="https://nabil-quran.netlify.app"
-          target="_blank"
-          rel="noreferrer"
-          style={{ fontSize: 12, color: 'var(--accent)', marginTop: 4, display: 'block' }}
-        >
-          🌐 تابعنا عبر الموقع
-        </a>
+        <p style={{ fontSize: 12, marginTop: 8, color: 'var(--text-muted)' }}>تم برمجة التطبيق عن طريق المهندس أحمد نبيل</p>
       </div>
     </div>
   )
