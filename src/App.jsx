@@ -26,6 +26,15 @@ import WhatsNew from './components/WhatsNew'
 import WelcomeAudio from './components/WelcomeAudio'
 import TopBar from './components/TopBar'
 import { initNotifications } from './services/notifications'
+import * as adhan from 'adhan'
+
+const ADHAN_SOUNDS = [
+  { id: 'makkah',  url: 'https://www.islamcan.com/audio/adhan/azan1.mp3' },
+  { id: 'madinah', url: 'https://www.islamcan.com/audio/adhan/azan2.mp3' },
+  { id: 'egypt',   url: 'https://www.islamcan.com/audio/adhan/azan3.mp3' },
+  { id: 'mishary', url: 'https://www.islamcan.com/audio/adhan/azan4.mp3' },
+  { id: 'turkish', url: 'https://www.islamcan.com/audio/adhan/azan5.mp3' },
+]
 
 // ترتيب التابات للسويب
 const TAB_ROUTES = ['/', '/quran', '/prayer', '/adhkar', '/settings']
@@ -36,11 +45,43 @@ function AppLayout() {
   const { settings } = useApp()
   const touchX    = useRef(null)
   const touchY    = useRef(null)
+  const adhanAudioRef = useRef(null)
 
   // جدولة الإشعارات عند فتح التطبيق وعند تغيير الإعدادات
   useEffect(() => {
     initNotifications(settings)
   }, [settings.adhanEnabled, settings.salawatEnabled, settings.salawatInterval, settings.notifMinutesBefore, settings.location?.lat])
+
+  // ─── تشغيل صوت الأذان عند وقت الصلاة (يعمل من أي صفحة) ──────
+  useEffect(() => {
+    if (!settings.adhanEnabled || !settings.location) return
+    const check = setInterval(() => {
+      try {
+        const now = new Date()
+        const coords = new adhan.Coordinates(settings.location.lat, settings.location.lng)
+        const methodFn = adhan.CalculationMethod[settings.calcMethod || 'Egyptian']
+        const params = methodFn ? methodFn() : adhan.CalculationMethod.Egyptian()
+        const pt = new adhan.PrayerTimes(coords, now, params)
+        const today = now.toDateString()
+
+        for (const key of ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
+          const pTime = pt[key]
+          if (!pTime) continue
+          const diff = now - pTime
+          const playKey = `adhan_played_${today}_${key}`
+          if (diff >= 0 && diff < 30000 && !localStorage.getItem(playKey)) {
+            localStorage.setItem(playKey, '1')
+            const sound = ADHAN_SOUNDS.find(s => s.id === (settings.adhanSound || 'makkah')) || ADHAN_SOUNDS[0]
+            if (adhanAudioRef.current) adhanAudioRef.current.pause()
+            adhanAudioRef.current = new Audio(sound.url)
+            adhanAudioRef.current.play().catch(() => {})
+            break
+          }
+        }
+      } catch {}
+    }, 1000)
+    return () => clearInterval(check)
+  }, [settings.adhanEnabled, settings.adhanSound, settings.location?.lat, settings.location?.lng, settings.calcMethod])
 
   const onTouchStart = (e) => {
     touchX.current = e.touches[0].clientX

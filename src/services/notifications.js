@@ -47,47 +47,64 @@ export async function schedulePrayerNotifications(settings) {
       vibration: true,
     }).catch(() => {})
 
-    // إلغاء الإشعارات القديمة (1-10)
-    await ln.cancel({ notifications: Array.from({ length: 10 }, (_, i) => ({ id: i + 1 })) }).catch(() => {})
+    // إلغاء الإشعارات القديمة (1-20: اليوم + بكره)
+    await ln.cancel({ notifications: Array.from({ length: 20 }, (_, i) => ({ id: i + 1 })) }).catch(() => {})
 
     if (!settings.adhanEnabled) return
 
-    const times = calcTimes(settings.location.lat, settings.location.lng, settings.calcMethod || 'Egyptian')
     const now = new Date()
     const minutesBefore = settings.notifMinutesBefore ?? 5
     const notifications = []
 
-    PRAYER_KEYS.forEach((key, idx) => {
-      const pt = times[key]
-      if (!pt) return
+    // جدول إشعارات اليوم + بكره (عشان لو كل صلوات اليوم عدت)
+    for (let dayOffset = 0; dayOffset <= 1; dayOffset++) {
+      const day = new Date(now)
+      day.setDate(day.getDate() + dayOffset)
+      const times = calcTimes(settings.location.lat, settings.location.lng, settings.calcMethod || 'Egyptian')
+      // لو بكره: احسب أوقات بكره
+      if (dayOffset === 1) {
+        const tomorrow = new Date(now)
+        tomorrow.setDate(tomorrow.getDate() + 1)
+        const coords = new adhan.Coordinates(settings.location.lat, settings.location.lng)
+        const methodFn = adhan.CalculationMethod[settings.calcMethod || 'Egyptian']
+        const params = methodFn ? methodFn() : adhan.CalculationMethod.Egyptian()
+        const pt2 = new adhan.PrayerTimes(coords, tomorrow, params)
+        Object.assign(times, { fajr: pt2.fajr, dhuhr: pt2.dhuhr, asr: pt2.asr, maghrib: pt2.maghrib, isha: pt2.isha })
+      }
 
-      // إشعار قبل الصلاة
-      if (minutesBefore > 0) {
-        const preBefore = new Date(pt.getTime() - minutesBefore * 60 * 1000)
-        if (preBefore > now) {
+      PRAYER_KEYS.forEach((key, idx) => {
+        const pt = times[key]
+        if (!pt) return
+        const baseId = dayOffset * 10
+
+        // إشعار قبل الصلاة
+        if (minutesBefore > 0) {
+          const preBefore = new Date(pt.getTime() - minutesBefore * 60 * 1000)
+          if (preBefore > now) {
+            notifications.push({
+              id: baseId + idx + 1,
+              title: `${PRAYER_ICONS[key]} ${PRAYER_AR[key]} بعد ${minutesBefore} دقائق`,
+              body: `استعد لصلاة ${PRAYER_AR[key]}`,
+              schedule: { at: preBefore, allowWhileIdle: true },
+              channelId: 'prayer-notifs',
+              smallIcon: 'ic_notification',
+            })
+          }
+        }
+
+        // إشعار عند وقت الصلاة
+        if (pt > now) {
           notifications.push({
-            id: idx + 1,
-            title: `${PRAYER_ICONS[key]} ${PRAYER_AR[key]} بعد ${minutesBefore} دقائق`,
-            body: `استعد لصلاة ${PRAYER_AR[key]}`,
-            schedule: { at: preBefore, allowWhileIdle: true },
+            id: baseId + idx + 6,
+            title: `🕌 حان وقت صلاة ${PRAYER_AR[key]}`,
+            body: `حيّ على الصلاة — حيّ على الفلاح`,
+            schedule: { at: pt, allowWhileIdle: true },
             channelId: 'prayer-notifs',
             smallIcon: 'ic_notification',
           })
         }
-      }
-
-      // إشعار عند وقت الصلاة
-      if (pt > now) {
-        notifications.push({
-          id: idx + 6,
-          title: `🕌 حان وقت صلاة ${PRAYER_AR[key]}`,
-          body: `حيّ على الصلاة — حيّ على الفلاح`,
-          schedule: { at: pt, allowWhileIdle: true },
-          channelId: 'prayer-notifs',
-          smallIcon: 'ic_notification',
-        })
-      }
-    })
+      })
+    }
 
     if (notifications.length) await ln.schedule({ notifications })
   } catch (e) {

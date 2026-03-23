@@ -8,10 +8,7 @@ const isNativeApp = () =>
   typeof window !== 'undefined' &&
   (window.Capacitor?.isNativePlatform?.() || window.navigator?.userAgent?.includes('CapacitorWebView'))
 
-let LocalNotifications = null
-if (isNativeApp()) {
-  import('@capacitor/local-notifications').then(m => { LocalNotifications = m.LocalNotifications }).catch(() => {})
-}
+// الإشعارات تُدار من services/notifications.js
 
 // مدن مع إحداثياتها — لا تحتاج GPS ولا API
 const POPULAR_CITIES = [
@@ -117,28 +114,7 @@ export default function PrayerTime() {
   const audioRef = useRef(null)
   const methodId = settings.calcMethod || 'Egyptian'
 
-  // ─── جدولة إشعارات 5 دقائق قبل الأذان ───────────────────────────────
-  const schedulePreAdhanNotifs = useCallback(async (prayerTimes, enabled) => {
-    if (!isNativeApp() || !LocalNotifications) return
-    try {
-      await LocalNotifications.cancel({ notifications: [1,2,3,4,5].map(id => ({ id })) }).catch(() => {})
-      if (!enabled) return
-      await LocalNotifications.requestPermissions()
-      await LocalNotifications.createChannel({ id: 'prayer-notifs', name: 'تنبيهات الصلاة', importance: 5, sound: 'default', vibration: true }).catch(() => {})
-      const now = new Date()
-      const pending = ['fajr','dhuhr','asr','maghrib','isha']
-        .map((key, idx) => {
-          const pt = prayerTimes[key]
-          if (!pt) return null
-          const notifTime = new Date(pt.getTime() - 5 * 60 * 1000)
-          if (notifTime <= now) return null
-          return { id: idx + 1, title: `🕌 ${PRAYER_NAMES[key].ar} بعد 5 دقائق`, body: `استعد لصلاة ${PRAYER_NAMES[key].ar}`, schedule: { at: notifTime, allowWhileIdle: true }, channelId: 'prayer-notifs', smallIcon: 'ic_notification' }
-        }).filter(Boolean)
-      if (pending.length) await LocalNotifications.schedule({ notifications: pending })
-    } catch (e) { console.warn('Prayer notif:', e) }
-  }, [])
-
-  useEffect(() => { if (times) schedulePreAdhanNotifs(times, adhanEnabled) }, [times, adhanEnabled, schedulePreAdhanNotifs])
+  // الإشعارات تُجدول من services/notifications.js عند فتح التطبيق (App.jsx)
 
   // ─── حساب الأوقات عند تغيير الطريقة أو الموقع ───────────────────────
   useEffect(() => {
@@ -170,7 +146,7 @@ export default function PrayerTime() {
       .catch(() => setGpsStatus(''))
   }, [pickLocation])
 
-  // ─── عداد تنازلي + أذان ──────────────────────────────────────────────
+  // ─── عداد تنازلي (الأذان الصوتي انتقل لـ App.jsx) ─────────────────
   useEffect(() => {
     let lastDate = new Date().toDateString()
     const t = setInterval(() => {
@@ -182,28 +158,10 @@ export default function PrayerTime() {
         try { setTimes(calcTimes(settings.location.lat, settings.location.lng, methodId)) } catch (_) {}
         return
       }
-      if (times) {
-        setNext(getNextPrayer(times))
-        if (adhanEnabled) {
-          const prayers = ['fajr','dhuhr','asr','maghrib','isha']
-          prayers.forEach(key => {
-            const pt = times[key]
-            if (!pt) return
-            const diff = n - pt
-            const playKey = `adhan_played_${today}_${key}`
-            if (diff >= 0 && diff < 30000 && !localStorage.getItem(playKey)) {
-              localStorage.setItem(playKey, '1')
-              const sound = ADHAN_SOUNDS.find(s => s.id === selectedAdhan) || ADHAN_SOUNDS[0]
-              if (audioRef.current) audioRef.current.pause()
-              audioRef.current = new Audio(sound.url)
-              audioRef.current.play().catch(() => {})
-            }
-          })
-        }
-      }
+      if (times) setNext(getNextPrayer(times))
     }, 1000)
     return () => clearInterval(t)
-  }, [times, adhanEnabled, selectedAdhan, methodId, settings.location])
+  }, [times, methodId, settings.location])
 
   // GPS
   const doGps = async () => {
