@@ -28,13 +28,13 @@ import TopBar from './components/TopBar'
 import { initNotifications } from './services/notifications'
 import * as adhan from 'adhan'
 
-const ADHAN_SOUNDS = [
-  { id: 'makkah',  url: 'https://www.islamcan.com/audio/adhan/azan1.mp3' },
-  { id: 'madinah', url: 'https://www.islamcan.com/audio/adhan/azan2.mp3' },
-  { id: 'egypt',   url: 'https://www.islamcan.com/audio/adhan/azan3.mp3' },
-  { id: 'mishary', url: 'https://www.islamcan.com/audio/adhan/azan4.mp3' },
-  { id: 'turkish', url: 'https://www.islamcan.com/audio/adhan/azan5.mp3' },
-]
+const ADHAN_URLS = {
+  makkah:  'https://www.islamcan.com/audio/adhan/azan1.mp3',
+  madinah: 'https://www.islamcan.com/audio/adhan/azan2.mp3',
+  egypt:   'https://www.islamcan.com/audio/adhan/azan3.mp3',
+  mishary: 'https://www.islamcan.com/audio/adhan/azan4.mp3',
+  turkish: 'https://www.islamcan.com/audio/adhan/azan5.mp3',
+}
 
 // ترتيب التابات للسويب
 const TAB_ROUTES = ['/', '/quran', '/prayer', '/adhkar', '/settings']
@@ -46,41 +46,76 @@ function AppLayout() {
   const touchX    = useRef(null)
   const touchY    = useRef(null)
   const adhanAudioRef = useRef(null)
+  const timersRef = useRef([])
 
-  // جدولة الإشعارات عند فتح التطبيق وعند تغيير الإعدادات
+  // جدولة الإشعارات
   useEffect(() => {
     initNotifications(settings)
   }, [settings.adhanEnabled, settings.salawatEnabled, settings.salawatInterval, settings.notifMinutesBefore, settings.location?.lat])
 
-  // ─── تشغيل صوت الأذان عند وقت الصلاة (يعمل من أي صفحة) ──────
+  // ─── الأذان الصوتي — setTimeout دقيق لكل صلاة (مثل أنا مسلم) ──
   useEffect(() => {
-    if (!settings.adhanEnabled || !settings.location) return
-    const check = setInterval(() => {
-      try {
-        const now = new Date()
-        const coords = new adhan.Coordinates(settings.location.lat, settings.location.lng)
-        const methodFn = adhan.CalculationMethod[settings.calcMethod || 'Egyptian']
-        const params = methodFn ? methodFn() : adhan.CalculationMethod.Egyptian()
-        const pt = new adhan.PrayerTimes(coords, now, params)
-        const today = now.toDateString()
+    // مسح أي timers قديمة
+    timersRef.current.forEach(t => clearTimeout(t))
+    timersRef.current = []
 
-        for (const key of ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
-          const pTime = pt[key]
-          if (!pTime) continue
-          const diff = now - pTime
-          const playKey = `adhan_played_${today}_${key}`
-          if (diff >= 0 && diff < 30000 && !localStorage.getItem(playKey)) {
-            localStorage.setItem(playKey, '1')
-            const sound = ADHAN_SOUNDS.find(s => s.id === (settings.adhanSound || 'makkah')) || ADHAN_SOUNDS[0]
-            if (adhanAudioRef.current) adhanAudioRef.current.pause()
-            adhanAudioRef.current = new Audio(sound.url)
-            adhanAudioRef.current.play().catch(() => {})
-            break
-          }
+    if (!settings.adhanEnabled || !settings.location) return
+
+    const now = new Date()
+    const coords = new adhan.Coordinates(settings.location.lat, settings.location.lng)
+    const methodFn = adhan.CalculationMethod[settings.calcMethod || 'Egyptian']
+    const params = methodFn ? methodFn() : adhan.CalculationMethod.Egyptian()
+    const pt = new adhan.PrayerTimes(coords, now, params)
+    const today = now.toDateString()
+    const soundUrl = ADHAN_URLS[settings.adhanSound || 'makkah'] || ADHAN_URLS.makkah
+
+    const playAdhan = (key) => {
+      const playKey = `adhan_played_${today}_${key}`
+      if (localStorage.getItem(playKey)) return
+      localStorage.setItem(playKey, '1')
+      if (adhanAudioRef.current) { adhanAudioRef.current.pause(); adhanAudioRef.current = null }
+      const audio = new Audio(soundUrl)
+      audio.volume = 1.0
+      audio.play().catch(() => {})
+      adhanAudioRef.current = audio
+    }
+
+    // جدول setTimeout لكل صلاة لسه مجاتش
+    for (const key of ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
+      const pTime = pt[key]
+      if (!pTime) continue
+      const ms = pTime.getTime() - now.getTime()
+      if (ms > 0 && ms < 24 * 3600000) {
+        const t = setTimeout(() => playAdhan(key), ms)
+        timersRef.current.push(t)
+      } else if (ms >= -30000 && ms <= 0) {
+        // الصلاة دلوقتي (خلال آخر 30 ثانية)
+        playAdhan(key)
+      }
+    }
+
+    // لما المستخدم يرجع للتطبيق بعد ما كان في الخلفية
+    const onResume = () => {
+      const n = new Date()
+      const pt2 = new adhan.PrayerTimes(coords, n, params)
+      for (const key of ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
+        const t = pt2[key]
+        if (!t) continue
+        const diff = n - t
+        const pk = `adhan_played_${n.toDateString()}_${key}`
+        if (diff >= 0 && diff < 120000 && !localStorage.getItem(pk)) {
+          playAdhan(key)
+          break
         }
-      } catch {}
-    }, 1000)
-    return () => clearInterval(check)
+      }
+    }
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) onResume() })
+    document.addEventListener('resume', onResume) // Capacitor resume
+
+    return () => {
+      timersRef.current.forEach(t => clearTimeout(t))
+      timersRef.current = []
+    }
   }, [settings.adhanEnabled, settings.adhanSound, settings.location?.lat, settings.location?.lng, settings.calcMethod])
 
   const onTouchStart = (e) => {

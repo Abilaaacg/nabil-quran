@@ -1,12 +1,11 @@
-// خدمة الإشعارات — تعمل حتى لو التطبيق مغلق
+// خدمة الأذان والإشعارات — مثل تطبيق أنا مسلم
 import * as adhan from 'adhan'
 
 const isNative = () =>
   typeof window !== 'undefined' &&
   (window.Capacitor?.isNativePlatform?.() || navigator.userAgent?.includes('CapacitorWebView'))
 
-let LN = null // LocalNotifications
-
+let LN = null
 async function getPlugin() {
   if (LN) return LN
   if (!isNative()) return null
@@ -17,126 +16,111 @@ async function getPlugin() {
   } catch { return null }
 }
 
-const PRAYER_KEYS = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']
-const PRAYER_AR = { fajr: 'الفجر', dhuhr: 'الظهر', asr: 'العصر', maghrib: 'المغرب', isha: 'العشاء' }
-const PRAYER_ICONS = { fajr: '🌙', dhuhr: '☀️', asr: '🌤', maghrib: '🌇', isha: '🌙' }
+const PRAYERS = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']
+const AR = { fajr: 'الفجر', dhuhr: 'الظهر', asr: 'العصر', maghrib: 'المغرب', isha: 'العشاء' }
 
-// ─── حساب أوقات الصلاة ────────────────────────────────────────
-function calcTimes(lat, lng, methodId) {
+function getPrayerTimes(lat, lng, method, date) {
   const coords = new adhan.Coordinates(lat, lng)
-  const methodFn = adhan.CalculationMethod[methodId]
-  const params = methodFn ? methodFn() : adhan.CalculationMethod.Egyptian()
-  const pt = new adhan.PrayerTimes(coords, new Date(), params)
-  return { fajr: pt.fajr, sunrise: pt.sunrise, dhuhr: pt.dhuhr, asr: pt.asr, maghrib: pt.maghrib, isha: pt.isha }
+  const fn = adhan.CalculationMethod[method || 'Egyptian']
+  const params = fn ? fn() : adhan.CalculationMethod.Egyptian()
+  return new adhan.PrayerTimes(coords, date || new Date(), params)
 }
 
-// ─── جدولة إشعارات الصلاة ──────────────────────────────────────
+// ─── جدولة إشعارات الصلاة (يومين) ──────────────────────────────
 export async function schedulePrayerNotifications(settings) {
   const ln = await getPlugin()
   if (!ln || !settings.location) return
 
   try {
-    await ln.requestPermissions()
+    const perm = await ln.requestPermissions()
+    if (perm.display === 'denied') return
 
-    // قناة إشعارات الصلاة
+    // قناة الأذان — أعلى أهمية
     await ln.createChannel({
-      id: 'prayer-notifs',
-      name: 'تنبيهات الصلاة',
+      id: 'adhan-channel',
+      name: 'الأذان وتنبيهات الصلاة',
       importance: 5,
       sound: 'default',
       vibration: true,
+      lights: true,
+      lightColor: '#6bc077',
     }).catch(() => {})
 
-    // إلغاء الإشعارات القديمة (1-20: اليوم + بكره)
-    await ln.cancel({ notifications: Array.from({ length: 20 }, (_, i) => ({ id: i + 1 })) }).catch(() => {})
+    // إلغاء القديم
+    await ln.cancel({ notifications: Array.from({ length: 30 }, (_, i) => ({ id: i + 1 })) }).catch(() => {})
 
     if (!settings.adhanEnabled) return
 
     const now = new Date()
-    const minutesBefore = settings.notifMinutesBefore ?? 5
-    const notifications = []
+    const minBefore = settings.notifMinutesBefore ?? 5
+    const notifs = []
 
-    // جدول إشعارات اليوم + بكره (عشان لو كل صلوات اليوم عدت)
-    for (let dayOffset = 0; dayOffset <= 1; dayOffset++) {
+    // جدول يومين (اليوم + بكره)
+    for (let d = 0; d < 2; d++) {
       const day = new Date(now)
-      day.setDate(day.getDate() + dayOffset)
-      const times = calcTimes(settings.location.lat, settings.location.lng, settings.calcMethod || 'Egyptian')
-      // لو بكره: احسب أوقات بكره
-      if (dayOffset === 1) {
-        const tomorrow = new Date(now)
-        tomorrow.setDate(tomorrow.getDate() + 1)
-        const coords = new adhan.Coordinates(settings.location.lat, settings.location.lng)
-        const methodFn = adhan.CalculationMethod[settings.calcMethod || 'Egyptian']
-        const params = methodFn ? methodFn() : adhan.CalculationMethod.Egyptian()
-        const pt2 = new adhan.PrayerTimes(coords, tomorrow, params)
-        Object.assign(times, { fajr: pt2.fajr, dhuhr: pt2.dhuhr, asr: pt2.asr, maghrib: pt2.maghrib, isha: pt2.isha })
-      }
+      day.setDate(day.getDate() + d)
+      const pt = getPrayerTimes(settings.location.lat, settings.location.lng, settings.calcMethod, day)
 
-      PRAYER_KEYS.forEach((key, idx) => {
-        const pt = times[key]
-        if (!pt) return
-        const baseId = dayOffset * 10
+      PRAYERS.forEach((key, i) => {
+        const time = pt[key]
+        if (!time || time <= now) return
+        const base = d * 15 + i * 3
 
-        // إشعار قبل الصلاة
-        if (minutesBefore > 0) {
-          const preBefore = new Date(pt.getTime() - minutesBefore * 60 * 1000)
-          if (preBefore > now) {
-            notifications.push({
-              id: baseId + idx + 1,
-              title: `${PRAYER_ICONS[key]} ${PRAYER_AR[key]} بعد ${minutesBefore} دقائق`,
-              body: `استعد لصلاة ${PRAYER_AR[key]}`,
-              schedule: { at: preBefore, allowWhileIdle: true },
-              channelId: 'prayer-notifs',
+        // إشعار عند الأذان
+        notifs.push({
+          id: base + 1,
+          title: `🕌 الله أكبر — حان وقت صلاة ${AR[key]}`,
+          body: `حيّ على الصلاة ، حيّ على الفلاح`,
+          schedule: { at: time, allowWhileIdle: true },
+          channelId: 'adhan-channel',
+          smallIcon: 'ic_notification',
+          sound: 'default',
+        })
+
+        // إشعار قبل الأذان
+        if (minBefore > 0) {
+          const before = new Date(time.getTime() - minBefore * 60000)
+          if (before > now) {
+            notifs.push({
+              id: base + 2,
+              title: `${AR[key]} بعد ${minBefore} دقائق`,
+              body: `استعد لصلاة ${AR[key]}`,
+              schedule: { at: before, allowWhileIdle: true },
+              channelId: 'adhan-channel',
               smallIcon: 'ic_notification',
             })
           }
         }
-
-        // إشعار عند وقت الصلاة
-        if (pt > now) {
-          notifications.push({
-            id: baseId + idx + 6,
-            title: `🕌 حان وقت صلاة ${PRAYER_AR[key]}`,
-            body: `حيّ على الصلاة — حيّ على الفلاح`,
-            schedule: { at: pt, allowWhileIdle: true },
-            channelId: 'prayer-notifs',
-            smallIcon: 'ic_notification',
-          })
-        }
       })
     }
 
-    if (notifications.length) await ln.schedule({ notifications })
+    if (notifs.length) await ln.schedule({ notifications: notifs })
   } catch (e) {
-    console.warn('Prayer notifications error:', e)
+    console.warn('Adhan notifications:', e)
   }
 }
 
-// ─── إشعارات "صلي على النبي" ──────────────────────────────────
+// ─── صلي على النبي ──────────────────────────────────────────────
 export async function scheduleSalawatReminders(settings) {
   const ln = await getPlugin()
   if (!ln) return
 
   try {
-    // قناة صلي على النبي
     await ln.createChannel({
       id: 'salawat-channel',
-      name: 'صلي على النبي',
+      name: 'صلي على النبي ﷺ',
       importance: 3,
       sound: 'default',
       vibration: true,
     }).catch(() => {})
 
-    // إلغاء الإشعارات القديمة (100-400)
-    await ln.cancel({ notifications: Array.from({ length: 300 }, (_, i) => ({ id: i + 100 })) }).catch(() => {})
+    await ln.cancel({ notifications: Array.from({ length: 200 }, (_, i) => ({ id: i + 100 })) }).catch(() => {})
 
     if (!settings.salawatEnabled) return
 
-    const intervalMin = settings.salawatInterval ?? 5
+    const interval = settings.salawatInterval ?? 5
     const now = new Date()
-    const notifications = []
-
-    const salawatTexts = [
+    const texts = [
       'اللهم صل وسلم على نبينا محمد ﷺ',
       'اللهم صل على محمد وعلى آل محمد ﷺ',
       'صلوا على الحبيب محمد ﷺ',
@@ -144,37 +128,25 @@ export async function scheduleSalawatReminders(settings) {
       'من صلى عليّ صلاة صلى الله عليه بها عشرا ﷺ',
     ]
 
-    // جدول إشعارات لمدة 12 ساعة
-    const count = Math.min(Math.floor((12 * 60) / intervalMin), 200)
+    const count = Math.min(Math.floor(720 / interval), 144)
+    const notifs = []
     for (let i = 0; i < count; i++) {
-      const at = new Date(now.getTime() + (i + 1) * intervalMin * 60 * 1000)
-      notifications.push({
+      notifs.push({
         id: 100 + i,
         title: '🤲 صلي على النبي ﷺ',
-        body: salawatTexts[i % salawatTexts.length],
-        schedule: { at, allowWhileIdle: true },
+        body: texts[i % texts.length],
+        schedule: { at: new Date(now.getTime() + (i + 1) * interval * 60000), allowWhileIdle: true },
         channelId: 'salawat-channel',
         smallIcon: 'ic_notification',
       })
     }
-
-    if (notifications.length) await ln.schedule({ notifications })
+    if (notifs.length) await ln.schedule({ notifications: notifs })
   } catch (e) {
-    console.warn('Salawat notifications error:', e)
+    console.warn('Salawat:', e)
   }
 }
 
-// ─── إلغاء كل الإشعارات ──────────────────────────────────────
-export async function cancelAllNotifications() {
-  const ln = await getPlugin()
-  if (!ln) return
-  try {
-    const all = Array.from({ length: 400 }, (_, i) => ({ id: i + 1 }))
-    await ln.cancel({ notifications: all }).catch(() => {})
-  } catch {}
-}
-
-// ─── تشغيل كل الإشعارات حسب الإعدادات ────────────────────────
+// ─── تشغيل الكل ─────────────────────────────────────────────────
 export async function initNotifications(settings) {
   await schedulePrayerNotifications(settings)
   await scheduleSalawatReminders(settings)
