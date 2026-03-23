@@ -56,7 +56,7 @@ jobs:
             echo "$KEYSTORE_B64" | base64 -d > ~/.android/release.keystore
             echo "✅ Keystore loaded from secret"
           else
-            keytool -genkey -v \
+            keytool -genkeypair -noprompt \
               -keystore ~/.android/release.keystore \
               -storepass android \
               -alias appkey \
