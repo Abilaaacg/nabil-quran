@@ -58,9 +58,9 @@ jobs:
           else
             keytool -genkey -v \
               -keystore ~/.android/release.keystore \
-              -storepass nabilquran2026 \
-              -alias nabilquran \
-              -keypass nabilquran2026 \
+              -storepass android \
+              -alias appkey \
+              -keypass android \
               -keyalg RSA -keysize 2048 -validity 10000 \
               -dname "CN=Nabil Quran,O=NabilQuran,C=EG"
             echo ""

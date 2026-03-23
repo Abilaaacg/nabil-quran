@@ -19,9 +19,9 @@ android {
     signingConfigs {
         release {
             storeFile file("${System.getProperty('user.home')}/.android/release.keystore")
-            storePassword "nabilquran2026"
-            keyAlias "nabilquran"
-            keyPassword "nabilquran2026"
+            storePassword "android"
+            keyAlias "appkey"
+            keyPassword "android"
         }
     }
     buildTypes {
