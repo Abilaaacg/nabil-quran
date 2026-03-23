@@ -84,26 +84,18 @@ export default function UpdateChecker() {
   if (step === 'downloading') {
     return (
       <div style={{
-        position: 'fixed', bottom: 70, left: 0, right: 0, zIndex: 999,
-        display: 'flex', justifyContent: 'center', padding: '0 16px',
+        position: 'fixed', bottom: 64, left: 12, right: 12, zIndex: 999,
         pointerEvents: 'none',
       }}>
         <div style={{
-          background: '#1a2f1a', border: '1px solid rgba(107,192,119,0.4)',
-          color: '#fff', borderRadius: 12, padding: '14px 18px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
-          pointerEvents: 'all', maxWidth: 420, width: '100%',
-          fontFamily: 'var(--font-arabic)',
+          background: '#1a2f1a', border: '1px solid rgba(107,192,119,0.3)',
+          color: '#fff', borderRadius: 10, padding: '10px 14px',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.3)',
+          pointerEvents: 'all', fontSize: 13, fontFamily: 'var(--font-arabic)',
+          display: 'flex', alignItems: 'center', gap: 8,
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-            <span style={{ fontSize: 18 }}>⬇</span>
-            <span style={{ fontSize: 14, fontWeight: 700, color: '#6bc077' }}>جاري تحميل التحديث...</span>
-          </div>
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>
-            لو ظهرت رسالة <strong style={{ color: 'rgba(255,255,255,0.85)' }}>تعارض في التوقيع</strong>:<br />
-            ١. أزل التطبيق القديم من الإعدادات<br />
-            ٢. افتح <strong style={{ color: '#6bc077' }}>إشعار التحميل</strong> في شريط الحالة لإكمال التثبيت
-          </div>
+          <span>⬇</span>
+          <span style={{ color: '#6bc077', fontWeight: 700 }}>جاري التحميل...</span>
         </div>
       </div>
     )
@@ -111,38 +103,26 @@ export default function UpdateChecker() {
 
   return (
     <div style={{
-      position: 'fixed', bottom: 70, left: 0, right: 0, zIndex: 999,
-      display: 'flex', justifyContent: 'center', padding: '0 16px',
+      position: 'fixed', bottom: 64, left: 12, right: 12, zIndex: 999,
       pointerEvents: 'none',
     }}>
       <div style={{
-        background: 'var(--accent)', color: '#fff', borderRadius: 12,
-        padding: '12px 20px', display: 'flex', alignItems: 'center',
-        gap: 12, boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-        pointerEvents: 'all', maxWidth: 420, width: '100%',
+        background: 'var(--accent)', color: '#fff', borderRadius: 10,
+        padding: '8px 12px', display: 'flex', alignItems: 'center',
+        gap: 8, boxShadow: '0 2px 12px rgba(0,0,0,0.25)',
+        pointerEvents: 'all', fontSize: 13, fontFamily: 'var(--font-arabic)',
       }}>
-        <span style={{ flex: 1, fontSize: 14, fontFamily: 'var(--font-arabic)' }}>
-          تحديث جديد متاح ({info.version})
-        </span>
-        <button
-          onClick={handleUpdate}
-          style={{
-            background: '#fff', color: 'var(--accent)', borderRadius: 8,
-            padding: '6px 14px', fontSize: 13, fontWeight: 700,
-            border: 'none', cursor: 'pointer', whiteSpace: 'nowrap',
-            fontFamily: 'var(--font-arabic)',
-          }}
-        >
-          تحديث الآن
-        </button>
-        <button
-          onClick={() => setInfo(null)}
-          style={{
-            background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff',
-            borderRadius: 6, width: 28, height: 28, cursor: 'pointer',
-            fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}
-        >×</button>
+        <span style={{ flex: 1 }}>📲 تحديث جديد</span>
+        <button onClick={handleUpdate} style={{
+          background: '#fff', color: 'var(--accent)', borderRadius: 6,
+          padding: '4px 10px', fontSize: 12, fontWeight: 700,
+          border: 'none', cursor: 'pointer', fontFamily: 'var(--font-arabic)',
+        }}>تحديث</button>
+        <button onClick={() => setInfo(null)} style={{
+          background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff',
+          borderRadius: 4, width: 22, height: 22, cursor: 'pointer', fontSize: 12,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>×</button>
       </div>
     </div>
   )
