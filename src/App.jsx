@@ -50,6 +50,7 @@ function AppLayout() {
 
   // جدولة الإشعارات
   useEffect(() => {
+    console.log('🚀 initNotifications triggered', { adhanEnabled: settings.adhanEnabled, location: settings.location?.city })
     initNotifications(settings)
   }, [settings.adhanEnabled, settings.salawatEnabled, settings.salawatInterval, settings.notifMinutesBefore, settings.location?.lat])
 
@@ -80,12 +81,14 @@ function AppLayout() {
       adhanAudioRef.current = audio
     }
 
+    console.log('🔊 Setting up adhan audio timers...')
     // جدول setTimeout لكل صلاة لسه مجاتش
     for (const key of ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
       const pTime = pt[key]
       if (!pTime) continue
       const ms = pTime.getTime() - now.getTime()
       if (ms > 0 && ms < 24 * 3600000) {
+        console.log(`  ⏰ ${key}: adhan in ${Math.round(ms/60000)} min`)
         const t = setTimeout(() => playAdhan(key), ms)
         timersRef.current.push(t)
       } else if (ms >= -30000 && ms <= 0) {

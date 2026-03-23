@@ -28,8 +28,15 @@ function getPrayerTimes(lat, lng, method, date) {
 
 // ─── جدولة إشعارات الصلاة (يومين) ──────────────────────────────
 export async function schedulePrayerNotifications(settings) {
+  console.log('🔔 schedulePrayerNotifications called', {
+    isNative: isNative(),
+    hasLocation: !!settings.location,
+    adhanEnabled: settings.adhanEnabled,
+    calcMethod: settings.calcMethod,
+  })
   const ln = await getPlugin()
-  if (!ln || !settings.location) return
+  if (!ln) { console.log('⚠️ LocalNotifications plugin not available'); return }
+  if (!settings.location) { console.log('⚠️ No location set'); return }
 
   try {
     const perm = await ln.requestPermissions()
@@ -73,7 +80,7 @@ export async function schedulePrayerNotifications(settings) {
           body: `حيّ على الصلاة ، حيّ على الفلاح`,
           schedule: { at: time, allowWhileIdle: true },
           channelId: 'adhan-channel',
-          smallIcon: 'ic_notification',
+          smallIcon: 'ic_launcher',
           sound: 'default',
         })
 
@@ -87,16 +94,22 @@ export async function schedulePrayerNotifications(settings) {
               body: `استعد لصلاة ${AR[key]}`,
               schedule: { at: before, allowWhileIdle: true },
               channelId: 'adhan-channel',
-              smallIcon: 'ic_notification',
+              smallIcon: 'ic_launcher',
             })
           }
         }
       })
     }
 
-    if (notifs.length) await ln.schedule({ notifications: notifs })
+    if (notifs.length) {
+      await ln.schedule({ notifications: notifs })
+      console.log(`✅ Scheduled ${notifs.length} prayer notifications`)
+      notifs.forEach(n => console.log(`  📌 ${n.title} @ ${new Date(n.schedule.at).toLocaleTimeString('ar-EG')}`))
+    } else {
+      console.log('⚠️ No prayer notifications to schedule (all prayers passed)')
+    }
   } catch (e) {
-    console.warn('Adhan notifications:', e)
+    console.error('❌ Prayer notifications FAILED:', e)
   }
 }
 

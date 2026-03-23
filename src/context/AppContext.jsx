@@ -11,8 +11,13 @@ export function AppProvider({ children }) {
         adhkarFontSize: 20,
         location: null,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        calcMethod: 4, // Umm Al-Qura
+        calcMethod: 'Egyptian',
         audioVolume: 80,
+        adhanEnabled: true,
+        adhanSound: 'makkah',
+        salawatEnabled: false,
+        salawatInterval: 30,
+        notifMinutesBefore: 5,
       }
     } catch {
       return {
@@ -22,6 +27,11 @@ export function AppProvider({ children }) {
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         calcMethod: 4,
         audioVolume: 80,
+        adhanEnabled: true,
+        adhanSound: 'makkah',
+        salawatEnabled: false,
+        salawatInterval: 30,
+        notifMinutesBefore: 5,
       }
     }
   })
