@@ -31,6 +31,7 @@ const features = [
   { to: '/prayer',    icon: '🕌', title: 'مواقيت الصلاة',   desc: 'أوقات الصلاة بدقة حسب مدينتك',             color: '#f3a049' },
   { to: '/adhkar',    icon: '📿', title: 'الأذكار',          desc: 'أذكار الصباح والمساء وكل المناسبات',       color: '#a779e9' },
   { to: '/hisnmuslim',icon: '🛡️', title: 'حصن المسلم',      desc: 'أدعية وأذكار من حصن المسلم',               color: '#e96979' },
+  { to: '/tasbeeh',   icon: '📿', title: 'عداد التسبيح',    desc: 'سبّح واذكر الله بالعداد الرقمي',            color: '#6bc077' },
   { to: '/names',     icon: '✨', title: 'أسماء الله الحسنى',desc: 'تعرف على أسماء الله الـ٩٩ ومعانيها',       color: '#f3d049' },
   { to: '/zakat',     icon: '💰', title: 'حاسبة الزكاة',    desc: 'احسب زكاة مالك بسهولة ودقة',               color: '#49c8a0' },
   { to: '/sunnah',    icon: '🌟', title: 'السنن المهجورة',  desc: '12 سنة نبوية مع الفوائد والأدلة',           color: '#49b8c8' },

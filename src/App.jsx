@@ -1,6 +1,6 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
-import { AppProvider } from './context/AppContext'
+import { AppProvider, useApp } from './context/AppContext'
 import Sidebar from './components/Sidebar'
 import MobileNav from './components/MobileNav'
 import ChatFAB from './components/ChatFAB'
@@ -17,6 +17,7 @@ import Settings from './pages/Settings'
 import Qibla from './pages/Qibla'
 import SunnahPage from './pages/SunnahPage'
 import DailyChallenge from './pages/DailyChallenge'
+import Tasbeeh from './pages/Tasbeeh'
 import NamesOfAllah from './pages/NamesOfAllah'
 import Zakat from './pages/Zakat'
 import IslamicAI from './pages/IslamicAI'
@@ -24,6 +25,7 @@ import UpdateChecker from './components/UpdateChecker'
 import WhatsNew from './components/WhatsNew'
 import WelcomeAudio from './components/WelcomeAudio'
 import TopBar from './components/TopBar'
+import { initNotifications } from './services/notifications'
 
 // ترتيب التابات للسويب
 const TAB_ROUTES = ['/', '/quran', '/prayer', '/adhkar', '/settings']
@@ -31,8 +33,14 @@ const TAB_ROUTES = ['/', '/quran', '/prayer', '/adhkar', '/settings']
 function AppLayout() {
   const location = useLocation()
   const navigate  = useNavigate()
+  const { settings } = useApp()
   const touchX    = useRef(null)
   const touchY    = useRef(null)
+
+  // جدولة الإشعارات عند فتح التطبيق وعند تغيير الإعدادات
+  useEffect(() => {
+    initNotifications(settings)
+  }, [settings.adhanEnabled, settings.salawatEnabled, settings.salawatInterval, settings.notifMinutesBefore, settings.location?.lat])
 
   const onTouchStart = (e) => {
     touchX.current = e.touches[0].clientX
@@ -79,6 +87,7 @@ function AppLayout() {
             <Route path="/qibla"               element={<Qibla />} />
             <Route path="/sunnah"              element={<SunnahPage />} />
             <Route path="/challenge"           element={<DailyChallenge />} />
+            <Route path="/tasbeeh"             element={<Tasbeeh />} />
             <Route path="/names"               element={<NamesOfAllah />} />
             <Route path="/zakat"               element={<Zakat />} />
             <Route path="/ai"                  element={<IslamicAI />} />

@@ -114,6 +114,81 @@ export default function Settings() {
         </div>
       </div>
 
+      {/* Notifications */}
+      <div className="settings-section card mb-4">
+        <h2>🔔 الإشعارات</h2>
+
+        {/* تنبيهات الصلاة */}
+        <div className="setting-row">
+          <div className="setting-info">
+            <span>تنبيهات الصلاة</span>
+            <small>إشعار عند وقت كل صلاة</small>
+          </div>
+          <button
+            className={`theme-toggle ${settings.adhanEnabled ? '' : 'off'}`}
+            onClick={() => updateSettings({ adhanEnabled: !settings.adhanEnabled })}
+          >
+            {settings.adhanEnabled ? '✅ مفعّل' : '❌ معطّل'}
+          </button>
+        </div>
+
+        {settings.adhanEnabled && (
+          <div className="setting-row">
+            <div className="setting-info">
+              <span>التنبيه قبل الصلاة بـ</span>
+              <small>عدد الدقائق قبل وقت الأذان</small>
+            </div>
+            <select
+              className="method-select"
+              value={settings.notifMinutesBefore ?? 5}
+              onChange={e => updateSettings({ notifMinutesBefore: parseInt(e.target.value) })}
+            >
+              <option value={0}>عند الأذان فقط</option>
+              <option value={5}>5 دقائق</option>
+              <option value={10}>10 دقائق</option>
+              <option value={15}>15 دقيقة</option>
+              <option value={30}>30 دقيقة</option>
+            </select>
+          </div>
+        )}
+
+        <div style={{ borderTop: '1px solid var(--border)', margin: '12px 0' }} />
+
+        {/* صلي على النبي */}
+        <div className="setting-row">
+          <div className="setting-info">
+            <span>تذكير "صلي على النبي ﷺ"</span>
+            <small>إشعار دوري بالصلاة على النبي</small>
+          </div>
+          <button
+            className={`theme-toggle ${settings.salawatEnabled ? '' : 'off'}`}
+            onClick={() => updateSettings({ salawatEnabled: !settings.salawatEnabled })}
+          >
+            {settings.salawatEnabled ? '✅ مفعّل' : '❌ معطّل'}
+          </button>
+        </div>
+
+        {settings.salawatEnabled && (
+          <div className="setting-row">
+            <div className="setting-info">
+              <span>التكرار كل</span>
+              <small>اختر المدة بين كل تذكير</small>
+            </div>
+            <select
+              className="method-select"
+              value={settings.salawatInterval ?? 5}
+              onChange={e => updateSettings({ salawatInterval: parseInt(e.target.value) })}
+            >
+              <option value={5}>5 دقائق</option>
+              <option value={10}>10 دقائق</option>
+              <option value={15}>15 دقيقة</option>
+              <option value={30}>30 دقيقة</option>
+              <option value={60}>ساعة</option>
+            </select>
+          </div>
+        )}
+      </div>
+
       {/* About */}
       <div className="settings-section card mb-4">
         <h2>ℹ️ عن التطبيق</h2>

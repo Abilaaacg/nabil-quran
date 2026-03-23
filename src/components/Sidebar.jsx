@@ -11,6 +11,7 @@ const navItems = [
   { to: '/ai',       label: 'المساعد الذكي',    icon: '🤖' },
   { to: '/adhkar',   label: 'الأذكار',          icon: '📿' },
   { to: '/hisnmuslim', label: 'حصن المسلم',   icon: '🛡️' },
+  { to: '/tasbeeh',  label: 'عداد التسبيح',    icon: '🔢' },
   { to: '/names',    label: 'أسماء الله الحسنى', icon: '✨' },
   { to: '/zakat',    label: 'حاسبة الزكاة',    icon: '💰' },
   { to: '/sunnah',   label: 'السنن المهجورة',  icon: '🌟' },
