@@ -49,17 +49,42 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Setup signing keystore
+        run: |
+          mkdir -p ~/.android
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > ~/.android/release.keystore
+            echo "✅ Keystore loaded from secret"
+          else
+            keytool -genkey -v \
+              -keystore ~/.android/release.keystore \
+              -storepass nabilquran2026 \
+              -alias nabilquran \
+              -keypass nabilquran2026 \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -dname "CN=Nabil Quran,O=NabilQuran,C=EG"
+            echo ""
+            echo "========================================"
+            echo "⚠️  SAVE THIS AS GitHub Secret: KEYSTORE_BASE64"
+            echo "========================================"
+            base64 -w 0 ~/.android/release.keystore
+            echo ""
+            echo "========================================"
+          fi
+        env:
+          KEYSTORE_B64: ${{ secrets.KEYSTORE_BASE64 }}
+
       - name: Sync Capacitor
         run: npx cap sync android
 
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
-      - name: Build Debug APK
-        run: cd android && ./gradlew assembleDebug --no-daemon
+      - name: Build Release APK
+        run: cd android && ./gradlew assembleRelease --no-daemon
 
       - name: Rename APK
-        run: cp android/app/build/outputs/apk/debug/app-debug.apk nabil-quran.apk
+        run: cp android/app/build/outputs/apk/release/app-release.apk nabil-quran.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -74,11 +99,8 @@ jobs:
           name: "نور الإسلام v${{ github.run_number }}"
           body: |
             ## 📱 تطبيق نور الإسلام للأندرويد
-
-            ### تحميل التطبيق:
-            قم بتحميل ملف `nabil-quran.apk` من الأسفل وثبته على هاتفك
-
-            > ملاحظة: قد تحتاج لتفعيل "السماح بمصادر غير معروفة" في إعدادات هاتفك
+            قم بتحميل ملف `nabil-quran.apk` وثبته على هاتفك
+            > تحتاج لتفعيل "السماح بمصادر غير معروفة"
           files: nabil-quran.apk
           draft: false
           prerelease: false
