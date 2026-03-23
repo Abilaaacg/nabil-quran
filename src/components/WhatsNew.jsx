@@ -3,6 +3,7 @@ import './WhatsNew.css'
 
 export default function WhatsNew() {
   const [data, setData] = useState(null)
+  const [expanded, setExpanded] = useState(false)
 
   useEffect(() => {
     fetch('/changelog.json?t=' + Date.now())
@@ -22,39 +23,20 @@ export default function WhatsNew() {
   if (!data) return null
 
   return (
-    <div className="wn-overlay" onClick={close}>
-      <div className="wn-modal" onClick={e => e.stopPropagation()}>
-
-        {/* شارة عاجل */}
-        {data.urgent && (
-          <div className="wn-urgent-bar">
-            <span>⚡</span>
-            <span>{data.urgentMsg}</span>
-          </div>
-        )}
-
-        <div className="wn-header">
-          <div className="wn-icon">🚀</div>
-          <div>
-            <div className="wn-title">{data.title}</div>
-            <div className="wn-version">{data.version}</div>
-          </div>
-        </div>
-
-        <div className="wn-subtitle">الجديد في هذا التحديث:</div>
-
-        <ul className="wn-list">
-          {data.changes.map((c, i) => (
-            <li key={i} className="wn-item">{c}</li>
-          ))}
-        </ul>
-
-        <button className="wn-btn" onClick={close}>
-          🎉 رائع! ابدأ الاستخدام
-        </button>
-
-        <p className="wn-dismiss">اضغط في أي مكان للإغلاق</p>
+    <div className="wn-banner">
+      <div className="wn-bar" onClick={() => setExpanded(!expanded)}>
+        <span className="wn-bar-text">🚀 {data.title}</span>
+        <span className="wn-bar-arrow">{expanded ? '▲' : '▼'}</span>
+        <button className="wn-close" onClick={e => { e.stopPropagation(); close() }}>×</button>
       </div>
+      {expanded && (
+        <div className="wn-details">
+          {data.changes.map((c, i) => (
+            <div key={i} className="wn-change">{c}</div>
+          ))}
+          <button className="wn-got-it" onClick={close}>✓ تم</button>
+        </div>
+      )}
     </div>
   )
 }

@@ -1,163 +1,77 @@
-.wn-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.65);
-  backdrop-filter: blur(5px);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  animation: wn-fade-in 0.25s ease;
-}
-
-@keyframes wn-fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-.wn-modal {
-  background: var(--bg-card);
-  border: 1px solid rgba(107,192,119,0.3);
-  border-radius: 22px;
-  padding: 0 0 22px;
-  max-width: 420px;
-  width: 100%;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(107,192,119,0.15);
-  animation: wn-slide-up 0.32s cubic-bezier(0.34,1.56,0.64,1);
+.wn-banner {
+  position: relative;
+  z-index: 100;
+  margin: 0 12px 8px;
+  border-radius: 10px;
   overflow: hidden;
+  border: 1px solid rgba(107,192,119,0.3);
+  background: var(--bg-card);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   direction: rtl;
 }
 
-@keyframes wn-slide-up {
-  from { transform: translateY(50px) scale(0.93); opacity: 0; }
-  to   { transform: translateY(0) scale(1); opacity: 1; }
-}
-
-/* ── شريط تحذير عاجل ── */
-.wn-urgent-bar {
-  background: linear-gradient(135deg, #e67e22, #d35400);
-  color: #fff;
-  padding: 10px 18px;
-  font-family: var(--font-arabic);
-  font-size: 13px;
-  font-weight: 700;
+.wn-bar {
   display: flex;
   align-items: center;
   gap: 8px;
-  animation: urgentPulse 2s ease-in-out infinite;
+  padding: 8px 12px;
+  cursor: pointer;
+  background: rgba(107,192,119,0.08);
 }
 
-@keyframes urgentPulse {
-  0%, 100% { background: linear-gradient(135deg, #e67e22, #d35400); }
-  50%       { background: linear-gradient(135deg, #f39c12, #e67e22); }
+.wn-bar-text {
+  flex: 1;
+  font-family: var(--font-arabic);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
 }
 
-/* ── رأس ── */
-.wn-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 22px 22px 0;
-  margin-bottom: 16px;
+.wn-bar-arrow {
+  font-size: 10px;
+  color: var(--text-muted);
 }
 
-.wn-icon {
-  width: 54px;
-  height: 54px;
-  background: linear-gradient(135deg, rgba(107,192,119,0.25), rgba(107,192,119,0.08));
-  border: 1px solid rgba(107,192,119,0.35);
-  border-radius: 16px;
+.wn-close {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: var(--text-muted);
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
-  flex-shrink: 0;
 }
 
-.wn-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-primary);
-  font-family: var(--font-arabic);
-  margin-bottom: 5px;
-}
-
-.wn-version {
-  font-size: 12px;
-  color: var(--accent);
-  background: rgba(107,192,119,0.12);
-  border-radius: 20px;
-  padding: 2px 10px;
-  display: inline-block;
-  border: 1px solid rgba(107,192,119,0.25);
-}
-
-/* ── عنوان فرعي ── */
-.wn-subtitle {
-  font-family: var(--font-arabic);
-  font-size: 13px;
-  color: var(--text-muted);
-  padding: 0 22px 10px;
-}
-
-/* ── قائمة التغييرات ── */
-.wn-list {
-  list-style: none;
+.wn-details {
+  padding: 8px 12px 10px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
-  padding: 0 22px;
+  gap: 4px;
 }
 
-.wn-item {
+.wn-change {
   font-family: var(--font-arabic);
-  font-size: 14px;
+  font-size: 12px;
   color: var(--text-secondary);
-  padding: 10px 14px;
+  padding: 4px 8px;
   background: var(--bg-secondary);
-  border-radius: 10px;
-  border-right: 3px solid var(--accent);
-  line-height: 1.55;
+  border-radius: 6px;
+  line-height: 1.5;
 }
 
-/* ── زر ── */
-.wn-btn {
-  width: calc(100% - 44px);
-  margin: 0 22px;
-  background: linear-gradient(135deg, #6bc077, #4a9a56);
+.wn-got-it {
+  margin-top: 6px;
+  background: var(--accent);
   color: #fff;
   border: none;
-  border-radius: 13px;
-  padding: 14px;
-  font-size: 15px;
+  border-radius: 6px;
+  padding: 6px;
+  font-size: 13px;
   font-weight: 700;
   font-family: var(--font-arabic);
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 4px 18px rgba(107,192,119,0.35);
-}
-
-.wn-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 22px rgba(107,192,119,0.45);
-}
-
-.wn-btn:active {
-  transform: translateY(0);
-}
-
-.wn-dismiss {
-  text-align: center;
-  font-size: 11px;
-  color: var(--text-muted);
-  font-family: var(--font-arabic);
-  margin-top: 10px;
-}
-
-@media (max-width: 420px) {
-  .wn-modal { border-radius: 18px; }
-  .wn-item  { font-size: 13px; padding: 9px 12px; }
-  .wn-title { font-size: 16px; }
 }
