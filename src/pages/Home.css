@@ -34,10 +34,12 @@
 
 /* ─── Circular Icons Grid ──────────────────────────── */
 .home-circles {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px 8px;
-  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px 12px;
+  margin-top: 10px;
+  padding: 8px 0;
   direction: rtl;
 }
 
@@ -47,54 +49,71 @@
   align-items: center;
   gap: 6px;
   text-decoration: none;
-  transition: transform 0.2s;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  width: 70px;
 }
-.home-circle-item:hover { transform: scale(1.08); }
+.home-circle-item:active { transform: scale(1.15); }
 
 .home-circle-icon {
-  width: 58px;
-  height: 58px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
-  border: 2px solid;
+  border: 2.5px solid;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
+  font-size: 24px;
   transition: all 0.3s;
-  animation: circle-pop 0.4s ease backwards;
+  animation: circle-orbit 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
 }
-.home-circle-item:nth-child(1) .home-circle-icon { animation-delay: 0s; }
-.home-circle-item:nth-child(2) .home-circle-icon { animation-delay: 0.05s; }
-.home-circle-item:nth-child(3) .home-circle-icon { animation-delay: 0.1s; }
-.home-circle-item:nth-child(4) .home-circle-icon { animation-delay: 0.15s; }
-.home-circle-item:nth-child(5) .home-circle-icon { animation-delay: 0.2s; }
-.home-circle-item:nth-child(6) .home-circle-icon { animation-delay: 0.25s; }
-.home-circle-item:nth-child(7) .home-circle-icon { animation-delay: 0.3s; }
-.home-circle-item:nth-child(8) .home-circle-icon { animation-delay: 0.35s; }
 
-@keyframes circle-pop {
-  0% { transform: scale(0); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+/* كل أيقونة بتظهر بتأخير مختلف مع دوران */
+.home-circle-item:nth-child(1) .home-circle-icon { animation-delay: 0s; }
+.home-circle-item:nth-child(2) .home-circle-icon { animation-delay: 0.06s; }
+.home-circle-item:nth-child(3) .home-circle-icon { animation-delay: 0.12s; }
+.home-circle-item:nth-child(4) .home-circle-icon { animation-delay: 0.18s; }
+.home-circle-item:nth-child(5) .home-circle-icon { animation-delay: 0.24s; }
+.home-circle-item:nth-child(6) .home-circle-icon { animation-delay: 0.30s; }
+.home-circle-item:nth-child(7) .home-circle-icon { animation-delay: 0.36s; }
+.home-circle-item:nth-child(8) .home-circle-icon { animation-delay: 0.42s; }
+.home-circle-item:nth-child(9) .home-circle-icon { animation-delay: 0.48s; }
+.home-circle-item:nth-child(10) .home-circle-icon { animation-delay: 0.54s; }
+.home-circle-item:nth-child(11) .home-circle-icon { animation-delay: 0.60s; }
+.home-circle-item:nth-child(12) .home-circle-icon { animation-delay: 0.66s; }
+.home-circle-item:nth-child(13) .home-circle-icon { animation-delay: 0.72s; }
+.home-circle-item:nth-child(14) .home-circle-icon { animation-delay: 0.78s; }
+.home-circle-item:nth-child(15) .home-circle-icon { animation-delay: 0.84s; }
+.home-circle-item:nth-child(16) .home-circle-icon { animation-delay: 0.90s; }
+
+@keyframes circle-orbit {
+  0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
 
 .home-circle-label {
   font-family: var(--font-arabic);
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-secondary);
   text-align: center;
   line-height: 1.3;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 @media (max-width: 480px) {
-  .home-hero { padding: 12px 0 6px; }
-  .home-hero-icon { font-size: 28px; margin-bottom: 4px; }
+  .home-hero { padding: 10px 0 4px; }
+  .home-hero-icon { font-size: 26px; margin-bottom: 4px; }
   .home-hero h1 { font-size: 18px; }
   .home-hero p { font-size: 11px; }
   .home-hijri { font-size: 10px; margin-top: 4px; padding: 2px 10px; }
-  .home-circles { gap: 10px 4px; }
-  .home-circle-icon { width: 48px; height: 48px; font-size: 22px; }
-  .home-circle-label { font-size: 10px; }
-  .home-footer { margin-top: 16px; }
+  .home-circles { gap: 12px 6px; }
+  .home-circle-item { width: 62px; }
+  .home-circle-icon { width: 48px; height: 48px; font-size: 20px; }
+  .home-circle-label { font-size: 9px; max-width: 62px; }
+  .home-footer { margin-top: 14px; }
 }
 
 .home-footer {
