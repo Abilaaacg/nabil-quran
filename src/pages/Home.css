@@ -11,8 +11,9 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 14px 8px;
-  margin: 12px 0;
-  direction: rtl;
+  margin: 12px auto;
+  max-width: 350px;
+  width: 100%;
 }
 
 .hg-item {
@@ -55,8 +56,8 @@
 @media (max-width: 480px) {
   .home-hero h1 { font-size: 17px; }
   .home-hijri { font-size: 10px; }
-  .home-grid { gap: 10px 4px; }
-  .hg-icon { width: 44px; height: 44px; font-size: 19px; }
+  .home-grid { gap: 12px 6px; max-width: 300px; }
+  .hg-icon { width: 46px; height: 46px; font-size: 20px; }
   .hg-label { font-size: 9px; }
   .home-footer { margin-top: 14px; }
 }
