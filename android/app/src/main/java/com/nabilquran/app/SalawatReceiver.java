@@ -57,26 +57,20 @@ public class SalawatReceiver extends BroadcastReceiver {
         }
     }
 
-    private void speakSalawat(Context context, String text, PowerManager.WakeLock wl) {
-        TextToSpeech tts = new TextToSpeech(context, status -> {
+    private void speakSalawat(Context context, String text, final PowerManager.WakeLock wakeLock) {
+        final TextToSpeech[] ttsHolder = new TextToSpeech[1];
+        ttsHolder[0] = new TextToSpeech(context, status -> {
             if (status == TextToSpeech.SUCCESS) {
-                // TTS موجود — نتحكم في اللغة
-            }
-        });
-
-        // استنى TTS يبدأ واتكلم
-        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
-            try {
+                TextToSpeech tts = ttsHolder[0];
                 tts.setLanguage(new Locale("ar"));
                 tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "salawat");
                 tts.setOnUtteranceCompletedListener(utteranceId -> {
                     tts.shutdown();
-                    if (wl.isHeld()) wl.release();
+                    if (wakeLock.isHeld()) wakeLock.release();
                 });
-            } catch (Exception e) {
-                tts.shutdown();
-                if (wl.isHeld()) wl.release();
+            } else {
+                if (wakeLock.isHeld()) wakeLock.release();
             }
-        }, 500);
+        });
     }
 }
