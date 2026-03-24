@@ -34,16 +34,17 @@
 
 .home-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
   margin-top: 8px;
 }
 
+@media (min-width: 768px) {
+  .home-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
 @media (max-width: 480px) {
-  .home-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-  }
+  .home-grid { gap: 8px; }
   .home-hero { padding: 12px 0 8px; }
   .home-hero-icon { font-size: 32px; margin-bottom: 6px; }
   .home-hero h1 { font-size: 20px; }
