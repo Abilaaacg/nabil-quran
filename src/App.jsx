@@ -28,16 +28,7 @@ import WhatsNew from './components/WhatsNew'
 import WelcomeAudio from './components/WelcomeAudio'
 import PermissionRequest from './components/PermissionRequest'
 import TopBar from './components/TopBar'
-import { initNotifications } from './services/notifications'
-import * as adhan from 'adhan'
-
-const ADHAN_URLS = {
-  makkah:  'https://www.islamcan.com/audio/adhan/azan1.mp3',
-  madinah: 'https://www.islamcan.com/audio/adhan/azan2.mp3',
-  egypt:   'https://www.islamcan.com/audio/adhan/azan3.mp3',
-  mishary: 'https://www.islamcan.com/audio/adhan/azan4.mp3',
-  turkish: 'https://www.islamcan.com/audio/adhan/azan5.mp3',
-}
+import { initNotifications, setupWebAdhan } from './services/notifications'
 
 // ترتيب التابات للسويب
 const TAB_ROUTES = ['/', '/quran', '/prayer', '/adhkar', '/settings']
@@ -51,77 +42,13 @@ function AppLayout() {
   const adhanAudioRef = useRef(null)
   const timersRef = useRef([])
 
-  // جدولة الإشعارات
+  // جدولة الإشعارات + الأذان
   useEffect(() => {
-    console.log('🚀 initNotifications triggered', { adhanEnabled: settings.adhanEnabled, location: settings.location?.city })
     initNotifications(settings)
-  }, [settings.adhanEnabled, settings.salawatEnabled, settings.salawatInterval, settings.notifMinutesBefore, settings.location?.lat])
-
-  // ─── الأذان الصوتي (web فقط — على native يتعامل AlarmManager) ──
-  useEffect(() => {
     timersRef.current.forEach(t => clearTimeout(t))
-    timersRef.current = []
-
-    // على Android الأذان يشتغل عبر AlarmManager + AdhanReceiver (حتى لو التطبيق مغلق)
-    if (window.Capacitor?.isNativePlatform?.()) return
-
-    if (!settings.adhanEnabled || !settings.location) return
-
-    const now = new Date()
-    const coords = new adhan.Coordinates(settings.location.lat, settings.location.lng)
-    const methodFn = adhan.CalculationMethod[settings.calcMethod || 'Egyptian']
-    const params = methodFn ? methodFn() : adhan.CalculationMethod.Egyptian()
-    const pt = new adhan.PrayerTimes(coords, now, params)
-    const today = now.toDateString()
-    const soundUrl = ADHAN_URLS[settings.adhanSound || 'makkah'] || ADHAN_URLS.makkah
-
-    const playAdhan = (key) => {
-      const playKey = `adhan_played_${today}_${key}`
-      if (localStorage.getItem(playKey)) return
-      localStorage.setItem(playKey, '1')
-      if (adhanAudioRef.current) { adhanAudioRef.current.pause(); adhanAudioRef.current = null }
-      const audio = new Audio(soundUrl)
-      audio.volume = 1.0
-      audio.play().catch(() => {})
-      adhanAudioRef.current = audio
-    }
-
-    for (const key of ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
-      const pTime = pt[key]
-      if (!pTime) continue
-      const ms = pTime.getTime() - now.getTime()
-      if (ms > 0 && ms < 24 * 3600000) {
-        const t = setTimeout(() => playAdhan(key), ms)
-        timersRef.current.push(t)
-      } else if (ms >= -30000 && ms <= 0) {
-        playAdhan(key)
-      }
-    }
-
-    // لما المستخدم يرجع للموقع بعد ما كان في تاب تاني
-    const onResume = () => {
-      const n = new Date()
-      const pt2 = new adhan.PrayerTimes(coords, n, params)
-      for (const key of ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
-        const t = pt2[key]
-        if (!t) continue
-        const diff = n - t
-        const pk = `adhan_played_${n.toDateString()}_${key}`
-        if (diff >= 0 && diff < 120000 && !localStorage.getItem(pk)) {
-          playAdhan(key)
-          break
-        }
-      }
-    }
-    const onVisChange = () => { if (!document.hidden) onResume() }
-    document.addEventListener('visibilitychange', onVisChange)
-
-    return () => {
-      timersRef.current.forEach(t => clearTimeout(t))
-      timersRef.current = []
-      document.removeEventListener('visibilitychange', onVisChange)
-    }
-  }, [settings.adhanEnabled, settings.adhanSound, settings.location?.lat, settings.location?.lng, settings.calcMethod])
+    timersRef.current = setupWebAdhan(settings, adhanAudioRef)
+    return () => { timersRef.current.forEach(t => clearTimeout(t)); timersRef.current = [] }
+  }, [settings.adhanEnabled, settings.adhanSound, settings.salawatEnabled, settings.salawatInterval, settings.notifMinutesBefore, settings.location?.lat, settings.calcMethod])
 
   const onTouchStart = (e) => {
     touchX.current = e.touches[0].clientX
