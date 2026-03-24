@@ -25,21 +25,21 @@ function toHijri(date) {
   return `${day} ${months[month - 1]} ${year} هـ`
 }
 
-const FEATURES = [
-  { to: '/quran',     icon: '📖', title: 'القرآن',     color: '#6bc077' },
-  { to: '/prayer',    icon: '🕌', title: 'الصلاة',     color: '#f3a049' },
-  { to: '/adhkar',    icon: '📿', title: 'الأذكار',    color: '#a779e9' },
-  { to: '/hisnmuslim',icon: '🛡️', title: 'حصن المسلم', color: '#e96979' },
-  { to: '/audio',     icon: '🎙️', title: 'القراء',     color: '#5b8dee' },
-  { to: '/qibla',     icon: '🧭', title: 'القبلة',     color: '#49a8e9' },
-  { to: '/names',     icon: '✨', title: 'الأسماء',    color: '#f3d049' },
-  { to: '/tasbeeh',   icon: '📿', title: 'التسبيح',    color: '#6bc077' },
-  { to: '/quiz',      icon: '🏆', title: 'المسابقة',   color: '#e96979' },
-  { to: '/lessons',   icon: '🎓', title: 'الدروس',     color: '#8b5cf6' },
-  { to: '/zakat',     icon: '💰', title: 'الزكاة',     color: '#49c8a0' },
-  { to: '/sunnah',    icon: '🌟', title: 'السنن',      color: '#49b8c8' },
-  { to: '/challenge', icon: '⭐', title: 'التحدي',     color: '#e9a049' },
-  { to: '/radio',     icon: '📻', title: 'الإذاعة',    color: '#b849c8' },
+const features = [
+  { to: '/quran',     icon: '📖', title: 'القرآن الكريم',     desc: 'تصفح وتلاوة سور القرآن الكريم',           color: '#6bc077' },
+  { to: '/audio',     icon: '🎙️', title: 'القراء',            desc: 'استمع لأشهر القراء في العالم',              color: '#5b8dee' },
+  { to: '/prayer',    icon: '🕌', title: 'مواقيت الصلاة',     desc: 'أوقات الصلاة بدقة حسب مدينتك',             color: '#f3a049' },
+  { to: '/adhkar',    icon: '📿', title: 'الأذكار',            desc: 'أذكار الصباح والمساء وكل المناسبات',       color: '#a779e9' },
+  { to: '/hisnmuslim',icon: '🛡️', title: 'حصن المسلم',        desc: 'أدعية وأذكار من حصن المسلم',               color: '#e96979' },
+  { to: '/tasbeeh',   icon: '📿', title: 'عداد التسبيح',      desc: 'سبّح واذكر الله بالعداد الرقمي',            color: '#6bc077' },
+  { to: '/names',     icon: '✨', title: 'أسماء الله الحسنى',  desc: 'تعرف على أسماء الله الـ٩٩ ومعانيها',       color: '#f3d049' },
+  { to: '/zakat',     icon: '💰', title: 'حاسبة الزكاة',      desc: 'احسب زكاة مالك بسهولة ودقة',               color: '#49c8a0' },
+  { to: '/sunnah',    icon: '🌟', title: 'السنن المهجورة',    desc: '12 سنة نبوية مع الفوائد والأدلة',           color: '#49b8c8' },
+  { to: '/challenge', icon: '🏆', title: 'التحدي اليومي',     desc: 'مهام يومية ونقاط لتحسين عباداتك',          color: '#e9a049' },
+  { to: '/qibla',     icon: '🧭', title: 'اتجاه القبلة',      desc: 'اعرف اتجاه الكعبة بدقة',                   color: '#49a8e9' },
+  { to: '/quiz',      icon: '🏆', title: 'المسابقة الإسلامية', desc: 'نافس الذكاء الاصطناعي واكسب نقاط',         color: '#e96979' },
+  { to: '/lessons',   icon: '🎓', title: 'دروس ومحاضرات',    desc: 'تعلّم من الشعراوي والنابلسي وغيرهم',        color: '#8b5cf6' },
+  { to: '/radio',     icon: '📻', title: 'الإذاعة',           desc: 'إذاعات إسلامية مباشرة من العالم',           color: '#b849c8' },
 ]
 
 export default function Home() {
@@ -49,29 +49,32 @@ export default function Home() {
   return (
     <div className="page-container fade-in">
       <div className="home-hero">
-        <h1>☪️ نور الإسلام</h1>
-        {hijri && <span className="home-hijri">{hijri}</span>}
+        <div className="home-hero-icon">☪️</div>
+        <h1>نور الإسلام</h1>
+        <p>تطبيق القرآن الكريم والأذكار الإسلامية</p>
+        {hijri && <div className="home-hijri">{hijri}</div>}
       </div>
 
       <NewsTicker />
+      <AppDownloadBanner />
 
       <div className="home-grid">
-        {FEATURES.map((f, i) => (
-          <Link key={f.to} to={f.to} className="hg-item" style={{ animationDelay: `${i * 0.04}s` }}>
-            <div className="hg-icon" style={{ background: `${f.color}22`, borderColor: `${f.color}55` }}>
+        {features.map(f => (
+          <Link key={f.to} to={f.to} className="home-card">
+            <div className="home-card-icon" style={{ background: `${f.color}22`, color: f.color }}>
               {f.icon}
             </div>
-            <span className="hg-label">{f.title}</span>
+            <h2>{f.title}</h2>
+            <p>{f.desc}</p>
           </Link>
         ))}
       </div>
 
-      <AppDownloadBanner />
       <SocialProof />
 
       <div className="home-footer">
         <p>بسم الله الرحمن الرحيم</p>
-        <p style={{ fontSize: 11, marginTop: 6, color: 'var(--text-muted)' }}>تم برمجة التطبيق عن طريق المهندس أحمد نبيل</p>
+        <p style={{ fontSize: 12, marginTop: 8, color: 'var(--text-muted)' }}>تم برمجة التطبيق عن طريق المهندس أحمد نبيل</p>
       </div>
     </div>
   )

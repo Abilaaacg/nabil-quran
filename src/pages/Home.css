@@ -1,44 +1,111 @@
-.home-hero { text-align: center; padding: 8px 0 4px; }
-.home-hero h1 { font-size: 18px; font-weight: 700; color: var(--text-primary); }
-.home-hijri {
-  display: inline-block; margin-top: 4px; padding: 2px 12px;
-  background: rgba(107,192,119,0.12); border: 1px solid rgba(107,192,119,0.3);
-  border-radius: 20px; font-size: 10px; color: var(--accent);
-}
-
-/* ─── Grid — أبسط طريقة ممكنة ────────────── */
-.home-grid {
+.home-hero {
   text-align: center;
-  margin: 14px 0;
+  padding: 40px 0 32px;
 }
 
-.hg-item {
-  display: inline-block;
-  width: 24%;
-  text-align: center;
-  text-decoration: none;
-  vertical-align: top;
-  margin-bottom: 14px;
-}
-.hg-item:active .hg-icon { transform: scale(1.2); }
-
-.hg-icon {
-  width: 54px; height: 54px;
-  border-radius: 50%;
-  border: 2px solid;
-  display: inline-flex; align-items: center; justify-content: center;
-  font-size: 23px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
-  transition: transform 0.2s;
+.home-hero-icon {
+  font-size: 60px;
+  margin-bottom: 16px;
 }
 
-.hg-label {
-  display: block;
-  font-family: var(--font-arabic);
-  font-size: 10px;
+.home-hero h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.home-hero p {
+  font-size: 16px;
   color: var(--text-secondary);
-  margin-top: 5px;
 }
 
-.home-footer { text-align: center; margin-top: 20px; padding: 14px 0; border-top: 1px solid var(--border); }
-.home-footer p { font-family: var(--font-arabic); font-size: 16px; color: var(--accent); }
+.home-hijri {
+  margin-top: 10px;
+  display: inline-block;
+  padding: 5px 16px;
+  background: rgba(107,192,119,0.12);
+  border: 1px solid rgba(107,192,119,0.3);
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--accent);
+  font-family: var(--font-arabic);
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+@media (max-width: 480px) {
+  .home-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .home-hero { padding: 12px 0 8px; }
+  .home-hero-icon { font-size: 32px; margin-bottom: 6px; }
+  .home-hero h1 { font-size: 20px; }
+  .home-hero p { font-size: 12px; }
+  .home-hijri { font-size: 11px; margin-top: 6px; padding: 3px 12px; }
+  .home-card { padding: 12px 10px; gap: 6px; }
+  .home-card-icon { width: 36px; height: 36px; font-size: 18px; border-radius: 10px; }
+  .home-card h2 { font-size: 13px; }
+  .home-card p { font-size: 10px; line-height: 1.4; }
+  .home-footer { margin-top: 20px; }
+}
+
+.home-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.home-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+.home-card-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.home-card h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.home-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.home-footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px 0;
+  border-top: 1px solid var(--border);
+}
+
+.home-footer p {
+  font-family: var(--font-arabic);
+  font-size: 20px;
+  color: var(--accent);
+}
