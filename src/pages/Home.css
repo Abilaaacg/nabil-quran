@@ -1,112 +1,51 @@
 .home-hero {
   text-align: center;
-  padding: 40px 0 32px;
+  padding: 16px 0 10px;
 }
-
-.home-hero-icon {
-  font-size: 60px;
-  margin-bottom: 16px;
-}
-
-.home-hero h1 {
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 8px;
-}
-
-.home-hero p {
-  font-size: 16px;
-  color: var(--text-secondary);
-}
-
+.home-hero-icon { font-size: 40px; margin-bottom: 8px; }
+.home-hero h1 { font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+.home-hero p { font-size: 14px; color: var(--text-secondary); }
 .home-hijri {
-  margin-top: 10px;
-  display: inline-block;
-  padding: 5px 16px;
-  background: rgba(107,192,119,0.12);
-  border: 1px solid rgba(107,192,119,0.3);
-  border-radius: 20px;
-  font-size: 13px;
-  color: var(--accent);
-  font-family: var(--font-arabic);
+  margin-top: 8px; display: inline-block; padding: 3px 14px;
+  background: rgba(107,192,119,0.12); border: 1px solid rgba(107,192,119,0.3);
+  border-radius: 20px; font-size: 12px; color: var(--accent);
 }
 
+/* ─── الكروت — دايماً 2 في الصف بأبسط طريقة ── */
 .home-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-top: 8px;
-}
-
-@media (min-width: 768px) {
-  .home-grid { grid-template-columns: repeat(3, 1fr); }
-}
-
-@media (max-width: 480px) {
-  .home-grid { gap: 8px; }
-  .home-hero { padding: 12px 0 8px; }
-  .home-hero-icon { font-size: 32px; margin-bottom: 6px; }
-  .home-hero h1 { font-size: 20px; }
-  .home-hero p { font-size: 12px; }
-  .home-hijri { font-size: 11px; margin-top: 6px; padding: 3px 12px; }
-  .home-card { padding: 12px 10px; gap: 6px; }
-  .home-card-icon { width: 36px; height: 36px; font-size: 18px; border-radius: 10px; }
-  .home-card h2 { font-size: 13px; }
-  .home-card p { font-size: 10px; line-height: 1.4; }
-  .home-footer { margin-top: 20px; }
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px;
+  margin-top: 10px;
 }
 
 .home-card {
+  width: 48% !important;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
+  border-radius: 10px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  transition: var(--transition);
+  gap: 6px;
   cursor: pointer;
+  text-decoration: none;
 }
-
-.home-card:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--accent);
-  transform: translateY(-3px);
-  box-shadow: var(--shadow);
-}
+.home-card:active { opacity: 0.8; }
 
 .home-card-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-}
-
-.home-card h2 {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
   font-size: 18px;
-  font-weight: 700;
-  color: var(--text-primary);
 }
 
-.home-card p {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
+.home-card h2 { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.home-card p { font-size: 10px; color: var(--text-secondary); line-height: 1.4; }
 
 .home-footer {
-  text-align: center;
-  margin-top: 40px;
-  padding: 20px 0;
+  text-align: center; margin-top: 24px; padding: 16px 0;
   border-top: 1px solid var(--border);
 }
-
-.home-footer p {
-  font-family: var(--font-arabic);
-  font-size: 20px;
-  color: var(--accent);
-}
+.home-footer p { font-family: var(--font-arabic); font-size: 16px; color: var(--accent); }
