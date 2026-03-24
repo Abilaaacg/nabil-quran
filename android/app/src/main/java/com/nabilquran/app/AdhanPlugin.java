@@ -86,10 +86,58 @@ public class AdhanPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void scheduleSalawat(PluginCall call) {
+        int intervalMinutes = call.getInt("intervalMinutes", 30);
+        int count = call.getInt("count", 24);
+
+        Context context = getContext();
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        String[] texts = {
+            "اللهم صل وسلم على نبينا محمد",
+            "اللهم صل على محمد وعلى آل محمد",
+            "صلوا على الحبيب محمد",
+        };
+
+        // إلغاء القديم (IDs 6000-6099)
+        for (int i = 0; i < 100; i++) {
+            Intent intent = new Intent(context, SalawatReceiver.class);
+            PendingIntent pi = PendingIntent.getBroadcast(
+                context, 6000 + i, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
+            am.cancel(pi);
+        }
+
+        long now = System.currentTimeMillis();
+        for (int i = 0; i < count && i < 100; i++) {
+            long triggerAt = now + (long)(i + 1) * intervalMinutes * 60 * 1000;
+
+            Intent intent = new Intent(context, SalawatReceiver.class);
+            intent.putExtra("salawat_text", texts[i % texts.length]);
+
+            PendingIntent pi = PendingIntent.getBroadcast(
+                context, 6000 + i, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+            } else {
+                am.set(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+            }
+        }
+
+        Log.d("AdhanPlugin", "Scheduled " + count + " salawat reminders every " + intervalMinutes + " min");
+        call.resolve();
+    }
+
+    @PluginMethod
     public void cancelAll(PluginCall call) {
         Context context = getContext();
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
+        // cancel adhan alarms
         for (int i = 0; i < 20; i++) {
             Intent intent = new Intent(context, AdhanReceiver.class);
             PendingIntent pi = PendingIntent.getBroadcast(
@@ -98,6 +146,17 @@ public class AdhanPlugin extends Plugin {
             );
             am.cancel(pi);
         }
+
+        // cancel salawat alarms
+        for (int i = 0; i < 100; i++) {
+            Intent intent = new Intent(context, SalawatReceiver.class);
+            PendingIntent pi = PendingIntent.getBroadcast(
+                context, 6000 + i, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
+            am.cancel(pi);
+        }
+
         call.resolve();
     }
 }

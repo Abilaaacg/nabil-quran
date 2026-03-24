@@ -29,6 +29,11 @@
             android:name=".AdhanReceiver"
             android:exported="false" />
 
+        <!-- مستقبل صلي على النبي — ينطق بالصوت -->
+        <receiver
+            android:name=".SalawatReceiver"
+            android:exported="false" />
+
         <!-- إعادة جدولة الأذان بعد إعادة تشغيل الجهاز -->
         <receiver
             android:name=".BootReceiver"

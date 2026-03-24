@@ -103,7 +103,57 @@ export async function initNotifications(settings) {
     console.log('Notifications: not on native platform')
   }
 
-  // === 2. Web Notification Permission (للموقع) ===
+  // === 2. Native Adhan (AlarmManager — يشغل صوت أذان حتى لو التطبيق مغلق) ===
+  try {
+    if (window.Capacitor?.isNativePlatform?.() && settings.adhanEnabled && settings.location) {
+      const { registerPlugin } = await import('@capacitor/core')
+      const AdhanPlugin = registerPlugin('AdhanPlugin')
+      await AdhanPlugin.cancelAll()
+
+      const ADHAN_URLS = {
+        makkah: 'https://www.islamcan.com/audio/adhan/azan1.mp3',
+        madinah: 'https://www.islamcan.com/audio/adhan/azan2.mp3',
+        egypt: 'https://www.islamcan.com/audio/adhan/azan3.mp3',
+        mishary: 'https://www.islamcan.com/audio/adhan/azan4.mp3',
+        turkish: 'https://www.islamcan.com/audio/adhan/azan5.mp3',
+      }
+
+      const now = new Date()
+      const prayers = []
+      for (let d = 0; d < 2; d++) {
+        const day = new Date(now)
+        day.setDate(day.getDate() + d)
+        const pt = getPrayerTimes(settings.location.lat, settings.location.lng, settings.calcMethod, day)
+        for (const key of PRAYERS) {
+          const t = pt[key]
+          if (t && t.getTime() > now.getTime()) {
+            prayers.push({ time: t.getTime(), name: AR[key] })
+          }
+        }
+      }
+
+      if (prayers.length > 0) {
+        await AdhanPlugin.scheduleAdhan({
+          prayers,
+          adhanUrl: ADHAN_URLS[settings.adhanSound || 'makkah'] || ADHAN_URLS.makkah,
+        })
+        console.log(`✅ Native adhan scheduled for ${prayers.length} prayers`)
+      }
+
+      // صلي على النبي — بصوت TTS
+      if (settings.salawatEnabled) {
+        await AdhanPlugin.scheduleSalawat({
+          intervalMinutes: settings.salawatInterval || 30,
+          count: 24,
+        })
+        console.log(`✅ Native salawat scheduled every ${settings.salawatInterval || 30} min`)
+      }
+    }
+  } catch (e) {
+    console.warn('Native adhan:', e)
+  }
+
+  // === 3. Web Notification Permission ===
   if ('Notification' in window && Notification.permission === 'default') {
     Notification.requestPermission()
   }
